@@ -4,22 +4,11 @@ import { Navigation } from "@/components/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import "leaflet/dist/leaflet.css";
+import { InteractiveMap } from "@/components/interactive-map";
 
 import { MapPin, NavigationIcon, Camera } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import * as L from "leaflet";
-
-// Custom marker icon
-const customIcon = new L.Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
-  iconSize: [30, 30],
-  iconAnchor: [15, 30],
-});
 
 export default function MapPage() {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
@@ -278,57 +267,10 @@ export default function MapPage() {
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Map */}
           <div className="lg:col-span-3">
-            <Card className="border-border bg-card">
-              <CardContent className="p-0">
-                <MapContainer
-                  center={[23.6102, 85.2799]} // Jharkhand center
-                  zoom={7}
-                  style={{ height: "600px", width: "100%" }}
-                >
-                  <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution="&copy; OpenStreetMap contributors"
-                  />
-                  {touristSpots.map((spot) => (
-                    <Marker
-                      key={spot.id}
-                      position={[spot.lat, spot.lng]}
-                      icon={customIcon}
-                      eventHandlers={{
-                        click: () => setSelectedLocation(spot.id),
-                      }}
-                    >
-                      <Popup>
-                        <div className="flex flex-col space-y-2">
-                          <strong>{spot.name}</strong>
-                          <p>{spot.description}</p>
-                          <p>
-                            <span className="font-medium">Best Time:</span>{" "}
-                            {spot.bestTime}
-                          </p>
-                          <Link href={spot.googleMaps} target="_blank">
-                            <Button size="sm" className="w-full">
-                              <NavigationIcon className="h-4 w-4 mr-2" />
-                              Get Directions
-                            </Button>
-                          </Link>
-                          <Link href={`${spot.googleMaps}&t=k`} target="_blank">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="w-full"
-                            >
-                              <Camera className="h-4 w-4 mr-2" />
-                              Satellite View
-                            </Button>
-                          </Link>
-                        </div>
-                      </Popup>
-                    </Marker>
-                  ))}
-                </MapContainer>
-              </CardContent>
-            </Card>
+            <InteractiveMap 
+              touristSpots={touristSpots} 
+              onLocationSelect={setSelectedLocation}
+            />
           </div>
 
           {/* Sidebar */}
