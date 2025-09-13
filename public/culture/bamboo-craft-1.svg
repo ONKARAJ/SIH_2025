@@ -1,0 +1,84 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bambooGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#16a34a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#22c55e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4ade80;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#bambooGradient)"/>
+  
+  <!-- Bamboo basket (main item) -->
+  <g transform="translate(300,200)">
+    <ellipse cx="0" cy="40" rx="80" ry="20" fill="#92400e"/>
+    <path d="M -80,40 Q -85,10 -70,0 Q 0,-10 70,0 Q 85,10 80,40" fill="#a16207"/>
+    
+    <!-- Weaving pattern -->
+    <g stroke="#78350f" stroke-width="2" fill="none">
+      <path d="M -60,20 Q 0,15 60,20"/>
+      <path d="M -70,30 Q 0,25 70,30"/>
+      <path d="M -50,10 Q 0,5 50,10"/>
+      <!-- Vertical lines -->
+      <line x1="-40" y1="5" x2="-45" y2="35"/>
+      <line x1="-20" y1="3" x2="-25" y2="33"/>
+      <line x1="0" y1="2" x2="0" y2="32"/>
+      <line x1="20" y1="3" x2="25" y2="33"/>
+      <line x1="40" y1="5" x2="45" y2="35"/>
+    </g>
+    
+    <!-- Handle -->
+    <ellipse cx="-60" cy="15" rx="8" ry="20" fill="#a16207"/>
+    <ellipse cx="60" cy="15" rx="8" ry="20" fill="#a16207"/>
+  </g>
+  
+  <!-- Smaller bamboo items -->
+  <g transform="translate(120,300)">
+    <!-- Small bowl -->
+    <ellipse cx="0" cy="10" rx="30" ry="8" fill="#92400e"/>
+    <path d="M -30,10 Q -32,5 -28,2 Q 0,0 28,2 Q 32,5 30,10" fill="#a16207"/>
+  </g>
+  
+  <g transform="translate(480,320)">
+    <!-- Bamboo flute -->
+    <rect x="0" y="0" width="80" height="8" fill="#a16207" rx="4"/>
+    <circle cx="15" cy="4" r="2" fill="#78350f"/>
+    <circle cx="25" cy="4" r="2" fill="#78350f"/>
+    <circle cx="35" cy="4" r="2" fill="#78350f"/>
+    <circle cx="45" cy="4" r="2" fill="#78350f"/>
+    <circle cx="55" cy="4" r="2" fill="#78350f"/>
+  </g>
+  
+  <!-- Bamboo plants in background -->
+  <g opacity="0.4">
+    <g transform="translate(50,50)">
+      <rect x="0" y="0" width="8" height="300" fill="#22c55e"/>
+      <rect x="10" y="20" width="8" height="280" fill="#16a34a"/>
+      <rect x="20" y="10" width="8" height="290" fill="#22c55e"/>
+      <!-- Joints -->
+      <rect x="-2" y="50" width="32" height="4" fill="#15803d"/>
+      <rect x="-2" y="100" width="32" height="4" fill="#15803d"/>
+      <rect x="-2" y="150" width="32" height="4" fill="#15803d"/>
+      <rect x="-2" y="200" width="32" height="4" fill="#15803d"/>
+      <rect x="-2" y="250" width="32" height="4" fill="#15803d"/>
+    </g>
+    
+    <g transform="translate(520,80)">
+      <rect x="0" y="0" width="6" height="250" fill="#22c55e"/>
+      <rect x="8" y="15" width="6" height="235" fill="#16a34a"/>
+      <rect x="-2" y="40" width="18" height="3" fill="#15803d"/>
+      <rect x="-2" y="80" width="18" height="3" fill="#15803d"/>
+      <rect x="-2" y="120" width="18" height="3" fill="#15803d"/>
+      <rect x="-2" y="160" width="18" height="3" fill="#15803d"/>
+    </g>
+  </g>
+  
+  <!-- Text overlay -->
+  <text x="300" y="360" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white" opacity="0.9">
+    Bamboo Craft
+  </text>
+  <text x="300" y="380" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white" opacity="0.8">
+    Traditional Weaving & Handicrafts
+  </text>
+</svg>

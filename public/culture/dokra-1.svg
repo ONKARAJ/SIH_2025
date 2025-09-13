@@ -1,0 +1,73 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d97706;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#b45309;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#92400e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#78350f;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="bronzeGradient" cx="50%" cy="30%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#d97706;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#92400e;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#metalGradient)"/>
+  
+  <!-- Main Dokra vessel -->
+  <g transform="translate(300,200)">
+    <!-- Base -->
+    <ellipse cx="0" cy="80" rx="60" ry="15" fill="url(#bronzeGradient)"/>
+    <!-- Body -->
+    <path d="M -50,80 Q -55,40 -45,20 Q -20,10 20,10 Q 45,20 55,40 Q 50,80 50,80" fill="url(#bronzeGradient)"/>
+    <!-- Neck -->
+    <rect x="-20" y="10" width="40" height="15" fill="url(#bronzeGradient)"/>
+    <!-- Rim -->
+    <ellipse cx="0" cy="10" rx="25" ry="8" fill="#fbbf24"/>
+    
+    <!-- Decorative patterns -->
+    <g stroke="#654321" stroke-width="2" fill="none">
+      <!-- Geometric patterns -->
+      <path d="M -30,30 L -20,35 L -30,40 L -20,45 L -30,50"/>
+      <path d="M 30,30 L 20,35 L 30,40 L 20,45 L 30,50"/>
+      <circle cx="0" cy="40" r="8"/>
+      <circle cx="0" cy="60" r="6"/>
+      
+      <!-- Traditional motifs -->
+      <path d="M -10,25 Q 0,20 10,25"/>
+      <path d="M -15,70 Q 0,65 15,70"/>
+    </g>
+    
+    <!-- Handles -->
+    <ellipse cx="-40" cy="45" rx="8" ry="12" fill="url(#bronzeGradient)"/>
+    <ellipse cx="40" cy="45" rx="8" ry="12" fill="url(#bronzeGradient)"/>
+  </g>
+  
+  <!-- Small decorative items -->
+  <g transform="translate(150,300)">
+    <circle cx="0" cy="0" r="15" fill="url(#bronzeGradient)"/>
+    <circle cx="0" cy="0" r="8" fill="none" stroke="#654321" stroke-width="2"/>
+  </g>
+  
+  <g transform="translate(450,320)">
+    <ellipse cx="0" cy="0" rx="20" ry="12" fill="url(#bronzeGradient)"/>
+    <path d="M -15,0 L 0,-5 L 15,0 L 0,5 Z" fill="#fbbf24"/>
+  </g>
+  
+  <!-- Background elements -->
+  <g opacity="0.3">
+    <circle cx="100" cy="100" r="30" fill="#fbbf24"/>
+    <circle cx="500" cy="80" r="25" fill="#d97706"/>
+    <circle cx="80" cy="350" r="20" fill="#b45309"/>
+  </g>
+  
+  <!-- Text overlay -->
+  <text x="300" y="360" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white" opacity="0.9">
+    Dokra Metalwork
+  </text>
+  <text x="300" y="380" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white" opacity="0.8">
+    Traditional Lost-Wax Casting
+  </text>
+</svg>

@@ -1,0 +1,104 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cuisineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#34d399;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#cuisineGradient)"/>
+  
+  <!-- Traditional clay pot (main) -->
+  <g transform="translate(300,200)">
+    <ellipse cx="0" cy="50" rx="50" ry="12" fill="#92400e"/>
+    <path d="M -50,50 Q -55,20 -45,10 Q 0,0 45,10 Q 55,20 50,50" fill="#a16207"/>
+    <!-- Pot rim -->
+    <ellipse cx="0" cy="10" rx="25" ry="6" fill="#d97706"/>
+    
+    <!-- Steam -->
+    <g opacity="0.6">
+      <ellipse cx="-10" cy="5" rx="3" ry="8" fill="white"/>
+      <ellipse cx="5" cy="2" rx="4" ry="10" fill="white"/>
+      <ellipse cx="15" cy="0" rx="3" ry="6" fill="white"/>
+    </g>
+    
+    <!-- Food inside pot -->
+    <ellipse cx="0" cy="15" rx="20" ry="8" fill="#eab308"/>
+    <circle cx="-8" cy="12" r="3" fill="#f59e0b"/>
+    <circle cx="10" cy="18" r="4" fill="#d97706"/>
+  </g>
+  
+  <!-- Traditional plate with food -->
+  <g transform="translate(150,300)">
+    <ellipse cx="0" cy="0" rx="40" ry="10" fill="#92400e"/>
+    <!-- Rice -->
+    <ellipse cx="-15" cy="-3" rx="12" ry="6" fill="white"/>
+    <!-- Vegetables -->
+    <circle cx="10" cy="-2" r="6" fill="#16a34a"/>
+    <circle cx="20" cy="2" r="4" fill="#dc2626"/>
+    <!-- Dal -->
+    <ellipse cx="0" cy="5" rx="8" ry="4" fill="#eab308"/>
+  </g>
+  
+  <!-- Handia pot (rice beer) -->
+  <g transform="translate(450,320)">
+    <ellipse cx="0" cy="20" rx="25" ry="8" fill="#92400e"/>
+    <path d="M -25,20 Q -28,10 -22,5 Q 0,0 22,5 Q 28,10 25,20" fill="#a16207"/>
+    <ellipse cx="0" cy="5" rx="15" ry="4" fill="#d97706"/>
+    <!-- Liquid inside -->
+    <ellipse cx="0" cy="8" rx="12" ry="3" fill="#fbbf24"/>
+  </g>
+  
+  <!-- Traditional bread/roti -->
+  <g transform="translate(120,150)">
+    <ellipse cx="0" cy="0" rx="20" ry="15" fill="#d97706"/>
+    <ellipse cx="0" cy="-2" rx="18" ry="13" fill="#f59e0b"/>
+    <!-- Texture marks -->
+    <g stroke="#b45309" stroke-width="1" fill="none">
+      <circle cx="0" cy="0" r="5"/>
+      <circle cx="-8" cy="-5" r="3"/>
+      <circle cx="10" cy="3" r="2"/>
+    </g>
+  </g>
+  
+  <!-- Tribal vegetables/herbs -->
+  <g transform="translate(480,150)">
+    <!-- Leaves -->
+    <ellipse cx="0" cy="0" rx="8" ry="15" fill="#16a34a"/>
+    <ellipse cx="10" cy="5" rx="6" ry="12" fill="#22c55e"/>
+    <ellipse cx="-8" cy="8" rx="7" ry="10" fill="#15803d"/>
+    <!-- Stems -->
+    <line x1="0" y1="15" x2="0" y2="25" stroke="#15803d" stroke-width="2"/>
+    <line x1="10" y1="17" x2="10" y2="27" stroke="#15803d" stroke-width="2"/>
+    <line x1="-8" y1="18" x2="-8" y2="28" stroke="#15803d" stroke-width="2"/>
+  </g>
+  
+  <!-- Traditional cooking fire -->
+  <g transform="translate(300,350)" opacity="0.8">
+    <!-- Logs -->
+    <rect x="-30" y="0" width="60" height="8" fill="#92400e" rx="4"/>
+    <rect x="-25" y="-5" width="50" height="8" fill="#a16207" rx="4"/>
+    <!-- Fire -->
+    <polygon points="0,-15 -8,0 -5,0 -10,5 0,0 10,5 5,0 8,0" fill="#dc2626"/>
+    <polygon points="0,-10 -5,-2 0,-2 5,-2" fill="#f59e0b"/>
+    <polygon points="0,-8 -3,-3 3,-3" fill="#fbbf24"/>
+  </g>
+  
+  <!-- Decorative elements -->
+  <g opacity="0.3">
+    <circle cx="80" cy="80" r="15" fill="#fbbf24"/>
+    <circle cx="520" cy="100" r="20" fill="#f59e0b"/>
+    <circle cx="100" cy="350" r="12" fill="#dc2626"/>
+    <circle cx="500" cy="300" r="18" fill="#16a34a"/>
+  </g>
+  
+  <!-- Text overlay -->
+  <text x="300" y="30" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white" opacity="0.9">
+    Tribal Cuisine
+  </text>
+  <text x="300" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white" opacity="0.8">
+    Traditional Foods & Cooking Methods
+  </text>
+</svg>

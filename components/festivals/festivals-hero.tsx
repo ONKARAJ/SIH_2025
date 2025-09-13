@@ -10,21 +10,21 @@ const FestivalsHero = () => {
       title: "Sarhul Festival",
       subtitle: "Spring Celebration of Nature",
       description: "Experience the vibrant Sarhul festival, celebrating the renewal of life and nature's bounty with traditional dances and rituals.",
-      image: "/images/sarhul-hero.jpg",
+      image: "/images/sarhul-hero.svg",
       video: "/videos/sarhul.mp4"
     },
     {
       title: "Sohrai Festival",
       subtitle: "Harvest Festival of Joy",
       description: "Join the colorful Sohrai celebration, where communities come together to celebrate the harvest season with folk art and music.",
-      image: "/images/sohrai-hero.jpg",
+      image: "/images/sohrai-hero.svg",
       video: "/videos/sohrai.mp4"
     },
     {
       title: "Tusu Festival",
       subtitle: "Winter Folk Celebration",
       description: "Discover the enchanting Tusu festival, marking the winter season with traditional songs, dances, and cultural performances.",
-      image: "/images/tusu-hero.jpg",
+      image: "/images/tusu-hero.svg",
       video: "/videos/tusu.mp4"
     }
   ];

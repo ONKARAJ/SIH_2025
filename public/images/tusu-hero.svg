@@ -1,0 +1,81 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="winterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#7c3aed;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6d28d9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#winterGradient)"/>
+  
+  <!-- Moon -->
+  <circle cx="650" cy="100" r="40" fill="#fbbf24" opacity="0.8"/>
+  
+  <!-- Stars -->
+  <g fill="white" opacity="0.7">
+    <polygon points="100,80 105,90 115,90 107,97 110,108 100,102 90,108 93,97 85,90 95,90" />
+    <polygon points="200,50 203,57 210,57 205,61 207,69 200,65 193,69 195,61 190,57 197,57" />
+    <polygon points="750,160 753,167 760,167 755,171 757,179 750,175 743,179 745,171 740,167 747,167" />
+    <polygon points="300,120 302,125 308,125 304,128 306,134 300,131 294,134 296,128 292,125 298,125" />
+  </g>
+  
+  <!-- Traditional Tusu dolls/figures -->
+  <g transform="translate(150,300)" opacity="0.8">
+    <!-- Tusu doll -->
+    <circle cx="0" cy="-20" r="15" fill="#fbbf24"/>
+    <rect x="-10" y="-5" width="20" height="40" fill="#dc2626"/>
+    <rect x="-15" y="10" width="30" height="25" fill="#059669"/>
+    <rect x="-5" y="35" width="5" height="25" fill="#8b4513"/>
+    <rect x="5" y="35" width="5" height="25" fill="#8b4513"/>
+    <!-- Decorative elements -->
+    <circle cx="0" cy="-25" r="5" fill="#f59e0b"/>
+    <rect x="-20" y="0" width="5" height="15" fill="#dc2626"/>
+    <rect x="15" y="0" width="5" height="15" fill="#dc2626"/>
+  </g>
+  
+  <g transform="translate(350,320)" opacity="0.8">
+    <!-- Another figure -->
+    <circle cx="0" cy="-15" r="12" fill="#fbbf24"/>
+    <rect x="-8" y="0" width="16" height="35" fill="#7c3aed"/>
+    <rect x="-12" y="15" width="24" height="20" fill="#dc2626"/>
+    <rect x="-4" y="35" width="4" height="20" fill="#8b4513"/>
+    <rect x="4" y="35" width="4" height="20" fill="#8b4513"/>
+  </g>
+  
+  <!-- Traditional huts -->
+  <g transform="translate(500,350)" opacity="0.7">
+    <polygon points="0,0 -30,30 30,30" fill="#8b4513"/>
+    <rect x="-25" y="30" width="50" height="40" fill="#d97706"/>
+    <rect x="-10" y="40" width="8" height="20" fill="#654321"/>
+    <circle cx="10" cy="50" r="3" fill="#654321"/>
+  </g>
+  
+  <!-- Bonfire -->
+  <g transform="translate(200,450)" opacity="0.9">
+    <polygon points="0,-20 -10,10 10,10" fill="#dc2626"/>
+    <polygon points="0,-15 -8,8 8,8" fill="#f59e0b"/>
+    <polygon points="0,-10 -5,5 5,5" fill="#fbbf24"/>
+    <!-- Smoke -->
+    <ellipse cx="0" cy="-30" rx="3" ry="8" fill="gray" opacity="0.5"/>
+    <ellipse cx="2" cy="-45" rx="4" ry="10" fill="gray" opacity="0.3"/>
+  </g>
+  
+  <!-- Dancing figures -->
+  <g transform="translate(600,400)" opacity="0.6">
+    <circle cx="0" cy="-10" r="8" fill="#fbbf24"/>
+    <line x1="-10" y1="0" x2="10" y2="10" stroke="white" stroke-width="3"/>
+    <rect x="-5" y="0" width="10" height="20" fill="#059669"/>
+    <line x1="-5" y1="20" x2="-10" y2="35" stroke="white" stroke-width="3"/>
+    <line x1="5" y1="20" x2="15" y2="30" stroke="white" stroke-width="3"/>
+  </g>
+  
+  <!-- Text overlay -->
+  <text x="400" y="500" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white" opacity="0.9">
+    Tusu Festival
+  </text>
+  <text x="400" y="540" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" fill="white" opacity="0.8">
+    Winter Folk Celebration
+  </text>
+</svg>

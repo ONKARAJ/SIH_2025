@@ -1,0 +1,122 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="danceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c084fc;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#danceGradient)"/>
+  
+  <!-- Dancing figures in a circle -->
+  <g transform="translate(300,200)">
+    <!-- Figure 1 -->
+    <g transform="rotate(0)">
+      <g transform="translate(0,-80)">
+        <circle cx="0" cy="-20" r="12" fill="#fbbf24"/>
+        <rect x="-8" y="-8" width="16" height="25" fill="#dc2626"/>
+        <rect x="-12" y="8" width="24" height="20" fill="#059669"/>
+        <!-- Arms in dance position -->
+        <line x1="-15" y1="0" x2="-25" y2="-10" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="15" y1="0" x2="25" y2="-10" stroke="#fbbf24" stroke-width="3"/>
+        <!-- Legs in dance position -->
+        <line x1="-5" y1="28" x2="-15" y2="45" stroke="#8b4513" stroke-width="4"/>
+        <line x1="5" y1="28" x2="20" y2="40" stroke="#8b4513" stroke-width="4"/>
+      </g>
+    </g>
+    
+    <!-- Figure 2 -->
+    <g transform="rotate(60)">
+      <g transform="translate(0,-80)">
+        <circle cx="0" cy="-20" r="12" fill="#fbbf24"/>
+        <rect x="-8" y="-8" width="16" height="25" fill="#7c3aed"/>
+        <rect x="-12" y="8" width="24" height="20" fill="#f59e0b"/>
+        <line x1="-15" y1="0" x2="-20" y2="-15" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="15" y1="0" x2="20" y2="-15" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="-5" y1="28" x2="-10" y2="45" stroke="#8b4513" stroke-width="4"/>
+        <line x1="5" y1="28" x2="15" y2="40" stroke="#8b4513" stroke-width="4"/>
+      </g>
+    </g>
+    
+    <!-- Figure 3 -->
+    <g transform="rotate(120)">
+      <g transform="translate(0,-80)">
+        <circle cx="0" cy="-20" r="12" fill="#fbbf24"/>
+        <rect x="-8" y="-8" width="16" height="25" fill="#059669"/>
+        <rect x="-12" y="8" width="24" height="20" fill="#dc2626"/>
+        <line x1="-15" y1="0" x2="-25" y2="-5" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="15" y1="0" x2="25" y2="-5" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="-5" y1="28" x2="-20" y2="40" stroke="#8b4513" stroke-width="4"/>
+        <line x1="5" y1="28" x2="10" y2="45" stroke="#8b4513" stroke-width="4"/>
+      </g>
+    </g>
+    
+    <!-- Figure 4 -->
+    <g transform="rotate(180)">
+      <g transform="translate(0,-80)">
+        <circle cx="0" cy="-20" r="12" fill="#fbbf24"/>
+        <rect x="-8" y="-8" width="16" height="25" fill="#f59e0b"/>
+        <rect x="-12" y="8" width="24" height="20" fill="#7c3aed"/>
+        <line x1="-15" y1="0" x2="-20" y2="-10" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="15" y1="0" x2="20" y2="-10" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="-5" y1="28" x2="-15" y2="45" stroke="#8b4513" stroke-width="4"/>
+        <line x1="5" y1="28" x2="15" y2="45" stroke="#8b4513" stroke-width="4"/>
+      </g>
+    </g>
+    
+    <!-- Figure 5 -->
+    <g transform="rotate(240)">
+      <g transform="translate(0,-80)">
+        <circle cx="0" cy="-20" r="12" fill="#fbbf24"/>
+        <rect x="-8" y="-8" width="16" height="25" fill="#dc2626"/>
+        <rect x="-12" y="8" width="24" height="20" fill="#059669"/>
+        <line x1="-15" y1="0" x2="-25" y2="-5" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="15" y1="0" x2="25" y2="-5" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="-5" y1="28" x2="-10" y2="45" stroke="#8b4513" stroke-width="4"/>
+        <line x1="5" y1="28" x2="20" y2="40" stroke="#8b4513" stroke-width="4"/>
+      </g>
+    </g>
+    
+    <!-- Figure 6 -->
+    <g transform="rotate(300)">
+      <g transform="translate(0,-80)">
+        <circle cx="0" cy="-20" r="12" fill="#fbbf24"/>
+        <rect x="-8" y="-8" width="16" height="25" fill="#7c3aed"/>
+        <rect x="-12" y="8" width="24" height="20" fill="#f59e0b"/>
+        <line x1="-15" y1="0" x2="-20" y2="-15" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="15" y1="0" x2="20" y2="-15" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="-5" y1="28" x2="-15" y2="40" stroke="#8b4513" stroke-width="4"/>
+        <line x1="5" y1="28" x2="15" y2="45" stroke="#8b4513" stroke-width="4"/>
+      </g>
+    </g>
+  </g>
+  
+  <!-- Musical instruments -->
+  <g transform="translate(150,100)">
+    <!-- Dhol -->
+    <ellipse cx="0" cy="10" rx="25" ry="8" fill="#8b4513"/>
+    <rect x="-25" y="10" width="50" height="30" fill="#d97706"/>
+    <ellipse cx="0" cy="40" rx="25" ry="8" fill="#8b4513"/>
+    <!-- Drum sticks -->
+    <line x1="-30" y1="15" x2="-45" y2="5" stroke="#654321" stroke-width="3"/>
+    <line x1="30" y1="15" x2="45" y2="5" stroke="#654321" stroke-width="3"/>
+  </g>
+  
+  <!-- Decorative elements -->
+  <g opacity="0.3">
+    <circle cx="80" cy="320" r="20" fill="#fbbf24"/>
+    <circle cx="520" cy="300" r="25" fill="#f59e0b"/>
+    <circle cx="100" cy="80" r="15" fill="#dc2626"/>
+    <circle cx="500" cy="100" r="18" fill="#059669"/>
+  </g>
+  
+  <!-- Text overlay -->
+  <text x="300" y="360" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white" opacity="0.9">
+    Jhumar Dance
+  </text>
+  <text x="300" y="380" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white" opacity="0.8">
+    Traditional Folk Circle Dance
+  </text>
+</svg>
