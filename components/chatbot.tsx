@@ -54,7 +54,7 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     if (isOpen && messages.length === 0) {
       const welcomeMessage: ChatMessage = {
         id: "welcome",
-        content: "Hello! 👋 I'm your AI assistant for Jharkhand Tourism. I can help you with:\n\n🏞️ **Tourism** - Places to visit, travel tips, best times\n🎭 **Culture** - Festivals, tribal heritage, traditions\n📰 **Current Affairs** - Latest news, government updates\n💬 **General Chat** - Ask me anything!\n\nWhat would you like to explore today?",
+        content: "Hello! 👋 I'm your AI assistant for Jharkhand Tourism. I can help you with:\n\n🏞️ **Tourism** - Places to visit, travel tips, best times\n🎭 **Culture** - Festivals, tribal heritage, traditions\n📍 **Distance Calculation** - Real-time distances between any two places\n📰 **Current Affairs** - Latest news, government updates\n💬 **General Chat** - Ask me anything about any topic!\n\n*Powered by DeepSeek AI with Google Maps integration*\n\nWhat would you like to explore today?",
         isBot: true,
         timestamp: new Date(),
       };
@@ -62,61 +62,118 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     }
   }, [isOpen, messages.length]);
 
-  const getResponse = (userMessage: string): string => {
+  // Check if message is asking for distance between two places
+  const extractDistanceQuery = (message: string): { origin: string; destination: string } | null => {
+    const lowerMessage = message.toLowerCase();
+    
+    // Common distance query patterns
+    const patterns = [
+      /(?:distance|how far).{0,20}(?:between|from)\s+([^\s]+(?:\s+[^\s]+)*)\s+(?:and|to)\s+([^\s]+(?:\s+[^\s]+)*)/i,
+      /(?:from)\s+([^\s]+(?:\s+[^\s]+)*)\s+to\s+([^\s]+(?:\s+[^\s]+)*).{0,20}(?:distance|how far)/i,
+      /([^\s]+(?:\s+[^\s]+)*)\s+to\s+([^\s]+(?:\s+[^\s]+)*)\s+(?:distance|km|kilometers)/i
+    ];
+    
+    for (const pattern of patterns) {
+      const match = message.match(pattern);
+      if (match) {
+        return {
+          origin: match[1].trim(),
+          destination: match[2].trim()
+        };
+      }
+    }
+    
+    return null;
+  };
+
+  // Get AI response from DeepSeek API
+  const getAIResponse = async (userMessage: string): Promise<string> => {
+    try {
+      // Check if it's a distance query first
+      const distanceQuery = extractDistanceQuery(userMessage);
+      if (distanceQuery) {
+        try {
+          const distanceResponse = await fetch('/api/distance', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              origin: distanceQuery.origin,
+              destination: distanceQuery.destination,
+            }),
+          });
+          
+          if (distanceResponse.ok) {
+            const distanceData = await distanceResponse.json();
+            return `📍 **Distance from ${distanceData.origin} to ${distanceData.destination}:**\n\n🚗 **By Road**: ${distanceData.distance.text} (${distanceData.distance.kilometers} km)\n⏱️ **Travel Time**: ${distanceData.duration.text} (approximately ${distanceData.duration.hours} hours)\n\n*Travel times are estimated for driving and may vary based on traffic conditions and route taken.*\n\nWould you like to know about any attractions or places to visit along this route?`;
+          }
+        } catch (error) {
+          console.log('Distance API failed, falling back to general response');
+        }
+      }
+      
+      // Get general AI response from DeepSeek
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+        }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return data.message;
+      } else {
+        throw new Error('API request failed');
+      }
+    } catch (error) {
+      console.error('AI response error:', error);
+      // Fallback to local responses
+      return getFallbackResponse(userMessage);
+    }
+  };
+
+  // Fallback responses when APIs are unavailable
+  const getFallbackResponse = (userMessage: string): string => {
     const message = userMessage.toLowerCase();
     
-    // Government questions
-    if (message.includes('cm') || message.includes('chief minister') || (message.includes('hemant') && message.includes('soren'))) {
-      return "**Hemant Soren** is the current Chief Minister of Jharkhand. He belongs to the **Jharkhand Mukti Morcha (JMM)** party and has been serving as CM since 2019. He's known for his focus on tribal rights, employment generation, and welfare schemes.";
+    // Distance queries fallback
+    if (message.includes('distance') || message.includes('how far')) {
+      return "📍 **Distance Information:**\n\nI can help you with distances between places! I'm currently working on getting the precise distance calculation for you. In the meantime, here are some common distances from Ranchi:\n\n• **Jamshedpur**: ~130 km (3 hours by road)\n• **Deoghar**: ~250 km (5-6 hours)\n• **Netarhat**: ~156 km (4 hours)\n• **Hundru Falls**: ~45 km (1.5 hours)\n\nWhich specific route would you like to know about?";
     }
     
-    if (message.includes('governor') || (message.includes('c.p.') && message.includes('radhakrishnan'))) {
-      return "**C.P. Radhakrishnan** is the current Governor of Jharkhand. He took office in July 2024 and has served in various administrative and political roles.";
-    }
-    
-    // Tourism
+    // Tourism fallbacks
     if (message.includes('waterfall') || message.includes('falls')) {
-      return "Jharkhand has stunning waterfalls! **Top waterfalls**: Hundru Falls (98m), Dassam Falls (44m - 'Niagara of Jharkhand'), Lodh Falls (143m - highest), and Jonha Falls (43m). Best time to visit is during or after monsoon (July-February).";
+      return "🏞️ **Jharkhand's Beautiful Waterfalls:**\n\n• **Hundru Falls** (98m) - Near Ranchi, spectacular cascade\n• **Dassam Falls** (44m) - Called 'Niagara of Jharkhand'\n• **Lodh Falls** (143m) - Highest waterfall in the state\n• **Jonha Falls** (43m) - Also known as Gautamdhara\n\n**Best time to visit**: During/after monsoon (July-February) for maximum water flow!";
     }
     
     if (message.includes('festival') || message.includes('culture')) {
-      return "Jharkhand's tribal festivals are incredible! **Major festivals**: **Sarhul** (Spring - nature worship), **Sohrai** (Harvest - cattle celebration), **Tusu** (Winter - goddess worship), and **Karma** (Monsoon - youth blessings). Each showcases the deep connection between tribal communities and nature.";
+      return "🎭 **Jharkhand's Rich Tribal Culture:**\n\n• **Sarhul** - Spring festival celebrating nature\n• **Sohrai** - Harvest festival honoring cattle\n• **Tusu** - Winter festival dedicated to goddess Tusu\n• **Karma** - Monsoon festival for youth blessings\n\nThese festivals showcase the deep connection between tribal communities and nature! Would you like to know more about any specific festival?";
     }
     
     if (message.includes('place') || message.includes('visit') || message.includes('destination')) {
-      return "Top Jharkhand destinations: **Hundru Falls** (spectacular waterfall), **Betla National Park** (tigers & elephants), **Netarhat** (hill station), **Deoghar** (Baidyanath Jyotirlinga), **Parasnath Hill** (highest peak), and **Ranchi** (capital city). What type of experience interests you?";
+      return "🌟 **Top Jharkhand Destinations:**\n\n• **Hundru Falls** - Spectacular 98m waterfall\n• **Betla National Park** - Tigers, elephants, wildlife\n• **Netarhat** - 'Queen of Chotanagpur', hill station\n• **Deoghar** - Sacred Baidyanath Jyotirlinga temple\n• **Parasnath Hill** - Highest peak, Jain pilgrimage\n• **Ranchi** - Capital city, Rock Garden, Tagore Hill\n\nWhat type of experience are you looking for - adventure, spirituality, or nature?";
     }
     
-    // General knowledge
+    // Government-related
+    if (message.includes('cm') || message.includes('chief minister')) {
+      return "🏛️ **Hemant Soren** is the current Chief Minister of Jharkhand (JMM party), serving since 2019. He focuses on tribal rights, employment generation, and welfare schemes.";
+    }
+    
     if (message.includes('capital')) {
-      return "**Ranchi** is the capital of Jharkhand. It's known for its pleasant climate, educational institutions (IIT, NIT), industries, and as MS Dhoni's hometown. Major attractions include Jagannath Temple, Rock Garden, and Tagore Hill.";
+      return "🏙️ **Ranchi** is the capital of Jharkhand! Known for its pleasant climate, educational institutions (IIT, NIT), and as MS Dhoni's hometown. Major attractions include Jagannath Temple, Rock Garden, and Tagore Hill.";
     }
     
-    if (message.includes('formation') || (message.includes('when') && message.includes('formed'))) {
-      return "Jharkhand was formed on **November 15, 2000**, carved out from Bihar to become India's 28th state. It was created to address the developmental needs of tribal populations and harness the region's rich mineral resources.";
+    // General responses
+    if (message.includes('hello') || message.includes('hi')) {
+      return "Hello! 👋 Welcome to Jharkhand Tourism! I'm here to help you explore the beauty of Jharkhand - from magnificent waterfalls to rich tribal culture. I can also answer questions about travel, distances, current affairs, and general topics. What would you like to know?";
     }
     
-    // Science & technology
-    if (message.includes('ai') || message.includes('artificial intelligence')) {
-      return "Artificial Intelligence (AI) is technology that enables machines to perform tasks that typically require human intelligence - like learning, reasoning, and problem-solving. AI is used in healthcare, education, transportation, and even chatbots like me! It's transforming how we work and live.";
-    }
-    
-    if (message.includes('science') || message.includes('physics') || message.includes('chemistry')) {
-      return "I'd love to discuss science! Whether it's physics (how the universe works), chemistry (matter and reactions), biology (life sciences), or environmental science - I can help explain concepts, discoveries, and how things work. What scientific topic interests you?";
-    }
-    
-    // Weather
-    if (message.includes('weather') || message.includes('climate')) {
-      return "Jharkhand has a tropical climate: **Summer** (April-June) - hot and dry, **Monsoon** (July-September) - heavy rainfall, **Winter** (October-March) - pleasant and cool. The best time to visit is October-March for most activities, though waterfalls are spectacular during monsoons!";
-    }
-    
-    // General greetings
-    if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
-      return "Hello! 👋 I'm here to help with any questions you have. I'm particularly knowledgeable about Jharkhand - its tourism, culture, government, and history - but I can also discuss science, technology, current affairs, and general topics. What would you like to talk about?";
-    }
-    
-    // Default response
-    return `That's an interesting question! I can help you with information about Jharkhand tourism (waterfalls, festivals, places to visit), current affairs (government, politics), general knowledge (science, technology), and much more. Could you be more specific about what you'd like to know?`;
+    return "I'm here to help you with information about Jharkhand tourism, culture, travel distances, and general questions! I can provide details about:\n\n🏞️ **Tourism**: Waterfalls, national parks, temples\n🎭 **Culture**: Festivals, tribal heritage\n📍 **Travel**: Distances, routes, best times to visit\n💬 **General**: Current affairs, science, any topic!\n\nWhat would you like to explore?";
   };
 
   const handleSendMessage = async () => {
@@ -133,9 +190,9 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     setInputMessage("");
     setIsTyping(true);
 
-    // Simulate response delay
-    setTimeout(() => {
-      const botResponse = getResponse(userMessage.content);
+    try {
+      // Get AI response (with distance calculation support)
+      const botResponse = await getAIResponse(userMessage.content);
       const botMessage: ChatMessage = {
         id: `bot-${Date.now()}`,
         content: botResponse,
@@ -144,8 +201,18 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
       };
 
       setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error('Error getting response:', error);
+      const errorMessage: ChatMessage = {
+        id: `bot-${Date.now()}`,
+        content: "I'm having trouble connecting right now. Please try again in a moment! In the meantime, I can still help with basic Jharkhand tourism questions.",
+        isBot: true,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1000 + Math.random() * 1000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -188,15 +255,17 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
   };
 
   const quickSuggestions = [
-    "Who is the CM of Jharkhand?",
+    "Distance between Ranchi and Jamshedpur",
+    "What are the tourist spots in Ranchi?",
+    "Tell me about festivals in Jharkhand",
     "Best waterfalls to visit",
-    "Tell me about Sarhul festival",
-    "What's the capital of Jharkhand?",
-    "Explain artificial intelligence",
-    "Weather in Jharkhand"
+    "How far is Deoghar from Ranchi?",
+    "Who is the CM of Jharkhand?",
+    "Tell me about artificial intelligence",
+    "Weather and climate in Jharkhand"
   ];
 
-  const handleSuggestionClick = (suggestion: string) => {
+  const handleSuggestionClick = async (suggestion: string) => {
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       content: suggestion,
@@ -207,8 +276,8 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
 
-    setTimeout(() => {
-      const botResponse = getResponse(suggestion);
+    try {
+      const botResponse = await getAIResponse(suggestion);
       const botMessage: ChatMessage = {
         id: `bot-${Date.now()}`,
         content: botResponse,
@@ -216,63 +285,77 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error('Error getting suggestion response:', error);
+      const errorMessage: ChatMessage = {
+        id: `bot-${Date.now()}`,
+        content: getFallbackResponse(suggestion),
+        isBot: true,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
   if (!isOpen) return null;
 
   return (
-    <Card className={`fixed bottom-4 right-4 w-96 max-w-[90vw] shadow-2xl border-border bg-background z-50 transition-all duration-300 overflow-hidden ${
+    <Card className={`fixed bottom-4 right-4 w-96 max-w-[calc(100vw-2rem)] shadow-2xl border-border bg-background z-50 transition-all duration-300 overflow-hidden ${
       isMinimized ? "h-16" : "h-[600px] max-h-[80vh]"
     }`}>
       {/* Header */}
-      <CardHeader className="p-4 border-b border-border bg-primary text-primary-foreground rounded-t-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-primary-foreground rounded-full flex items-center justify-center">
+      <CardHeader className="px-4 py-3 border-b border-border bg-gradient-to-r from-primary to-primary/90 text-primary-foreground rounded-t-lg">
+        <div className="flex items-center justify-between min-w-0">
+          <div className="flex items-center space-x-3 min-w-0 flex-1">
+            <div className="w-9 h-9 bg-primary-foreground rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
               <Bot className="h-5 w-5 text-primary" />
             </div>
-            <div>
-              <CardTitle className="text-sm font-semibold">Jharkhand Tourism Assistant</CardTitle>
-              <div className="flex items-center space-x-2 mt-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-xs opacity-90">Online</span>
+            <div className="min-w-0 flex-1">
+              <CardTitle className="text-sm font-semibold truncate">
+                Jharkhand Tourism Assistant
+              </CardTitle>
+              <div className="flex items-center space-x-2 mt-0.5">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse flex-shrink-0"></div>
+                <span className="text-xs opacity-90 font-medium">AI Powered • Online</span>
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-0.5 ml-2">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleClearConversation}
-              className="text-primary-foreground hover:bg-primary-foreground/20 w-8 h-8 p-0"
+              className="text-primary-foreground hover:bg-primary-foreground/20 w-8 h-8 p-0 rounded-md transition-colors"
               title="Clear conversation"
             >
-              <RotateCcw className="h-3 w-3" />
+              <RotateCcw className="h-3.5 w-3.5" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsMinimized(!isMinimized)}
-              className="text-primary-foreground hover:bg-primary-foreground/20 w-8 h-8 p-0"
+              className="text-primary-foreground hover:bg-primary-foreground/20 w-8 h-8 p-0 rounded-md transition-colors"
+              title={isMinimized ? "Expand" : "Minimize"}
             >
-              <Minimize2 className="h-4 w-4" />
+              <Minimize2 className="h-3.5 w-3.5" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={onToggle}
-              className="text-primary-foreground hover:bg-primary-foreground/20 w-8 h-8 p-0"
+              className="text-primary-foreground hover:bg-primary-foreground/20 w-8 h-8 p-0 rounded-md transition-colors"
+              title="Close chat"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
       </CardHeader>
 
       {!isMinimized && (
-        <CardContent className="p-0 flex flex-col h-[calc(100%-80px)] overflow-hidden">
+        <CardContent className="p-0 flex flex-col h-[calc(100%-76px)] overflow-hidden">
           {/* Messages Area */}
           <ScrollArea className="flex-1 p-4 overflow-x-hidden">
             <div className="space-y-4 overflow-x-hidden">
@@ -374,7 +457,7 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
             <div className="flex space-x-2">
               <Input
                 ref={inputRef}
-                placeholder="Ask me about Jharkhand tourism..."
+                placeholder="Ask anything - tourism, distances, general questions..."
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
@@ -397,7 +480,7 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
               <div className="flex items-center space-x-1">
                 <HelpCircle className="h-3 w-3 text-muted-foreground" />
                 <span className="text-xs text-muted-foreground">
-                  Ask anything about Jharkhand - tourism, current affairs, politics, culture!
+                  Ask about distances, tourism, culture, current affairs, or any topic!
                 </span>
               </div>
             </div>
