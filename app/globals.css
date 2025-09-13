@@ -124,3 +124,6 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Pannellum 360° viewer styles - Dynamic loading */
+/* CSS will be loaded dynamically with the component */

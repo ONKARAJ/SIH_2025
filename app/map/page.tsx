@@ -4,7 +4,7 @@ import { Navigation } from "@/components/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { InteractiveMap } from "@/components/interactive-map";
+import { MapWrapper } from "@/components/map-wrapper";
 
 import { MapPin, NavigationIcon, Camera } from "lucide-react";
 import { useState } from "react";
@@ -21,7 +21,7 @@ export default function MapPage() {
       type: "Waterfall",
       color: "#3b82f6",
       description:
-        "Known as the 'Niagara of Jharkhand', this 44-meter waterfall creates a mesmerizing curtain of water.",
+        "Known as the 'Niagara of Jharkhand', Dassam Falls is a spectacular 44-meter waterfall created by the Kanchi River. The waterfall cascades down in multiple tiers, creating a mesmerizing curtain of water surrounded by dense forests and rocky terrain. The name 'Dassam' is derived from the Mundari word 'Das-am' meaning 'water coming down'. The site offers excellent opportunities for photography, nature walks, and picnicking. During monsoon season, the waterfall is at its most spectacular with thunderous roar and misty spray creating rainbow effects. The area around the falls has been developed with viewing platforms, pathways, and basic facilities for tourists. Local legends speak of the falls having divine powers, and many visitors come here for spiritual solace as well as natural beauty.",
       bestTime: "Jul - Feb",
       lat: 23.63,
       lng: 85.46,
@@ -33,7 +33,7 @@ export default function MapPage() {
       type: "Waterfall",
       color: "#3b82f6",
       description:
-        "Also known as Gautamdhara, this 43-meter waterfall is associated with Lord Buddha.",
+        "Jonha Falls, also reverently known as Gautamdhara, is a magnificent 43-meter waterfall located about 40 km from Ranchi. The name 'Gautamdhara' is derived from its association with Lord Buddha (Gautama Buddha), and local legends suggest that Buddha once meditated near this sacred waterfall. The falls cascade down in a single magnificent drop, creating a natural pool at the bottom surrounded by rocky terrain and lush vegetation. The site has immense spiritual significance for both Hindus and Buddhists, with several small temples and meditation spots around the area. The thunderous sound of water hitting the rocks below creates a mystical atmosphere that attracts both pilgrims and nature enthusiasts. During monsoon season, the volume of water increases dramatically, making the falls even more spectacular. The area is well-developed with proper pathways, railings, and viewing platforms for tourist safety. Rock climbing enthusiasts also visit the area for the challenging rocky terrain surrounding the falls.",
       bestTime: "Jul - Mar",
       lat: 23.61,
       lng: 85.28,
@@ -82,7 +82,7 @@ export default function MapPage() {
       type: "Hill Station",
       color: "#10b981",
       description:
-        "The 'Queen of Chotanagpur', offering breathtaking sunrise and sunset views.",
+        "Known as the 'Queen of Chotanagpur', Netarhat Hill Station sits at an elevation of 1,128 meters above sea level. This picturesque hill station is famous for its breathtaking sunrise and sunset views from Magnolia Point. The region is blessed with dense forests of Sal, Pine, and other indigenous trees, making it a paradise for nature lovers and wildlife enthusiasts. The area houses the prestigious Netarhat Residential School, often called the 'Eton of the East'. Key attractions include the Netarhat Dam, Lodh Falls (accessible from here), Pine Forest areas perfect for trekking, and the famous Sunrise Point. The cool climate throughout the year makes it an ideal retreat from the plains. During winter months, the temperature can drop significantly, sometimes experiencing frost. The region has rich tribal culture with several indigenous communities living in harmony with nature. Adventure activities include trekking, camping, and wildlife spotting in the nearby forests.",
       bestTime: "Oct - May",
       lat: 23.4,
       lng: 84.2,
@@ -94,7 +94,7 @@ export default function MapPage() {
       type: "Hill Station",
       color: "#10b981",
       description:
-        "The highest peak in Jharkhand at 1,365 meters, sacred to Jains.",
+        "Parasnath Hill, standing majestically at 1,365 meters above sea level, is the highest peak in Jharkhand and holds immense religious significance for the Jain community. Known as 'Sammed Shikharji', this sacred mountain is believed to be the place where 20 out of 24 Jain Tirthankaras attained moksha (liberation). The hill is dotted with numerous Jain temples, each marking the spot where a Tirthankara achieved nirvana. The main temple complex houses beautiful marble structures with intricate carvings and sculptures depicting Jain mythology. Pilgrims undertake a challenging trek of about 27 kilometers, visiting all the temples on foot as per Jain tradition. The hill offers breathtaking panoramic views of the surrounding landscape, dense forests, and distant plains. The area is rich in biodiversity with rare species of flora and fauna. The trek route is well-maintained with resting spots, water facilities, and basic amenities for pilgrims. The serene atmosphere, combined with spiritual significance and natural beauty, makes it a unique destination for both religious and adventure tourism.",
       bestTime: "Oct - Mar",
       lat: 24.2,
       lng: 86.68,
@@ -120,7 +120,7 @@ export default function MapPage() {
       type: "Wildlife",
       color: "#f59e0b",
       description:
-        "Home to tigers, elephants, and diverse wildlife across 979 sq km.",
+        "Betla National Park, established in 1986, spans across 979 square kilometers of pristine wilderness in the Chota Nagpur plateau. This magnificent park is part of the Palamau Tiger Reserve and serves as a crucial habitat for the endangered Royal Bengal Tiger. The park is home to over 174 species of birds, including the Indian Hornbill, Red Junglefowl, and various species of eagles and owls. Wildlife includes tigers, leopards, elephants, sloth bears, wild boars, spotted deer, sambars, and the unique four-horned antelope. The landscape varies from dense forests to grasslands, with the Betla river flowing through it. Historical significance includes ancient fort ruins of Chero kings dating back to the 16th century. The park offers jungle safaris, elephant rides, watchtowers for wildlife viewing, and nature trails. Accommodation is available in forest rest houses. The park also has the Kamaldah Lake, perfect for bird watching, especially during migratory seasons.",
       bestTime: "Nov - Apr",
       lat: 23.62,
       lng: 84.42,
@@ -169,7 +169,7 @@ export default function MapPage() {
       type: "Temple",
       color: "#ef4444",
       description:
-        "One of the 12 Jyotirlingas, this ancient Shiva temple is a major pilgrimage site.",
+        "The sacred Baidyanath Temple in Deoghar is one of the twelve revered Jyotirlingas dedicated to Lord Shiva and holds immense religious significance for millions of devotees. Known as 'Baidyanath Dham' or 'Vaidyanath Dham', meaning 'Lord of Physicians', the temple is believed to fulfill the wishes of devotees and provide healing from ailments. The main temple complex houses the sacred Shivalinga and is surrounded by 21 other temples, creating a spiritual atmosphere. The annual Shravan month (July-August) witnesses the famous Kanwar Yatra, where millions of devotees carry holy water from the Ganges River and walk hundreds of kilometers to offer it to the Shivalinga. The temple architecture reflects ancient Indian style with intricate carvings and sculptures. According to Hindu mythology, this is where Ravana worshipped Lord Shiva to gain immortality. The temple offers facilities for pilgrims including accommodation, prasadam, and various religious ceremonies. The town of Deoghar itself has become a significant pilgrimage destination with numerous ashrams, dharamshalas, and religious institutions.",
       bestTime: "Oct - Mar",
       lat: 24.48,
       lng: 86.7,
@@ -195,7 +195,7 @@ export default function MapPage() {
       type: "City",
       color: "#8b5cf6",
       description:
-        "The capital city featuring Jagannath Temple and urban attractions.",
+        "Ranchi, the capital city of Jharkhand, is a vibrant urban center known as the 'City of Waterfalls' due to numerous cascades in its vicinity. Established as the summer capital during British era, the city sits at an average elevation of 2,140 feet above sea level, providing a pleasant climate. Major attractions include the sacred Jagannath Temple, inspired by the famous temple in Puri, which attracts thousands of devotees during Rath Yatra. The city is famous for Birsa Munda's legacy and houses several museums and monuments dedicated to tribal freedom fighters. Ranchi is also known as India's 'Manchester' due to its heavy industries and is the birthplace of legendary cricketer MS Dhoni. Key attractions include Rock Garden, Kanke Dam, Tagore Hill, Birsa Zoological Park, and the State Museum. The city offers excellent connectivity and serves as the gateway to explore other tourist destinations in Jharkhand. Modern amenities, shopping complexes, educational institutions, and cultural centers make it a perfect blend of tradition and modernity.",
       bestTime: "Oct - Mar",
       lat: 23.34,
       lng: 85.33,
@@ -267,7 +267,7 @@ export default function MapPage() {
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Map */}
           <div className="lg:col-span-3">
-            <InteractiveMap 
+            <MapWrapper 
               touristSpots={touristSpots} 
               onLocationSelect={setSelectedLocation}
             />
