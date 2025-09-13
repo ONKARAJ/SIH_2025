@@ -3,9 +3,9 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { Menu, X } from "lucide-react"
 import { usePathname } from "next/navigation"
+import GlobalSearch from "@/components/search/global-search"
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -14,7 +14,7 @@ export function Navigation() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/places", label: "Places to Visit" },
-    { href: "/culture", label: "Festivals & Culture" },
+    { href: "/festivals", label: "Festivals & Culture" },
     { href: "/reviews", label: "Reviews" },
     { href: "/map", label: "Map" },
     { href: "/contact", label: "Contact Us" },
@@ -51,12 +51,12 @@ export function Navigation() {
             </div>
           </div>
 
-          {/* Search Bar */}
+          {/* Search Bar & Booking */}
           <div className="hidden lg:flex items-center space-x-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input type="text" placeholder="Search destinations..." className="pl-10 w-64" />
-            </div>
+            <GlobalSearch placeholder="Search destinations, festivals, culture..." className="w-64" />
+            <Button asChild className="bg-primary hover:bg-primary/90">
+              <Link href="/book-tour">Book Cultural Tour</Link>
+            </Button>
           </div>
 
           {/* Mobile menu button */}
@@ -78,16 +78,21 @@ export function Navigation() {
                   className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
                     pathname === link.href ? "text-primary bg-primary/10" : "text-card-foreground hover:text-primary"
                   }`}
-                  onClick={() => setIsMenuOpen(false)}
                 >
-                  {link.label}
+                  <div onClick={() => setIsMenuOpen(false)}>
+                    {link.label}
+                  </div>
                 </Link>
               ))}
-              <div className="px-3 py-2">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input type="text" placeholder="Search destinations..." className="pl-10 w-full" />
-                </div>
+              <div className="px-3 py-2 space-y-3">
+                <GlobalSearch 
+                  placeholder="Search destinations, festivals, culture..." 
+                  className="w-full" 
+                  showResults={false}
+                />
+                <Button asChild className="w-full bg-primary hover:bg-primary/90">
+                  <Link href="/book-tour">Book Cultural Tour</Link>
+                </Button>
               </div>
             </div>
           </div>
