@@ -1,0 +1,167 @@
+/* Polygon masking styles for Jharkhand boundary */
+
+.jharkhand-map-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.jharkhand-boundary-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.jharkhand-boundary-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* Enhanced boundary line styling */
+.leaflet-interactive.jharkhand-boundary {
+  filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.3));
+  animation: boundaryPulse 3s ease-in-out infinite;
+}
+
+@keyframes boundaryPulse {
+  0%, 100% {
+    opacity: 0.8;
+    filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.3));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 4px 8px rgba(37, 99, 235, 0.5));
+  }
+}
+
+/* Custom popup styling for boundary */
+.leaflet-popup-content .jharkhand-boundary-popup {
+  text-align: center;
+  padding: 8px;
+}
+
+.leaflet-popup-content .jharkhand-boundary-popup h3 {
+  margin: 0 0 8px 0;
+  color: #2563eb;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Poppins', 'Roboto', system-ui, sans-serif;
+}
+
+.leaflet-popup-content .jharkhand-boundary-popup p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 12px;
+  font-family: 'Poppins', 'Roboto', system-ui, sans-serif;
+}
+
+.leaflet-popup-content .jharkhand-boundary-popup .highlight-box {
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: #dbeafe;
+  border-radius: 4px;
+  border: 1px solid #93c5fd;
+}
+
+/* Dim areas outside boundary */
+.outside-jharkhand-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  pointer-events: none;
+  z-index: 500;
+}
+
+/* Custom marker styles for boundary awareness */
+.leaflet-marker-icon.within-boundary {
+  filter: brightness(1.1) saturate(1.1);
+}
+
+.leaflet-marker-icon.outside-boundary {
+  filter: grayscale(0.5) opacity(0.7);
+}
+
+/* Animated border effect */
+.jharkhand-boundary-highlight {
+  position: relative;
+}
+
+.jharkhand-boundary-highlight::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #2563eb, #3b82f6, #1d4ed8, #2563eb);
+  border-radius: inherit;
+  z-index: -1;
+  animation: boundaryGlow 2s linear infinite;
+}
+
+@keyframes boundaryGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Focus indicator for Jharkhand region */
+.jharkhand-focus-indicator {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  font-family: 'Poppins', 'Roboto', system-ui, sans-serif;
+  z-index: 1000;
+}
+
+.jharkhand-focus-indicator .status-dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.2); }
+}
+
+.jharkhand-focus-indicator .main-text {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 12px;
+  display: block;
+}
+
+.jharkhand-focus-indicator .sub-text {
+  color: #6b7280;
+  font-size: 10px;
+  margin-top: 2px;
+  display: block;
+}

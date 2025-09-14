@@ -3,12 +3,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { NavigationIcon, Camera, Search, X, MapPin } from "lucide-react";
+import { NavigationIcon, Camera, Search, X, MapPin, Eye } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import "leaflet/dist/leaflet.css";
 import "../styles/map-search.css";
-// Removed panoramic view modal
+import "../styles/polygon-mask.css";
+import { StreetViewModal } from "./street-view-modal";
+import * as turf from '@turf/turf';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
 interface TouristSpot {
   id: string;
@@ -45,6 +48,10 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
   const [satelliteTileLayer, setSatelliteTileLayer] = useState<any>(null);
   const [osmTileLayer, setOsmTileLayer] = useState<any>(null);
   const [currentSearchResult, setCurrentSearchResult] = useState<any>(null);
+  const [showStreetView, setShowStreetView] = useState(false);
+  const [selectedStreetViewSpot, setSelectedStreetViewSpot] = useState<TouristSpot | null>(null);
+  const [jharkhandBoundary, setJharkhandBoundary] = useState<any>(null);
+  const [GeoJSON, setGeoJSON] = useState<any>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -81,9 +88,21 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
         setTileLayer(() => reactLeaflet.TileLayer);
         setMarker(() => reactLeaflet.Marker);
         setPopup(() => reactLeaflet.Popup);
+        setGeoJSON(() => reactLeaflet.GeoJSON);
         setCustomIcon(icon);
         setSearchIcon(searchResultIcon);
-        setMapLoaded(true);
+        
+        // Load Jharkhand boundary data
+        fetch('/data/jharkhand-boundary.json')
+          .then(response => response.json())
+          .then(data => {
+            setJharkhandBoundary(data);
+            setMapLoaded(true);
+          })
+          .catch(error => {
+            console.error('Error loading Jharkhand boundary:', error);
+            setMapLoaded(true); // Still load map even if boundary fails
+          });
       }
     };
 
@@ -209,7 +228,25 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
     return names[category] || names.default;
   }, []);
 
-  // Enhanced search functionality with POI support
+  // Helper function to check if coordinates are within Jharkhand polygon boundary
+  const isWithinJharkhandBounds = useCallback((lat: number, lng: number) => {
+    if (!jharkhandBoundary || !jharkhandBoundary.features || !jharkhandBoundary.features[0]) {
+      // Fallback to rectangular bounds if GeoJSON not loaded
+      return lat >= 21.972 && lat <= 25.25 && lng >= 83.333 && lng <= 88.12;
+    }
+    
+    try {
+      const point = turf.point([lng, lat]);
+      const polygon = jharkhandBoundary.features[0];
+      return booleanPointInPolygon(point, polygon);
+    } catch (error) {
+      console.error('Error checking point in polygon:', error);
+      // Fallback to rectangular bounds on error
+      return lat >= 21.972 && lat <= 25.25 && lng >= 83.333 && lng <= 88.12;
+    }
+  }, [jharkhandBoundary]);
+
+  // Enhanced search functionality with POI support and bounds filtering
   const searchLocation = useCallback(async (query: string) => {
     if (!query.trim() || typeof window === 'undefined') {
       setSearchResults([]);
@@ -219,29 +256,32 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
 
     setIsSearching(true);
     try {
-      // Enhanced search with POI categories
+      // Enhanced search with POI categories and Jharkhand bounds
+      // Using viewbox to restrict search results to Jharkhand state bounds
+      const jharkhandViewbox = 'viewbox=83.333,25.25,88.12,21.972&bounded=1';
+      
       const searches = [
-        // Primary search with Jharkhand bias
+        // Primary search with Jharkhand bias and bounds
         {
           query: `${query}, Jharkhand, India`,
-          params: 'format=json&limit=8&countrycodes=in&addressdetails=1&extratags=1'
+          params: `format=json&limit=8&countrycodes=in&addressdetails=1&extratags=1&${jharkhandViewbox}`
         },
-        // POI-specific searches
+        // POI-specific searches within Jharkhand bounds
         {
           query: `${query} hotel, Jharkhand`,
-          params: 'format=json&limit=3&countrycodes=in&addressdetails=1&extratags=1'
+          params: `format=json&limit=3&countrycodes=in&addressdetails=1&extratags=1&${jharkhandViewbox}`
         },
         {
           query: `${query} restaurant, Jharkhand`,
-          params: 'format=json&limit=3&countrycodes=in&addressdetails=1&extratags=1'
+          params: `format=json&limit=3&countrycodes=in&addressdetails=1&extratags=1&${jharkhandViewbox}`
         },
         {
           query: `${query} mall shopping, Jharkhand`,
-          params: 'format=json&limit=3&countrycodes=in&addressdetails=1&extratags=1'
+          params: `format=json&limit=3&countrycodes=in&addressdetails=1&extratags=1&${jharkhandViewbox}`
         },
         {
           query: `${query} park garden, Jharkhand`,
-          params: 'format=json&limit=3&countrycodes=in&addressdetails=1&extratags=1'
+          params: `format=json&limit=3&countrycodes=in&addressdetails=1&extratags=1&${jharkhandViewbox}`
         }
       ];
 
@@ -273,8 +313,13 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
         });
       });
 
-      // Sort results by relevance and category
+      // Filter and sort results by relevance and category
       const sortedResults = allResults
+        .filter((result) => {
+          const lat = parseFloat(result.lat);
+          const lng = parseFloat(result.lon);
+          return isWithinJharkhandBounds(lat, lng);
+        })
         .sort((a, b) => {
           // Prioritize exact name matches
           const aExact = a.display_name.toLowerCase().includes(query.toLowerCase());
@@ -303,19 +348,25 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
           }
         );
         const fallbackData = await fallbackResponse.json();
-        const enhancedFallback = fallbackData.map((result: any) => ({
-          ...result,
-          category: getCategoryFromResult(result),
-          icon: getIconForCategory(getCategoryFromResult(result)),
-          formattedAddress: formatAddress(result.address)
-        }));
+        const enhancedFallback = fallbackData
+          .map((result: any) => ({
+            ...result,
+            category: getCategoryFromResult(result),
+            icon: getIconForCategory(getCategoryFromResult(result)),
+            formattedAddress: formatAddress(result.address)
+          }))
+          .filter((result: any) => {
+            const lat = parseFloat(result.lat);
+            const lng = parseFloat(result.lon);
+            return isWithinJharkhandBounds(lat, lng);
+          });
         
         setSearchResults(enhancedFallback);
         setShowResults(enhancedFallback.length > 0);
         
         if (enhancedFallback.length === 0 && typeof window !== 'undefined') {
-          // Show a more helpful error message
-          alert(`No results found for "${query}". Try searching for:\n• Cities: Ranchi, Dhanbad\n• Hotels: Hotel names\n• Restaurants: Restaurant names\n• Parks: Park or garden names\n• Malls: Shopping center names`);
+          // Show a more helpful error message for Jharkhand-specific searches
+          alert(`No results found for "${query}" within Jharkhand state. Try searching for:\n• Cities: Ranchi, Dhanbad, Jamshedpur, Bokaro\n• Districts: Hazaribagh, Giridih, Deoghar\n• Attractions: Betla National Park, Hundru Falls\n• Hotels or restaurants in Jharkhand cities\n\nAll searches are limited to Jharkhand state boundaries.`);
         }
       }
     } catch (error) {
@@ -367,17 +418,28 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
     });
   }, [mapInstance, isSatelliteView, satelliteTileLayer, osmTileLayer]);
 
-  // Ensure global toggle function is always available
+  // Handle street view opening
+  const openStreetView = useCallback((spotId: string) => {
+    const spot = touristSpots.find(s => s.id === spotId);
+    if (spot) {
+      setSelectedStreetViewSpot(spot);
+      setShowStreetView(true);
+    }
+  }, [touristSpots]);
+
+  // Ensure global functions are always available
   useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).toggleMapSatellite = toggleSatelliteView;
+      (window as any).openStreetView = openStreetView;
       return () => {
         if (typeof window !== 'undefined') {
           delete (window as any).toggleMapSatellite;
+          delete (window as any).openStreetView;
         }
       };
     }
-  }, [toggleSatelliteView]);
+  }, [toggleSatelliteView, openStreetView]);
 
   // Get Google Maps URL for directions
   const getGoogleMapsUrl = (lat: number, lng: number) => {
@@ -472,6 +534,14 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
 
     const lat = parseFloat(result.lat);
     const lng = parseFloat(result.lon);
+    
+    // Double-check that the result is within Jharkhand bounds
+    if (!isWithinJharkhandBounds(lat, lng)) {
+      if (typeof window !== 'undefined') {
+        alert('This location is outside Jharkhand. Please search for locations within Jharkhand state.');
+      }
+      return;
+    }
     
     // Store current search result for popup actions
     setCurrentSearchResult(result);
@@ -580,7 +650,7 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
     }
   }, [searchMarker, mapInstance]);
 
-  if (!mapLoaded || !MapContainer || !TileLayer || !Marker || !Popup) {
+  if (!mapLoaded || !MapContainer || !TileLayer || !Marker || !Popup || !GeoJSON) {
     return (
       <Card className="border-border bg-card">
         <CardContent className="p-0">
@@ -597,7 +667,7 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
 
   return (
     <Card className="border-border bg-card">
-      <CardContent className="p-0 relative">
+      <CardContent className="p-0 relative jharkhand-map-container">
         {/* Clean Floating Search Bar */}
         <div className="absolute top-6 right-6 z-[1000] w-80 max-w-[calc(100vw-3rem)]">
           {/* Main Search Container */}
@@ -613,7 +683,7 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Search destinations…"
+                  placeholder="Search places in Jharkhand…"
                   value={searchQuery}
                   onChange={handleSearchInput}
                   disabled={isSearching}
@@ -730,23 +800,132 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
               <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Search className="w-5 h-5 text-gray-400" />
               </div>
-              <p className="text-sm font-medium text-gray-800 mb-1" style={{ fontFamily: 'Poppins, Roboto, system-ui, sans-serif' }}>No results found</p>
-              <p className="text-xs text-gray-500" style={{ fontFamily: 'Poppins, Roboto, system-ui, sans-serif' }}>Try searching for a different location</p>
+              <p className="text-sm font-medium text-gray-800 mb-1" style={{ fontFamily: 'Poppins, Roboto, system-ui, sans-serif' }}>No results found in Jharkhand</p>
+              <p className="text-xs text-gray-500" style={{ fontFamily: 'Poppins, Roboto, system-ui, sans-serif' }}>Try searching for cities, attractions, or places within Jharkhand state</p>
             </div>
           )}
         </div>
 
+        {/* Jharkhand Focus Indicator Badge */}
+        <div className="jharkhand-focus-indicator">
+          <div className="flex items-center gap-2">
+            <div className="status-dot"></div>
+            <span className="main-text">
+              📍 Jharkhand State
+            </span>
+          </div>
+          <div className="sub-text">
+            {jharkhandBoundary ? 'Jharkhand-focused map' : 'Loading map...'}
+          </div>
+        </div>
+
         <MapContainer
-          center={[23.6102, 85.2799]} // Jharkhand center
-          zoom={7}
+          center={[23.35, 85.33]} // Accurate Jharkhand center (Ranchi coordinates)
+          zoom={9}
+          minZoom={8}
+          maxZoom={16}
           style={{ height: "600px", width: "100%" }}
           ref={setMapInstance}
+          whenCreated={(mapInstance) => {
+            // Set initial view based on Jharkhand boundary if available
+            if (jharkhandBoundary && jharkhandBoundary.features && jharkhandBoundary.features[0]) {
+              try {
+                const bbox = turf.bbox(jharkhandBoundary.features[0]);
+                const bounds = [
+                  [bbox[1], bbox[0]], // Southwest [lat, lng]
+                  [bbox[3], bbox[2]]  // Northeast [lat, lng]
+                ];
+                mapInstance.fitBounds(bounds, {
+                  padding: [30, 30],
+                  maxZoom: 11
+                });
+              } catch (error) {
+                console.error('Error fitting to polygon bounds:', error);
+                // Accurate Jharkhand bounds fallback
+                const bounds = [
+                  [21.95, 83.32], // Southwest - more accurate
+                  [25.35, 87.9]   // Northeast - more accurate
+                ];
+                mapInstance.fitBounds(bounds, {
+                  padding: [30, 30],
+                  maxZoom: 11
+                });
+              }
+            } else {
+              // Accurate Jharkhand bounds fallback
+              const bounds = [
+                [21.95, 83.32], // Southwest - more accurate
+                [25.35, 87.9]   // Northeast - more accurate
+              ];
+              mapInstance.fitBounds(bounds, {
+                padding: [30, 30],
+                maxZoom: 11
+              });
+            }
+            
+            // Add event handlers to enforce polygon bounds
+            mapInstance.on('moveend', () => {
+              if (!jharkhandBoundary || !jharkhandBoundary.features || !jharkhandBoundary.features[0]) {
+                return; // Skip if boundary not loaded
+              }
+              
+              try {
+                const center = mapInstance.getCenter();
+                const centerPoint = turf.point([center.lng, center.lat]);
+                const polygon = jharkhandBoundary.features[0];
+                
+                // Check if center is outside Jharkhand polygon
+                if (!booleanPointInPolygon(centerPoint, polygon)) {
+                  // Find the centroid of Jharkhand polygon to navigate back
+                  const polygonCentroid = turf.centroid(polygon);
+                  const [lng, lat] = polygonCentroid.geometry.coordinates;
+                  
+                  // Gently guide back to Jharkhand center
+                  mapInstance.setView([lat, lng], Math.max(mapInstance.getZoom(), 8), {
+                    animate: true,
+                    duration: 1
+                  });
+                }
+              } catch (error) {
+                console.error('Error in moveend handler:', error);
+              }
+            });
+            
+            setMapInstance(mapInstance);
+          }}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution="&copy; OpenStreetMap contributors"
+            attribution="&copy; OpenStreetMap contributors | Jharkhand Tourism"
           />
-          {touristSpots.map((spot) => {
+          
+          {/* Jharkhand Boundary GeoJSON Layer */}
+          {jharkhandBoundary && GeoJSON && (
+            <GeoJSON
+              data={jharkhandBoundary}
+              style={{
+                color: 'transparent',
+                weight: 0,
+                opacity: 0,
+                fillColor: 'transparent',
+                fillOpacity: 0,
+                stroke: false
+              }}
+              onEachFeature={(feature, layer) => {
+                // Hidden boundary for point-in-polygon checking only
+                // No popup or interaction
+              }}
+            />
+          )}
+          {touristSpots
+            .filter((spot) => {
+              const inBounds = isWithinJharkhandBounds(spot.lat, spot.lng);
+              if (!inBounds && typeof window !== 'undefined') {
+                console.warn(`Tourist spot "${spot.name}" is outside Jharkhand bounds: [${spot.lat}, ${spot.lng}]`);
+              }
+              return inBounds;
+            })
+            .map((spot) => {
             const directionsUrl = getGoogleMapsUrl(spot.lat, spot.lng);
             const satelliteUrl = getGoogleMapsSatelliteUrl(spot.lat, spot.lng);
             
@@ -803,6 +982,30 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
                                 transition: 'all 0.2s', boxShadow: '0 2px 4px rgba(16, 185, 129, 0.3)'}}>
                         📷 Satellite View
                       </a>
+                      <button 
+                        onClick={() => {
+                          setSelectedStreetViewSpot(spot);
+                          setShowStreetView(true);
+                        }}
+                        style={{
+                          display: 'inline-flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center', 
+                          gap: '8px',
+                          background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)', 
+                          color: 'white', 
+                          padding: '8px 12px',
+                          border: 'none', 
+                          borderRadius: '8px', 
+                          fontSize: '12px', 
+                          fontWeight: '500', 
+                          cursor: 'pointer',
+                          transition: 'all 0.2s', 
+                          boxShadow: '0 2px 4px rgba(139, 92, 246, 0.3)'
+                        }}
+                      >
+                        🌐 360° View
+                      </button>
                     </div>
                     
                     {/* Footer Info */}
@@ -818,6 +1021,22 @@ export function InteractiveMap({ touristSpots, onLocationSelect }: InteractiveMa
           })}
         </MapContainer>
       </CardContent>
+      
+      {/* 360° Street View Modal */}
+      {selectedStreetViewSpot && (
+        <StreetViewModal
+          isOpen={showStreetView}
+          onClose={() => {
+            setShowStreetView(false);
+            setSelectedStreetViewSpot(null);
+          }}
+          title={selectedStreetViewSpot.name}
+          description={selectedStreetViewSpot.description}
+          location={`${selectedStreetViewSpot.type} • Jharkhand, India`}
+          lat={selectedStreetViewSpot.lat}
+          lng={selectedStreetViewSpot.lng}
+        />
+      )}
     </Card>
   );
 }

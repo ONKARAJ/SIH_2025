@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Street View Test</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+        iframe { width: 100%; height: 500px; border: 1px solid #ccc; border-radius: 8px; }
+        .test-section { margin-bottom: 30px; }
+        h2 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Street View API Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Dassam Falls (Original Location)</h2>
+        <iframe src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&location=23.63,85.46&heading=0&pitch=0&fov=100" 
+                title="Dassam Falls Street View"></iframe>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Ranchi City (More Likely to Work)</h2>
+        <iframe src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&location=23.3441,85.3096&heading=0&pitch=0&fov=100" 
+                title="Ranchi City Street View"></iframe>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Times Square NYC (Known Working Location)</h2>
+        <iframe src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&location=40.7580,-73.9855&heading=0&pitch=0&fov=100" 
+                title="Times Square Street View"></iframe>
+    </div>
+    
+    <script>
+        console.log('Street View Test Page Loaded');
+        
+        // Test if API key works by making a simple request
+        const testApiKey = () => {
+            const script = document.createElement('script');
+            script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&libraries=geometry&callback=testCallback';
+            
+            window.testCallback = () => {
+                console.log('✅ Google Maps API Key is working!');
+                console.log('✅ Maps JavaScript API is accessible');
+            };
+            
+            script.onerror = () => {
+                console.error('❌ Failed to load Google Maps API - check API key');
+            };
+            
+            document.head.appendChild(script);
+        };
+        
+        // Test the API key after page loads
+        setTimeout(testApiKey, 1000);
+    </script>
+</body>
+</html>

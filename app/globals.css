@@ -200,6 +200,106 @@ html {
   }
 }
 
+/* Header enhancements */
+.header-logo-glow {
+  box-shadow: 0 0 20px rgba(var(--primary), 0.3);
+}
+
+.header-nav-item {
+  position: relative;
+}
+
+.header-nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)));
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.header-nav-item:hover::after {
+  width: 100%;
+}
+
+/* Mobile menu animation */
+.mobile-menu-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.mobile-menu-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Panoramic Viewer Enhancements */
+.pnlm-container {
+  font-family: system-ui, -apple-system, sans-serif !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pnlm-ui {
+  z-index: 100;
+}
+
+.pnlm-controls {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.pnlm-zoom-controls {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.pnlm-compass {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.pnlm-hotspot {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.pnlm-hotspot:hover {
+  transform: scale(1.2);
+}
+
+.pnlm-panorama-info {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  padding: 12px;
+  margin: 8px;
+}
+
+.pnlm-load-button {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pnlm-load-button:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
 /* Pulse animation */
 @keyframes pulse-glow {
   0%, 100% {

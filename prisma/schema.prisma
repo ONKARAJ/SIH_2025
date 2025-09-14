@@ -12,12 +12,15 @@ model User {
   email     String   @unique
   name      String
   phone     String?
+  password  String?
+  isVerified Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
   hotelBookings  HotelBooking[]
   flightBookings FlightBooking[]
   hotelReviews   HotelReview[]
+  sessions       UserSession[]
   
   @@map("users")
 }
@@ -62,8 +65,9 @@ model Room {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
-  hotel    Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-  bookings HotelBooking[]
+  hotel        Hotel              @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  bookings     HotelBooking[]
+  availability RoomAvailability[]
   
   @@map("rooms")
 }
@@ -166,4 +170,68 @@ model Admin {
   updatedAt DateTime @updatedAt
   
   @@map("admins")
+}
+
+model Payment {
+  id              String   @id @default(uuid())
+  bookingId       String
+  bookingType     String   // 'hotel' or 'flight'
+  amount          Float
+  currency        String   @default("INR")
+  paymentGateway  String   // 'razorpay' or 'stripe'
+  paymentId       String?  // Gateway payment ID
+  orderId         String?  // Gateway order ID
+  status          String   @default("pending") // pending, completed, failed, refunded
+  paymentMethod   String?  // card, netbanking, upi, wallet
+  transactionId   String?  @unique
+  failureReason   String?
+  refundAmount    Float?   @default(0)
+  refundStatus    String?  // pending, processed, failed
+  metadata        String?  @default("{}")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("payments")
+}
+
+model RoomAvailability {
+  id        String   @id @default(uuid())
+  roomId    String
+  date      DateTime
+  available Int      @default(1)
+  price     Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  
+  @@unique([roomId, date])
+  @@map("room_availability")
+}
+
+model UserSession {
+  id        String   @id @default(uuid())
+  userId    String
+  sessionToken String @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_sessions")
+}
+
+model BookingCancellation {
+  id              String   @id @default(uuid())
+  bookingId       String
+  bookingType     String   // 'hotel' or 'flight'
+  reason          String
+  cancellationFee Float    @default(0)
+  refundAmount    Float
+  status          String   @default("pending") // pending, processed, rejected
+  processedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("booking_cancellations")
 }

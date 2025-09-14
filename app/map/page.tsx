@@ -6,14 +6,29 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapWrapper } from "@/components/map-wrapper";
 
-import { MapPin, NavigationIcon, Camera } from "lucide-react";
+import { MapPin, NavigationIcon, Camera, Eye } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import { StreetViewModal } from "@/components/street-view-modal";
 
 export default function MapPage() {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [showStreetView, setShowStreetView] = useState(false);
+  const [selectedStreetViewSpot, setSelectedStreetViewSpot] = useState<TouristSpot | null>(null);
 
-  const touristSpots = [
+  interface TouristSpot {
+    id: string;
+    name: string;
+    type: string;
+    color: string;
+    description: string;
+    bestTime: string;
+    lat: number;
+    lng: number;
+    googleMaps: string;
+  }
+
+  const touristSpots: TouristSpot[] = [
     // Waterfalls
     {
       id: "dassam-falls",
@@ -47,8 +62,8 @@ export default function MapPage() {
       description:
         "A picturesque waterfall amidst dense forests, perfect for picnics.",
       bestTime: "Jul - Feb",
-      lat: 22.8,
-      lng: 84.48,
+      lat: 22.9540,
+      lng: 86.1840,
       googleMaps: "https://maps.google.com/?q=Hirni+Falls+Jharkhand",
     },
     {
@@ -58,8 +73,8 @@ export default function MapPage() {
       color: "#3b82f6",
       description: "The highest waterfall in Jharkhand at 143 meters.",
       bestTime: "Jul - Feb",
-      lat: 23.75,
-      lng: 85.43,
+      lat: 23.4200,
+      lng: 84.1800,
       googleMaps: "https://maps.google.com/?q=Lodh+Falls+Jharkhand",
     },
     {
@@ -70,12 +85,12 @@ export default function MapPage() {
       description:
         "A hidden gem waterfall near Latehar, surrounded by serene forests.",
       bestTime: "Jul - Feb",
-      lat: 23.8,
-      lng: 84.55,
+      lat: 23.7420,
+      lng: 84.5200,
       googleMaps: "https://maps.google.com/?q=Nakti+Falls+Jharkhand",
     },
 
-    // Hill Stations
+    // Hill Stations - Using accessible roads and towns with Street View
     {
       id: "netarhat",
       name: "Netarhat Hill Station",
@@ -84,8 +99,8 @@ export default function MapPage() {
       description:
         "Known as the 'Queen of Chotanagpur', Netarhat Hill Station sits at an elevation of 1,128 meters above sea level. This picturesque hill station is famous for its breathtaking sunrise and sunset views from Magnolia Point. The region is blessed with dense forests of Sal, Pine, and other indigenous trees, making it a paradise for nature lovers and wildlife enthusiasts. The area houses the prestigious Netarhat Residential School, often called the 'Eton of the East'. Key attractions include the Netarhat Dam, Lodh Falls (accessible from here), Pine Forest areas perfect for trekking, and the famous Sunrise Point. The cool climate throughout the year makes it an ideal retreat from the plains. During winter months, the temperature can drop significantly, sometimes experiencing frost. The region has rich tribal culture with several indigenous communities living in harmony with nature. Adventure activities include trekking, camping, and wildlife spotting in the nearby forests.",
       bestTime: "Oct - May",
-      lat: 23.4,
-      lng: 84.2,
+      lat: 23.4620,
+      lng: 84.1580,
       googleMaps: "https://maps.google.com/?q=Netarhat+Jharkhand",
     },
     {
@@ -96,8 +111,8 @@ export default function MapPage() {
       description:
         "Parasnath Hill, standing majestically at 1,365 meters above sea level, is the highest peak in Jharkhand and holds immense religious significance for the Jain community. Known as 'Sammed Shikharji', this sacred mountain is believed to be the place where 20 out of 24 Jain Tirthankaras attained moksha (liberation). The hill is dotted with numerous Jain temples, each marking the spot where a Tirthankara achieved nirvana. The main temple complex houses beautiful marble structures with intricate carvings and sculptures depicting Jain mythology. Pilgrims undertake a challenging trek of about 27 kilometers, visiting all the temples on foot as per Jain tradition. The hill offers breathtaking panoramic views of the surrounding landscape, dense forests, and distant plains. The area is rich in biodiversity with rare species of flora and fauna. The trek route is well-maintained with resting spots, water facilities, and basic amenities for pilgrims. The serene atmosphere, combined with spiritual significance and natural beauty, makes it a unique destination for both religious and adventure tourism.",
       bestTime: "Oct - Mar",
-      lat: 24.2,
-      lng: 86.68,
+      lat: 23.9640,
+      lng: 86.1690,
       googleMaps: "https://maps.google.com/?q=Parasnath+Hill+Jharkhand",
     },
     {
@@ -108,12 +123,12 @@ export default function MapPage() {
       description:
         "Scenic valley with winding roads, lush greenery, and the Patratu Dam.",
       bestTime: "Oct - Apr",
-      lat: 23.82,
-      lng: 85.35,
+      lat: 23.6800,
+      lng: 85.3100,
       googleMaps: "https://maps.google.com/?q=Patratu+Valley+Jharkhand",
     },
 
-    // Wildlife Parks
+    // Wildlife Parks - Using nearby towns and access roads with Street View
     {
       id: "betla-national-park",
       name: "Betla National Park",
@@ -122,8 +137,8 @@ export default function MapPage() {
       description:
         "Betla National Park, established in 1986, spans across 979 square kilometers of pristine wilderness in the Chota Nagpur plateau. This magnificent park is part of the Palamau Tiger Reserve and serves as a crucial habitat for the endangered Royal Bengal Tiger. The park is home to over 174 species of birds, including the Indian Hornbill, Red Junglefowl, and various species of eagles and owls. Wildlife includes tigers, leopards, elephants, sloth bears, wild boars, spotted deer, sambars, and the unique four-horned antelope. The landscape varies from dense forests to grasslands, with the Betla river flowing through it. Historical significance includes ancient fort ruins of Chero kings dating back to the 16th century. The park offers jungle safaris, elephant rides, watchtowers for wildlife viewing, and nature trails. Accommodation is available in forest rest houses. The park also has the Kamaldah Lake, perfect for bird watching, especially during migratory seasons.",
       bestTime: "Nov - Apr",
-      lat: 23.62,
-      lng: 84.42,
+      lat: 23.8960,
+      lng: 84.0420,
       googleMaps: "https://maps.google.com/?q=Betla+National+Park+Jharkhand",
     },
     {
@@ -134,8 +149,8 @@ export default function MapPage() {
       description:
         "A wildlife sanctuary known for its diverse flora and fauna.",
       bestTime: "Nov - Apr",
-      lat: 23.97,
-      lng: 85.36,
+      lat: 23.9920,
+      lng: 85.3520,
       googleMaps: "https://maps.google.com/?q=Hazaribagh+National+Park",
     },
     {
@@ -145,8 +160,8 @@ export default function MapPage() {
       color: "#f59e0b",
       description: "Famous for its elephant population and diverse wildlife.",
       bestTime: "Nov - Apr",
-      lat: 22.88,
-      lng: 86.13,
+      lat: 22.8940,
+      lng: 86.2040,
       googleMaps: "https://maps.google.com/?q=Dalma+Wildlife+Sanctuary",
     },
     {
@@ -157,12 +172,12 @@ export default function MapPage() {
       description:
         "A bird sanctuary near Sahibganj, home to migratory and resident birds.",
       bestTime: "Nov - Mar",
-      lat: 24.67,
-      lng: 87.23,
+      lat: 25.2520,
+      lng: 87.6200,
       googleMaps: "https://maps.google.com/?q=Udhuwa+Lake+Jharkhand",
     },
 
-    // Temples
+    // Temples - Using main town locations with Street View access
     {
       id: "deoghar",
       name: "Deoghar Baidyanath Temple",
@@ -171,8 +186,8 @@ export default function MapPage() {
       description:
         "The sacred Baidyanath Temple in Deoghar is one of the twelve revered Jyotirlingas dedicated to Lord Shiva and holds immense religious significance for millions of devotees. Known as 'Baidyanath Dham' or 'Vaidyanath Dham', meaning 'Lord of Physicians', the temple is believed to fulfill the wishes of devotees and provide healing from ailments. The main temple complex houses the sacred Shivalinga and is surrounded by 21 other temples, creating a spiritual atmosphere. The annual Shravan month (July-August) witnesses the famous Kanwar Yatra, where millions of devotees carry holy water from the Ganges River and walk hundreds of kilometers to offer it to the Shivalinga. The temple architecture reflects ancient Indian style with intricate carvings and sculptures. According to Hindu mythology, this is where Ravana worshipped Lord Shiva to gain immortality. The temple offers facilities for pilgrims including accommodation, prasadam, and various religious ceremonies. The town of Deoghar itself has become a significant pilgrimage destination with numerous ashrams, dharamshalas, and religious institutions.",
       bestTime: "Oct - Mar",
-      lat: 24.48,
-      lng: 86.7,
+      lat: 24.4880,
+      lng: 86.7020,
       googleMaps: "https://maps.google.com/?q=Baidyanath+Temple+Deoghar",
     },
     {
@@ -183,12 +198,12 @@ export default function MapPage() {
       description:
         "A unique temple dedicated to Goddess Chhinnamasta at river confluence.",
       bestTime: "Oct - Mar",
-      lat: 23.63,
-      lng: 85.54,
+      lat: 23.6320,
+      lng: 85.7080,
       googleMaps: "https://maps.google.com/?q=Rajrappa+Temple+Jharkhand",
     },
 
-    // Cities
+    // Cities - Using main urban areas with comprehensive Street View
     {
       id: "ranchi",
       name: "Ranchi (Capital)",
@@ -209,8 +224,8 @@ export default function MapPage() {
       description:
         "Popular tourist spot with sculptures, gardens, and a lake view.",
       bestTime: "Oct - Mar",
-      lat: 23.36,
-      lng: 85.31,
+      lat: 23.3824,
+      lng: 85.3055,
       googleMaps: "https://maps.google.com/?q=Rock+Garden+Ranchi",
     },
     {
@@ -221,12 +236,12 @@ export default function MapPage() {
       description:
         "Historic site in Ranchi associated with Rabindranath Tagore, offering panoramic views.",
       bestTime: "Oct - Mar",
-      lat: 23.34,
-      lng: 85.32,
+      lat: 23.3786,
+      lng: 85.3298,
       googleMaps: "https://maps.google.com/?q=Tagore+Hill+Ranchi",
     },
 
-    // Dams
+    // Dams - Using nearby accessible towns with Street View
     {
       id: "maithon-dam",
       name: "Maithon Dam",
@@ -235,8 +250,8 @@ export default function MapPage() {
       description:
         "A huge dam on the Barakar River, offering boating and scenic views.",
       bestTime: "Oct - Mar",
-      lat: 23.78,
-      lng: 86.11,
+      lat: 23.7340,
+      lng: 86.8540,
       googleMaps: "https://maps.google.com/?q=Maithon+Dam+Jharkhand",
     },
   ];
@@ -337,6 +352,18 @@ export default function MapPage() {
                         Satellite View
                       </Button>
                     </Link>
+                    <Button 
+                      size="sm" 
+                      variant="secondary" 
+                      className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white"
+                      onClick={() => {
+                        setSelectedStreetViewSpot(selectedSpot);
+                        setShowStreetView(true);
+                      }}
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      360° View
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -357,6 +384,22 @@ export default function MapPage() {
           </div>
         </div>
       </section>
+      
+      {/* 360° Street View Modal */}
+      {selectedStreetViewSpot && (
+        <StreetViewModal
+          isOpen={showStreetView}
+          onClose={() => {
+            setShowStreetView(false);
+            setSelectedStreetViewSpot(null);
+          }}
+          title={selectedStreetViewSpot.name}
+          description={selectedStreetViewSpot.description}
+          location={`${selectedStreetViewSpot.type} • Jharkhand, India`}
+          lat={selectedStreetViewSpot.lat}
+          lng={selectedStreetViewSpot.lng}
+        />
+      )}
     </div>
   );
 }

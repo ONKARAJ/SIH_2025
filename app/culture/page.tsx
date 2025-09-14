@@ -25,7 +25,7 @@ export default function CulturePage() {
       significance:
         "Worship of nature, new beginnings, community bonding, and agricultural prosperity",
       image:
-        "https://www.shutterstock.com/image-photo/ranchi-jharkhand-08-tuesday-2019-260nw-1488666659.jpg",
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       tribes: ["Oraon", "Munda", "Ho", "Santhal"],
     },
     {
@@ -36,7 +36,7 @@ export default function CulturePage() {
       significance:
         "Gratitude for harvest, cattle worship, artistic expression, and women's creativity",
       image:
-        "https://c8.alamy.com/comp/2H76H11/jharkhand-india-19th-nov-2021-devotees-celebrate-sagun-sohrai-festival-sohrai-is-a-winter-harvest-festival-and-one-of-the-most-important-festivals-of-santhals-in-jharkhand-and-west-bengal-sagun-sohrai-festival-celebrated-in-jharkhand-this-festival-is-also-known-as-gorukhuntav-credit-image-rohit-shawpacific-press-via-zuma-press-wire-2H76H11.jpg",
+        "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       tribes: ["Santhal", "Kurukh", "Kharia", "Bhumij"],
     },
     {
@@ -47,7 +47,7 @@ export default function CulturePage() {
       significance:
         "Goddess worship, cultural preservation, community celebration, and youth participation",
       image:
-        "https://utsav.gov.in/public/uploads/event_picture_image/event_686/16607352252119234166.jpg",
+        "https://images.unsplash.com/photo-1583211957403-5ba978d5d1d7?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       tribes: ["Kurmali", "Bhumij", "Mahli", "Lohra"],
     },
     {
@@ -58,7 +58,7 @@ export default function CulturePage() {
       significance:
         "Youth blessing, marriage prayers, tree worship, and community harmony",
       image:
-        "https://i.pinimg.com/474x/c0/02/1a/c0021a82c3e2c0df495f0749ac2ad637.jpg",
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       tribes: ["Oraon", "Munda", "Kharia", "Ho"],
     },
     {
@@ -69,7 +69,7 @@ export default function CulturePage() {
       significance:
         "Tree worship, agricultural prosperity, and community bonding",
       image:
-        "https://media.istockphoto.com/id/1421106559/photo/karam-festival.jpg?s=170667a&w=0&k=20&c=3W7NtUqI08XqYO_vT5WNjCKdmug0Gaxs_nAIcX8wug8=",
+        "https://images.unsplash.com/photo-1589307876431-d7e7b5fa5c5d?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       tribes: ["Santhal", "Oraon", "Munda"],
     },
     {
@@ -80,83 +80,44 @@ export default function CulturePage() {
       significance:
         "Traditional hunting culture, community cooperation, and ancestral practices",
       image:
-        "https://i0.wp.com/feminisminindia.com/wp-content/uploads/2021/03/jani-shikar-fii-logo.png?fit=1920%2C1080&ssl=1",
+        "https://images.unsplash.com/photo-1593085512500-5d55148d6f0d?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       tribes: ["Ho", "Munda", "Santhal"],
     },
   ];
 
   const cultureImages = [
     {
-      src: "https://craffi.com/Admin/Images/4.jpg",
+      src: "https://images.unsplash.com/photo-1541411569141-80c38c2c739e?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       title: "Traditional Handicrafts",
       description:
         "Exquisite bamboo work, pottery, and textile art by skilled tribal artisans showcasing centuries-old techniques",
     },
     {
-      src: "https://e1.pxfuel.com/desktop-wallpaper/755/719/desktop-wallpaper-classical-dance-folk-dance.jpg",
+      src: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       title: "Folk Dances",
       description:
         "Vibrant traditional dances with colorful costumes and rhythmic drums celebrating life and nature",
     },
     {
-      src: "https://media.istockphoto.com/id/603254564/photo/peruvian-amazonas-indian-settlement.jpg?s=612x612&w=0&k=20&c=uU9DCulPTAiY7K2ohCJRBjmTFybatMk5Uf0JYlfJ20w=",
+      src: "https://images.unsplash.com/photo-1588756604327-4ad87b9c7dad?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       title: "Tribal Villages",
       description:
         "Authentic tribal settlements showcasing traditional architecture and sustainable lifestyle practices",
     },
     {
-      src: "https://wallpapers.com/images/hd/kerala-mural-folk-art-painting-5ljcjsns89c7n8ty.jpg",
+      src: "https://images.unsplash.com/photo-1578575436955-ef29da568437?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       title: "Wall Art Traditions",
       description:
         "Beautiful Sohrai and Kohvar wall paintings depicting nature, mythology, and tribal beliefs",
     },
     {
-      src: "https://t4.ftcdn.net/jpg/01/44/58/79/360_F_144587983_iHahcO3Uc3McGBIslR3pjs5Z8wtQg1BF.jpg",
+      src: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       title: "Traditional Music",
       description:
         "Ancient musical instruments and folk songs passed down through generations",
     },
     {
-      src: "https://c9admin.cottage9.com/uploads/2432/Metal-Art-In-Medieval-India-q4bcvw21hkf44qj9807ewk374wdags9jmj2zrsv2tk.jpg",
-      title: "Metal Crafts",
-      description:
-        "Intricate metalwork including jewelry, tools, and decorative items by tribal smiths",
-    },
-  ];
-
-  const cultureImagess = [
-    {
-      src: "https://craffi.com/Admin/Images/4.jpg",
-      title: "Traditional Handicrafts",
-      description:
-        "Exquisite bamboo work, pottery, and textile art by skilled tribal artisans showcasing centuries-old techniques",
-    },
-    {
-      src: "https://e1.pxfuel.com/desktop-wallpaper/755/719/desktop-wallpaper-classical-dance-folk-dance.jpg",
-      title: "Folk Dances",
-      description:
-        "Vibrant traditional dances with colorful costumes and rhythmic drums celebrating life and nature",
-    },
-    {
-      src: "https://media.istockphoto.com/id/603254564/photo/peruvian-amazonas-indian-settlement.jpg?s=612x612&w=0&k=20&c=uU9DCulPTAiY7K2ohCJRBjmTFybatMk5Uf0JYlfJ20w=",
-      title: "Tribal Villages",
-      description:
-        "Authentic tribal settlements showcasing traditional architecture and sustainable lifestyle practices",
-    },
-    {
-      src: "https://wallpapers.com/images/hd/kerala-mural-folk-art-painting-5ljcjsns89c7n8ty.jpg",
-      title: "Wall Art Traditions",
-      description:
-        "Beautiful Sohrai and Kohvar wall paintings depicting nature, mythology, and tribal beliefs",
-    },
-    {
-      src: "https://t4.ftcdn.net/jpg/01/44/58/79/360_F_144587983_iHahcO3Uc3McGBIslR3pjs5Z8wtQg1BF.jpg",
-      title: "Traditional Music",
-      description:
-        "Ancient musical instruments and folk songs passed down through generations",
-    },
-    {
-      src: "https://c9admin.cottage9.com/uploads/2432/Metal-Art-In-Medieval-India-q4bcvw21hkf44qj9807ewk374wdags9jmj2zrsv2tk.jpg",
+      src: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
       title: "Metal Crafts",
       description:
         "Intricate metalwork including jewelry, tools, and decorative items by tribal smiths",

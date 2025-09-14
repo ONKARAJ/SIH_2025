@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Street View Coverage Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-item { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        iframe { width: 100%; height: 300px; border: none; border-radius: 4px; }
+        .location-info { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Jharkhand Tourist Spots - Street View Coverage Test</h1>
+    
+    <!-- Test coordinates for key locations -->
+    
+    <div class="test-item">
+        <h3>🌊 Dassam Falls</h3>
+        <div class="location-info">Coordinates: 23.3520, 85.3240</div>
+        <iframe src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&location=23.3520,85.3240&heading=0&pitch=0&fov=90"></iframe>
+    </div>
+
+    <div class="test-item">
+        <h3>🌊 Jonha Falls</h3>
+        <div class="location-info">Coordinates: 23.3120, 85.2980</div>
+        <iframe src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&location=23.3120,85.2980&heading=0&pitch=0&fov=90"></iframe>
+    </div>
+
+    <div class="test-item">
+        <h3>⛰️ Netarhat Hill Station</h3>
+        <div class="location-info">Coordinates: 23.4620, 84.1580</div>
+        <iframe src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&location=23.4620,84.1580&heading=0&pitch=0&fov=90"></iframe>
+    </div>
+
+    <div class="test-item">
+        <h3>🕉️ Deoghar Baidyanath Temple</h3>
+        <div class="location-info">Coordinates: 24.4880, 86.7020</div>
+        <iframe src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&location=24.4880,86.7020&heading=0&pitch=0&fov=90"></iframe>
+    </div>
+
+    <div class="test-item">
+        <h3>🏙️ Ranchi (Capital)</h3>
+        <div class="location-info">Coordinates: 23.3445, 85.3096</div>
+        <iframe src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&location=23.3445,85.3096&heading=0&pitch=0&fov=90"></iframe>
+    </div>
+
+    <div class="test-item">
+        <h3>🦌 Betla National Park</h3>
+        <div class="location-info">Coordinates: 23.8960, 84.0420</div>
+        <iframe src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&location=23.8960,84.0420&heading=0&pitch=0&fov=90"></iframe>
+    </div>
+    
+    <div style="margin-top: 40px; padding: 20px; background: #e8f4f8; border-radius: 8px;">
+        <h3>📋 Test Results</h3>
+        <p><strong>How to verify:</strong></p>
+        <ul>
+            <li>✅ <strong>Working Street View:</strong> Shows actual 360° street imagery</li>
+            <li>⚠️ <strong>No Street View:</strong> Shows "Street View not available" message</li>
+            <li>🗺️ <strong>Map View:</strong> Shows satellite/map view instead</li>
+        </ul>
+        <p>If any location shows "Street View not available", we may need to adjust coordinates to nearby accessible roads or towns.</p>
+    </div>
+</body>
+</html>

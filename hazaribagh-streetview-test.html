@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hazaribagh National Park Street View Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5;
+        }
+        .test-container { 
+            background: white; 
+            border-radius: 10px; 
+            padding: 20px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        iframe { 
+            width: 100%; 
+            height: 500px; 
+            border: none; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .info-card { 
+            background: #e3f2fd; 
+            padding: 15px; 
+            margin: 15px 0; 
+            border-radius: 8px; 
+            border-left: 4px solid #2196f3;
+        }
+        .coordinates {
+            font-family: monospace;
+            font-size: 18px;
+            color: #1565c0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🦌 Hazaribagh National Park - Street View Test</h1>
+        
+        <div class="info-card">
+            <h3>📍 Location Details</h3>
+            <p><strong>Park:</strong> Hazaribagh National Park</p>
+            <p><strong>Location:</strong> Main Entrance Area</p>
+            <p><strong>Coordinates:</strong> <span class="coordinates">23.9759, 85.3686</span></p>
+            <p><strong>State:</strong> Jharkhand, India</p>
+        </div>
+
+        <h3>🌍 Google Street View Test</h3>
+        <iframe 
+            src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&location=23.9759,85.3686&heading=0&pitch=0&fov=100"
+            allowfullscreen>
+        </iframe>
+
+        <div class="info-card">
+            <h3>🧪 Test Results</h3>
+            <p><strong>✅ Expected:</strong> Street View of roads near Hazaribagh National Park entrance</p>
+            <p><strong>⚠️ Fallback:</strong> If Street View unavailable, should show satellite/map view</p>
+            <p><strong>📝 Note:</strong> This tests the exact coordinates you provided for the main entrance area</p>
+        </div>
+
+        <h3>🗺️ Alternative Map View Test</h3>
+        <iframe 
+            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&q=23.9759,85.3686&zoom=16"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <div style="margin-top: 30px; text-align: center; color: #666;">
+        <p>🔗 Open in browser to test Street View functionality</p>
+        <p>📱 This will be the same view users see in the 360° modal</p>
+    </div>
+</body>
+</html>

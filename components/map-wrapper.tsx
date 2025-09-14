@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { InteractiveMap } from "./interactive-map";
+import { GoogleMap } from "./google-map";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface TouristSpot {
@@ -44,7 +44,7 @@ export function MapWrapper({ touristSpots, onLocationSelect }: MapWrapperProps) 
   }
 
   return (
-    <InteractiveMap 
+    <GoogleMap 
       touristSpots={touristSpots} 
       onLocationSelect={onLocationSelect}
     />
