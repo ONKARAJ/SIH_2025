@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
 import { v4 as uuidv4 } from 'uuid'
+
+// Lazy load db to avoid issues during build time
+let db: any = null
+
+async function getDb() {
+  if (!db) {
+    try {
+      const dbModule = await import('@/lib/db')
+      db = dbModule.db
+    } catch (error) {
+      console.error('Failed to initialize database:', error)
+      throw new Error('Database initialization failed')
+    }
+  }
+  return db
+}
 
 function generateBookingRef(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
@@ -13,6 +28,7 @@ function generateBookingRef(): string {
 
 export async function GET(request: NextRequest) {
   try {
+    const database = await getDb()
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
     const status = searchParams.get('status')
@@ -27,7 +43,7 @@ export async function GET(request: NextRequest) {
       whereClause.status = status
     }
 
-    const bookings = await db.flightBooking.findMany({
+    const bookings = await database.flightBooking.findMany({
       where: whereClause,
       include: {
         flight: {
@@ -69,6 +85,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const database = await getDb()
     const body = await request.json()
     const {
       userId,
@@ -101,7 +118,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const flight = await db.flight.findUnique({
+    const flight = await database.flight.findUnique({
       where: { id: flightId }
     })
 
@@ -122,7 +139,7 @@ export async function POST(request: NextRequest) {
     const totalAmount = flight.price * passengers.length
     const bookingRef = generateBookingRef()
 
-    const booking = await db.flightBooking.create({
+    const booking = await database.flightBooking.create({
       data: {
         userId,
         flightId,
@@ -147,7 +164,7 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    await db.flight.update({
+    await database.flight.update({
       where: { id: flightId },
       data: {
         availableSeats: flight.availableSeats - passengers.length

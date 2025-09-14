@@ -4,6 +4,18 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-export const db = globalForPrisma.prisma ?? new PrismaClient()
+// Create Prisma client with deployment-friendly configuration
+export const db = globalForPrisma.prisma ?? new PrismaClient({
+  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  errorFormat: 'minimal',
+})
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
+// Handle database connection gracefully during build
+if (process.env.NODE_ENV === 'development') {
+  globalForPrisma.prisma = db
+}
+
+// Graceful shutdown
+process.on('beforeExit', async () => {
+  await db.$disconnect()
+})

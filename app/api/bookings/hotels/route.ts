@@ -1,9 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
 import { v4 as uuidv4 } from 'uuid'
+
+// Lazy load db to avoid issues during build time
+let db: any = null
+
+async function getDb() {
+  if (!db) {
+    try {
+      const dbModule = await import('@/lib/db')
+      db = dbModule.db
+    } catch (error) {
+      console.error('Failed to initialize database:', error)
+      throw new Error('Database initialization failed')
+    }
+  }
+  return db
+}
 
 export async function GET(request: NextRequest) {
   try {
+    const database = await getDb()
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
     const status = searchParams.get('status')
@@ -18,7 +34,7 @@ export async function GET(request: NextRequest) {
       whereClause.status = status
     }
 
-    const bookings = await db.hotelBooking.findMany({
+    const bookings = await database.hotelBooking.findMany({
       where: whereClause,
       include: {
         hotel: {
@@ -64,6 +80,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const database = await getDb()
     const body = await request.json()
     const {
       userId,
@@ -85,7 +102,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    const room = await db.room.findUnique({
+    const room = await database.room.findUnique({
       where: { id: roomId },
       include: { hotel: true }
     })
@@ -108,7 +125,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    const conflictingBookings = await db.hotelBooking.findMany({
+    const conflictingBookings = await database.hotelBooking.findMany({
       where: {
         roomId,
         status: { in: ['confirmed', 'pending'] },
@@ -144,7 +161,7 @@ export async function POST(request: NextRequest) {
 
     const totalAmount = room.basePrice * nights
 
-    const booking = await db.hotelBooking.create({
+    const booking = await database.hotelBooking.create({
       data: {
         userId,
         hotelId,
