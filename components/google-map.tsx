@@ -49,6 +49,8 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
     hasStreetView: boolean;
   }>({ isOpen: false, spot: null, hasStreetView: false });
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [mapError, setMapError] = useState<string | null>(null);
+  const [isMapLoading, setIsMapLoading] = useState(true);
 
   // Constants
   const JHARKHAND_BOUNDS = {
@@ -369,19 +371,54 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
 
   // Load Google Maps API
   useEffect(() => {
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    
+    // Debug logging for deployment
+    console.log('Google Maps API Key available:', !!apiKey);
+    console.log('Environment:', process.env.NODE_ENV);
+    
+    if (!apiKey) {
+      console.error('Google Maps API key is missing!');
+      console.error('Make sure NEXT_PUBLIC_GOOGLE_MAPS_API_KEY is set in your deployment environment');
+      setMapError('Google Maps API key is missing. Please check your environment configuration.');
+      setIsMapLoading(false);
+      return;
+    }
+    
     if (!window.google) {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places&callback=initMap`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initMap`;
       script.async = true;
       script.defer = true;
       
       (window as any).initMap = () => {
-        initializeMap();
+        try {
+          console.log('Google Maps API loaded successfully');
+          setMapError(null);
+          setIsMapLoading(false);
+          initializeMap();
+        } catch (error) {
+          console.error('Error initializing map:', error);
+          setMapError(`Failed to initialize map: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          setIsMapLoading(false);
+        }
       };
       
-      script.onerror = () => console.error('Failed to load Google Maps');
+      script.onerror = (error) => {
+        console.error('Failed to load Google Maps API:', error);
+        console.error('Check if:');
+        console.error('1. API key is valid');
+        console.error('2. Maps JavaScript API is enabled');
+        console.error('3. Places API is enabled');
+        console.error('4. Domain restrictions are properly configured');
+        setMapError('Failed to load Google Maps. Please check your internet connection and API configuration.');
+        setIsMapLoading(false);
+      };
+      
       document.head.appendChild(script);
     } else {
+      console.log('Google Maps API already loaded');
+      setIsMapLoading(false);
       initializeMap();
     }
 
@@ -684,12 +721,38 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
         </Button>
       </div>
 
-      {/* Loading Overlay */}
-      {!isMapLoaded && (
+      {/* Loading and Error Overlay */}
+      {(isMapLoading || mapError) && (
         <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4" />
-            <p className="text-gray-600">Loading Jharkhand map...</p>
+          <div className="text-center max-w-md mx-auto p-6">
+            {mapError ? (
+              <>
+                <div className="text-red-500 text-6xl mb-4">⚠️</div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Map Loading Error</h3>
+                <p className="text-gray-600 mb-4">{mapError}</p>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800">
+                  <p className="font-semibold mb-2">Common solutions:</p>
+                  <ul className="text-left space-y-1">
+                    <li>• Check your internet connection</li>
+                    <li>• Verify Google Maps API key is configured</li>
+                    <li>• Ensure Maps JavaScript API is enabled</li>
+                    <li>• Check domain restrictions in Google Cloud Console</li>
+                  </ul>
+                </div>
+                <Button 
+                  onClick={() => window.location.reload()} 
+                  className="mt-4 bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Reload Page
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4" />
+                <p className="text-gray-600">Loading Jharkhand map...</p>
+                <p className="text-sm text-gray-500 mt-2">Please wait while we load Google Maps</p>
+              </>
+            )}
           </div>
         </div>
       )}
