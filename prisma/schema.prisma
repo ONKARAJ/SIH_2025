@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -14,6 +14,9 @@ model User {
   phone     String?
   password  String?
   isVerified Boolean @default(false)
+  role      String   @default("user")
+  avatar    String?
+  preferences Json   @default("{}")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -21,6 +24,7 @@ model User {
   flightBookings FlightBooking[]
   hotelReviews   HotelReview[]
   sessions       UserSession[]
+  paymentMethods PaymentMethod[]
   
   @@map("users")
 }
@@ -28,19 +32,26 @@ model User {
 model Hotel {
   id          String   @id @default(uuid())
   name        String
-  description String
+  description String   @db.Text
   address     String
   city        String
   state       String   @default("Jharkhand")
   pincode     String
   phone       String
   email       String?
+  website     String?
   rating      Float    @default(4.0)
+  reviewCount Int      @default(0)
   images      Json     @default("[]")
   amenities   Json     @default("[]")
+  policies    Json     @default("{}")
   latitude    Float?
   longitude   Float?
+  checkInTime String   @default("14:00")
+  checkOutTime String  @default("11:00")
   isActive    Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  priceRange  String   @default("budget")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
@@ -56,11 +67,16 @@ model Room {
   hotelId     String
   name        String
   type        String
-  description String?
+  description String?  @db.Text
   maxGuests   Int      @default(2)
   basePrice   Float
+  discountPrice Float?
+  size        String?
+  bedType     String   @default("double")
+  view        String?
   images      Json     @default("[]")
   amenities   Json     @default("[]")
+  totalRooms  Int      @default(1)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -68,6 +84,7 @@ model Room {
   hotel        Hotel              @relation(fields: [hotelId], references: [id], onDelete: Cascade)
   bookings     HotelBooking[]
   availability RoomAvailability[]
+  inventory    RoomInventory[]
   
   @@map("rooms")
 }
@@ -77,17 +94,28 @@ model HotelBooking {
   userId      String
   hotelId     String
   roomId      String
-  checkIn     DateTime
-  checkOut    DateTime
-  guests      Int
+  bookingRef  String   @unique
+  checkIn     DateTime @db.Date
+  checkOut    DateTime @db.Date
+  nights      Int
+  adults      Int      @default(1)
+  children    Int      @default(0)
+  rooms       Int      @default(1)
+  roomPrice   Float
+  taxAmount   Float    @default(0)
+  discountAmount Float @default(0)
   totalAmount Float
-  status      String   @default("pending")
+  status      String   @default("pending") // pending, confirmed, cancelled, completed
   paymentId   String?
-  paymentStatus String @default("pending")
+  paymentStatus String @default("pending") // pending, paid, failed, refunded
   guestName   String
   guestEmail  String
   guestPhone  String
-  specialRequests String?
+  specialRequests String? @db.Text
+  cancellationPolicy String?
+  confirmationNumber String? @unique
+  checkInTime String?
+  checkOutTime String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
@@ -101,16 +129,25 @@ model HotelBooking {
 model Flight {
   id            String   @id @default(uuid())
   airline       String
-  flightNumber  String
+  flightNumber  String   @unique
   departure     String
   arrival       String
+  departureDate DateTime
   departureTime DateTime
+  arrivalDate   DateTime
   arrivalTime   DateTime
   duration      String
-  price         Float
+  basePrice     Float
+  discountPrice Float?
+  totalSeats    Int      @default(180)
   availableSeats Int
-  aircraft      String?
+  aircraft      String   @default("Boeing 737")
+  flightType    String   @default("domestic")
+  classTypes    Json     @default("[\"economy\", \"business\"]")
+  amenities     Json     @default("[]")
+  baggage       Json     @default("{}")
   isActive      Boolean  @default(true)
+  operatingDays Json     @default("[1,2,3,4,5,6,7]")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   
@@ -123,14 +160,26 @@ model FlightBooking {
   id            String   @id @default(uuid())
   userId        String
   flightId      String
-  passengers    Json
-  totalAmount   Float
-  status        String   @default("pending")
-  paymentId     String?
-  paymentStatus String   @default("pending")
   bookingRef    String   @unique
+  pnr           String?  @unique
+  passengers    Json     // Array of passenger objects
+  seatNumbers   Json     @default("[]")
+  class         String   @default("economy")
+  baseAmount    Float
+  taxAmount     Float    @default(0)
+  feeAmount     Float    @default(0)
+  discountAmount Float   @default(0)
+  totalAmount   Float
+  status        String   @default("pending") // pending, confirmed, cancelled, completed
+  paymentId     String?
+  paymentStatus String   @default("pending") // pending, paid, failed, refunded
   contactEmail  String
   contactPhone  String
+  specialRequests String? @db.Text
+  baggage       Json     @default("{}")
+  mealPreference String?
+  confirmationNumber String? @unique
+  eTicketNumber String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   
@@ -197,7 +246,7 @@ model Payment {
 model RoomAvailability {
   id        String   @id @default(uuid())
   roomId    String
-  date      DateTime
+  date      DateTime @db.Date
   available Int      @default(1)
   price     Float?
   createdAt DateTime @default(now())
@@ -207,6 +256,23 @@ model RoomAvailability {
   
   @@unique([roomId, date])
   @@map("room_availability")
+}
+
+model RoomInventory {
+  id        String   @id @default(uuid())
+  roomId    String
+  date      DateTime @db.Date
+  totalRooms Int     @default(1)
+  bookedRooms Int    @default(0)
+  blockedRooms Int   @default(0)
+  dynamicPrice Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  
+  @@unique([roomId, date])
+  @@map("room_inventory")
 }
 
 model UserSession {
@@ -225,13 +291,35 @@ model BookingCancellation {
   id              String   @id @default(uuid())
   bookingId       String
   bookingType     String   // 'hotel' or 'flight'
-  reason          String
+  reason          String   @db.Text
   cancellationFee Float    @default(0)
   refundAmount    Float
   status          String   @default("pending") // pending, processed, rejected
   processedAt     DateTime?
+  processedBy     String?
+  adminNotes      String?  @db.Text
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   
   @@map("booking_cancellations")
+}
+
+model PaymentMethod {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   // 'card', 'upi', 'wallet'
+  provider  String   // 'razorpay', 'stripe'
+  last4     String?
+  brand     String?
+  expiryMonth Int?
+  expiryYear  Int?
+  isDefault Boolean  @default(false)
+  isActive  Boolean  @default(true)
+  metadata  Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("payment_methods")
 }

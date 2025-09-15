@@ -1,20 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const hotel = await db.hotel.findUnique({
+    const hotelId = params.id
+
+    const hotel = await prisma.hotel.findUnique({
       where: {
-        id: params.id,
+        id: hotelId,
         isActive: true
       },
       include: {
         rooms: {
           where: {
             isActive: true
+          },
+          orderBy: {
+            basePrice: 'asc'
+          }
+        },
+        reviews: {
+          take: 10,
+          orderBy: {
+            createdAt: 'desc'
+          },
+          include: {
+            user: {
+              select: {
+                name: true,
+                avatar: true
+              }
+            }
+          }
+        },
+        _count: {
+          select: {
+            reviews: true,
+            bookings: true
           }
         }
       }
@@ -27,15 +54,33 @@ export async function GET(
       }, { status: 404 })
     }
 
+    const reviewStats = await prisma.hotelReview.groupBy({
+      by: ['rating'],
+      where: {
+        hotelId: hotelId
+      },
+      _count: {
+        rating: true
+      }
+    })
+
+    const ratingDistribution = [1, 2, 3, 4, 5].map(rating => ({
+      rating,
+      count: reviewStats.find(stat => stat.rating === rating)?._count.rating || 0
+    }))
+
     return NextResponse.json({
       success: true,
-      hotel
+      data: {
+        hotel,
+        ratingDistribution
+      }
     })
   } catch (error) {
-    console.error('Error fetching hotel:', error)
+    console.error('Error fetching hotel details:', error)
     return NextResponse.json({
       success: false,
-      error: 'Failed to fetch hotel'
+      error: 'Failed to fetch hotel details'
     }, { status: 500 })
   }
 }
@@ -45,49 +90,22 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const hotelId = params.id
     const body = await request.json()
-    const {
-      name,
-      description,
-      address,
-      city,
-      state,
-      pincode,
-      phone,
-      email,
-      rating,
-      images,
-      amenities,
-      latitude,
-      longitude,
-      isActive
-    } = body
 
-    const hotel = await db.hotel.update({
+    const hotel = await prisma.hotel.update({
       where: {
-        id: params.id
+        id: hotelId
       },
       data: {
-        ...(name && { name }),
-        ...(description && { description }),
-        ...(address && { address }),
-        ...(city && { city }),
-        ...(state && { state }),
-        ...(pincode && { pincode }),
-        ...(phone && { phone }),
-        ...(email && { email }),
-        ...(rating && { rating }),
-        ...(images && { images: JSON.stringify(images) }),
-        ...(amenities && { amenities: JSON.stringify(amenities) }),
-        ...(latitude !== undefined && { latitude }),
-        ...(longitude !== undefined && { longitude }),
-        ...(isActive !== undefined && { isActive })
+        ...body,
+        updatedAt: new Date()
       }
     })
 
     return NextResponse.json({
       success: true,
-      hotel
+      data: hotel
     })
   } catch (error) {
     console.error('Error updating hotel:', error)
@@ -103,9 +121,11 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await db.hotel.update({
+    const hotelId = params.id
+
+    await prisma.hotel.update({
       where: {
-        id: params.id
+        id: hotelId
       },
       data: {
         isActive: false

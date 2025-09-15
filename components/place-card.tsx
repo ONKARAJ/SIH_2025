@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SmartTipModal } from "./smart-tip-modal";
+import { useRouter } from 'next/navigation'
 import {
   MapPin,
   Calendar,
@@ -36,24 +36,16 @@ export function PlaceCard({
   image,
   category,
 }: PlaceCardProps) {
-  const [showModal, setShowModal] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState<{
-    type: string;
-    url: string;
-  }>({ type: "", url: "" });
-
-  const bookingOptions = {
-    hotel: "https://www.makemytrip.com/hotels/",
-    flight: "https://www.yatra.com/flights/",
-    package: "https://www.irctc.co.in/nget/train-search",
-  };
+  const router = useRouter();
 
   const handleBookingClick = (type: string) => {
-    setSelectedBooking({
-      type,
-      url: bookingOptions[type as keyof typeof bookingOptions],
-    });
-    setShowModal(true);
+    if (type === 'hotel') {
+      router.push('/book-hotels');
+    } else if (type === 'flight') {
+      router.push('/book-flights');
+    } else if (type === 'package') {
+      router.push('/book-tour');
+    }
   };
 
   return (
@@ -126,14 +118,6 @@ export function PlaceCard({
           </div>
         </CardContent>
       </Card>
-
-      <SmartTipModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        destination={name}
-        bookingType={selectedBooking.type}
-        externalUrl={selectedBooking.url}
-      />
     </>
   );
 }

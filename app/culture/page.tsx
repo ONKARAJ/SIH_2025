@@ -25,7 +25,7 @@ export default function CulturePage() {
       significance:
         "Worship of nature, new beginnings, community bonding, and agricultural prosperity",
       image:
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3",
+        "https://4kwallpapers.com/images/wallpapers/doraemon-5k-4480x2520-13819.jpg",
       tribes: ["Oraon", "Munda", "Ho", "Santhal"],
     },
     {

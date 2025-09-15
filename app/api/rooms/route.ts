@@ -1,50 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const hotelId = searchParams.get('hotelId')
+    const checkIn = searchParams.get('checkIn')
+    const checkOut = searchParams.get('checkOut')
+    const guests = parseInt(searchParams.get('guests') || '1')
+    const roomsNeeded = parseInt(searchParams.get('rooms') || '1')
+    const minPrice = parseFloat(searchParams.get('minPrice') || '0')
+    const maxPrice = parseFloat(searchParams.get('maxPrice') || '50000')
     const type = searchParams.get('type')
-    const minPrice = searchParams.get('minPrice')
-    const maxPrice = searchParams.get('maxPrice')
-    const guests = searchParams.get('guests')
 
-    let whereClause: any = {
+    const where: any = {
       isActive: true,
     }
 
     if (hotelId) {
-      whereClause.hotelId = hotelId
+      where.hotelId = hotelId
     }
 
     if (type) {
-      whereClause.type = {
-        contains: type
+      where.type = {
+        contains: type,
+        mode: 'insensitive'
       }
     }
 
-    if (minPrice) {
-      whereClause.basePrice = { ...whereClause.basePrice, gte: parseFloat(minPrice) }
+    if (guests > 0) {
+      where.maxGuests = {
+        gte: guests
+      }
     }
 
-    if (maxPrice) {
-      whereClause.basePrice = { ...whereClause.basePrice, lte: parseFloat(maxPrice) }
+    where.basePrice = {
+      gte: minPrice,
+      lte: maxPrice
     }
 
-    if (guests) {
-      whereClause.maxGuests = { gte: parseInt(guests) }
-    }
-
-    const rooms = await db.room.findMany({
-      where: whereClause,
+    const rooms = await prisma.room.findMany({
+      where,
       include: {
         hotel: {
           select: {
             id: true,
             name: true,
             city: true,
-            rating: true
+            rating: true,
+            checkInTime: true,
+            checkOutTime: true,
+            policies: true
           }
         }
       },
@@ -53,9 +61,46 @@ export async function GET(request: NextRequest) {
       }
     })
 
+    const roomsWithAvailability = await Promise.all(
+      rooms.map(async (room) => {
+        if (checkIn && checkOut) {
+          const availability = await checkRoomAvailability(
+            room.id,
+            new Date(checkIn),
+            new Date(checkOut),
+            roomsNeeded
+          )
+          
+          return {
+            ...room,
+            availability,
+            finalPrice: availability.dynamicPrice || room.discountPrice || room.basePrice
+          }
+        }
+        
+        return {
+          ...room,
+          availability: { available: true, availableRooms: room.totalRooms },
+          finalPrice: room.discountPrice || room.basePrice
+        }
+      })
+    )
+
+    const availableRooms = checkIn && checkOut 
+      ? roomsWithAvailability.filter(room => room.availability.available)
+      : roomsWithAvailability
+
     return NextResponse.json({
       success: true,
-      rooms
+      data: {
+        rooms: availableRooms,
+        searchParams: {
+          checkIn,
+          checkOut,
+          guests,
+          rooms: roomsNeeded
+        }
+      }
     })
   } catch (error) {
     console.error('Error fetching rooms:', error)
@@ -76,6 +121,11 @@ export async function POST(request: NextRequest) {
       description,
       maxGuests = 2,
       basePrice,
+      discountPrice,
+      size,
+      bedType = 'double',
+      view,
+      totalRooms = 1,
       images = [],
       amenities = []
     } = body
@@ -87,7 +137,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    const hotel = await db.hotel.findUnique({
+    const hotel = await prisma.hotel.findUnique({
       where: { id: hotelId }
     })
 
@@ -98,7 +148,7 @@ export async function POST(request: NextRequest) {
       }, { status: 404 })
     }
 
-    const room = await db.room.create({
+    const room = await prisma.room.create({
       data: {
         hotelId,
         name,
@@ -106,14 +156,19 @@ export async function POST(request: NextRequest) {
         description,
         maxGuests,
         basePrice,
-        images: JSON.stringify(images),
-        amenities: JSON.stringify(amenities)
+        discountPrice,
+        size,
+        bedType,
+        view,
+        totalRooms,
+        images,
+        amenities
       }
     })
 
     return NextResponse.json({
       success: true,
-      room
+      data: room
     }, { status: 201 })
   } catch (error) {
     console.error('Error creating room:', error)
@@ -121,5 +176,55 @@ export async function POST(request: NextRequest) {
       success: false,
       error: 'Failed to create room'
     }, { status: 500 })
+  }
+}
+
+async function checkRoomAvailability(
+  roomId: string,
+  checkIn: Date,
+  checkOut: Date,
+  roomsNeeded: number
+) {
+  const dates = []
+  const currentDate = new Date(checkIn)
+  
+  while (currentDate < checkOut) {
+    dates.push(new Date(currentDate))
+    currentDate.setDate(currentDate.getDate() + 1)
+  }
+
+  const inventoryData = await prisma.roomInventory.findMany({
+    where: {
+      roomId,
+      date: {
+        in: dates
+      }
+    }
+  })
+
+  if (inventoryData.length === 0) {
+    const room = await prisma.room.findUnique({
+      where: { id: roomId },
+      select: { totalRooms: true }
+    })
+    
+    return {
+      available: (room?.totalRooms || 1) >= roomsNeeded,
+      availableRooms: room?.totalRooms || 1,
+      dates: []
+    }
+  }
+
+  const availableCount = Math.min(
+    ...inventoryData.map(inv => inv.totalRooms - inv.bookedRooms - inv.blockedRooms)
+  )
+
+  const dynamicPrice = inventoryData[0]?.dynamicPrice
+
+  return {
+    available: availableCount >= roomsNeeded,
+    availableRooms: availableCount,
+    dynamicPrice,
+    dates: inventoryData
   }
 }

@@ -34,6 +34,11 @@ export default function ReviewsPage() {
       date: "2 weeks ago",
       location: "Hundru Falls",
       category: "Nature",
+      photos: [
+        "https://images.unsplash.com/photo-1544198365-f5d60b6d8190?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=400&fit=crop"
+      ],
     },
     {
       name: "Rajesh Kumar",
@@ -43,6 +48,10 @@ export default function ReviewsPage() {
       date: "1 month ago",
       location: "Betla National Park",
       category: "Wildlife",
+      photos: [
+        "https://images.unsplash.com/photo-1549366021-9f761d040fff?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=400&h=400&fit=crop"
+      ],
     },
     {
       name: "Anita Devi",
@@ -52,6 +61,12 @@ export default function ReviewsPage() {
       date: "2 months ago",
       location: "Ranchi",
       category: "Culture",
+      photos: [
+        "https://images.unsplash.com/photo-1524863479829-916d8e77f114?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1583521214690-73421a1829a9?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1561048877-4d8006de7b0d?w=400&h=400&fit=crop"
+      ],
     },
     {
       name: "Vikram Singh",
@@ -116,6 +131,7 @@ export default function ReviewsPage() {
     name: string;
     rating: number;
     feedback: string;
+    photos?: string[];
   }) => {
     const reviewWithDetails = {
       ...newReview,
@@ -410,6 +426,7 @@ export default function ReviewsPage() {
                       rating={review.rating}
                       feedback={review.feedback}
                       date={review.date}
+                      photos={review.photos}
                     />
                     <div className="flex items-center space-x-2 mt-2 ml-6">
                       <Badge variant="outline" className="text-xs">

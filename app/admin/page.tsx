@@ -1,278 +1,231 @@
-"use client";
+'use client'
 
-import { Navigation } from "@/components/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { useState } from 'react'
+import { Navigation } from '@/components/navigation'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
+import DashboardOverview from '@/components/admin/dashboard-overview'
 import { 
+  LayoutDashboard, 
   Hotel, 
   Plane, 
-  Calendar, 
+  CreditCard, 
   Users, 
-  DollarSign,
-  TrendingUp,
   Settings,
-  Plus
-} from "lucide-react";
-import { useState, useEffect } from "react";
+  Calendar
+} from 'lucide-react'
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({
-    totalHotels: 0,
-    totalRooms: 0,
-    totalFlights: 0,
-    hotelBookings: 0,
-    flightBookings: 0,
-    totalRevenue: 0
-  });
-  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('overview')
 
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
-    try {
-      setLoading(true);
-      // Mock stats for demo - updated numbers
-      setStats({
-        totalHotels: 12,
-        totalRooms: 60,
-        totalFlights: 30,
-        hotelBookings: 0,
-        flightBookings: 0,
-        totalRevenue: 0
-      });
-    } catch (error) {
-      console.error('Error fetching stats:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center py-12">
-            <div className="text-lg text-muted-foreground">Loading dashboard...</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const navigation = [
+    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'hotels', label: 'Hotels', icon: Hotel },
+    { id: 'flights', label: 'Flights', icon: Plane },
+    { id: 'bookings', label: 'Bookings', icon: Calendar },
+    { id: 'payments', label: 'Payments', icon: CreditCard },
+    { id: 'users', label: 'Users', icon: Users },
+    { id: 'settings', label: 'Settings', icon: Settings }
+  ]
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Admin Dashboard
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Manage hotels, flights, and bookings for Jharkhand Tourism
-          </p>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Hotel className="h-8 w-8 text-primary" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Hotels</p>
-                  <p className="text-2xl font-bold">{stats.totalHotels}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Settings className="h-8 w-8 text-secondary" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Rooms</p>
-                  <p className="text-2xl font-bold">{stats.totalRooms}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Plane className="h-8 w-8 text-accent" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Flights</p>
-                  <p className="text-2xl font-bold">{stats.totalFlights}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Calendar className="h-8 w-8 text-primary" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Hotel Bookings</p>
-                  <p className="text-2xl font-bold">{stats.hotelBookings}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Users className="h-8 w-8 text-secondary" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Flight Bookings</p>
-                  <p className="text-2xl font-bold">{stats.flightBookings}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <DollarSign className="h-8 w-8 text-green-600" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Revenue</p>
-                  <p className="text-2xl font-bold">₹{stats.totalRevenue.toLocaleString()}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Hotel className="h-5 w-5" />
-                Hotel Management
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Add, update, or manage hotels and their rooms.
-              </p>
-              <Button className="w-full mb-2">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Hotel
-              </Button>
-              <Button variant="outline" className="w-full">
-                Manage Hotels
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plane className="h-5 w-5" />
-                Flight Management
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Add new flights or update existing flight schedules.
-              </p>
-              <Button className="w-full mb-2">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Flight
-              </Button>
-              <Button variant="outline" className="w-full">
-                Manage Flights
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                Bookings
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                View and manage all hotel and flight bookings.
-              </p>
-              <Button variant="outline" className="w-full mb-2">
-                Hotel Bookings
-              </Button>
-              <Button variant="outline" className="w-full">
-                Flight Bookings
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" />
-                Analytics
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                View booking trends and revenue analytics.
-              </p>
-              <Button variant="outline" className="w-full mb-2">
-                Revenue Report
-              </Button>
-              <Button variant="outline" className="w-full">
-                Booking Trends
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Hotel className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="font-medium text-foreground">New hotel added</p>
-                    <p className="text-sm text-muted-foreground">Jharkhand Tourism Resort Ranchi</p>
-                  </div>
-                </div>
-                <Badge variant="secondary">Today</Badge>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Plane className="h-5 w-5 text-accent" />
-                  <div>
-                    <p className="font-medium text-foreground">Flight schedule updated</p>
-                    <p className="text-sm text-muted-foreground">6 flights added to database</p>
-                  </div>
-                </div>
-                <Badge variant="secondary">Today</Badge>
-              </div>
-
-              <div className="text-center py-4 text-sm text-muted-foreground">
-                System is ready for bookings!
-              </div>
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+              <p className="text-sm text-gray-600">Manage your tourism business</p>
             </div>
-          </CardContent>
-        </Card>
+            <Button variant="outline">
+              <Settings className="w-4 h-4 mr-2" />
+              Settings
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-7 mb-8 w-full">
+            {navigation.map((item) => {
+              const Icon = item.icon
+              return (
+                <TabsTrigger
+                  key={item.id}
+                  value={item.id}
+                  className="flex items-center gap-2 text-xs sm:text-sm"
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{item.label}</span>
+                </TabsTrigger>
+              )
+            })}
+          </TabsList>
+
+          <TabsContent value="overview">
+            <DashboardOverview />
+          </TabsContent>
+
+          <TabsContent value="hotels">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Hotel className="w-5 h-5" />
+                  Hotel Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <Hotel className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Hotel Management</h3>
+                  <p className="text-gray-600 mb-6">Manage hotels, rooms, and availability</p>
+                  <div className="space-y-3">
+                    <Button className="w-full max-w-sm">
+                      Add New Hotel
+                    </Button>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-sm mx-auto">
+                      <Button variant="outline" size="sm">View Hotels</Button>
+                      <Button variant="outline" size="sm">Room Types</Button>
+                      <Button variant="outline" size="sm">Inventory</Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="flights">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Plane className="w-5 h-5" />
+                  Flight Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <Plane className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Flight Management</h3>
+                  <p className="text-gray-600 mb-6">Manage flights, schedules, and pricing</p>
+                  <div className="space-y-3">
+                    <Button className="w-full max-w-sm">
+                      Add New Flight
+                    </Button>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-sm mx-auto">
+                      <Button variant="outline" size="sm">View Flights</Button>
+                      <Button variant="outline" size="sm">Schedules</Button>
+                      <Button variant="outline" size="sm">Airlines</Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="bookings">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  Booking Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Booking Management</h3>
+                  <p className="text-gray-600 mb-6">View and manage all bookings</p>
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-sm mx-auto">
+                      <Button variant="outline">Hotel Bookings</Button>
+                      <Button variant="outline">Flight Bookings</Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="payments">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5" />
+                  Payment Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <CreditCard className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Payment Management</h3>
+                  <p className="text-gray-600 mb-6">Monitor payments and transactions</p>
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-sm mx-auto">
+                      <Button variant="outline" size="sm">All Payments</Button>
+                      <Button variant="outline" size="sm">Refunds</Button>
+                      <Button variant="outline" size="sm">Reports</Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="users">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  User Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">User Management</h3>
+                  <p className="text-gray-600 mb-6">Manage customer accounts and data</p>
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-sm mx-auto">
+                      <Button variant="outline">All Users</Button>
+                      <Button variant="outline">User Analytics</Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="w-5 h-5" />
+                  System Settings
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <Settings className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">System Settings</h3>
+                  <p className="text-gray-600 mb-6">Configure system settings and preferences</p>
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-sm mx-auto">
+                      <Button variant="outline" size="sm">General</Button>
+                      <Button variant="outline" size="sm">Payment</Button>
+                      <Button variant="outline" size="sm">Notifications</Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
-  );
+  )
 }

@@ -85,20 +85,38 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const database = await getDb()
     const body = await request.json()
     const {
-      userId,
       flightId,
+      airline,
+      flightNumber,
+      departure,
+      arrival,
+      departureTime,
+      arrivalTime,
+      travelDate,
+      classType,
       passengers,
+      contactName,
       contactEmail,
-      contactPhone
+      contactPhone,
+      totalAmount,
+      specialRequests
     } = body
 
-    if (!userId || !flightId || !passengers || !contactEmail || !contactPhone) {
+    console.log('Flight booking request:', body)
+
+    if (!flightId || !airline || !passengers || !contactEmail || !contactPhone || !contactName) {
       return NextResponse.json({
         success: false,
-        error: 'Missing required fields'
+        error: 'Missing required fields: ' + JSON.stringify({
+          flightId: !!flightId,
+          airline: !!airline,
+          passengers: !!passengers,
+          contactEmail: !!contactEmail,
+          contactPhone: !!contactPhone,
+          contactName: !!contactName
+        })
       }, { status: 400 })
     }
 
@@ -110,7 +128,7 @@ export async function POST(request: NextRequest) {
     }
 
     for (const passenger of passengers) {
-      if (!passenger.firstName || !passenger.lastName || !passenger.gender || !passenger.age) {
+      if (!passenger.firstName || !passenger.lastName || !passenger.gender) {
         return NextResponse.json({
           success: false,
           error: 'Incomplete passenger information'
@@ -118,58 +136,34 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const flight = await database.flight.findUnique({
-      where: { id: flightId }
-    })
-
-    if (!flight) {
-      return NextResponse.json({
-        success: false,
-        error: 'Flight not found'
-      }, { status: 404 })
+    const bookingRef = 'FL' + generateBookingRef()
+    const pnr = 'PNR' + generateBookingRef()
+    
+    // Create simplified booking record
+    const bookingId = uuidv4()
+    const booking = {
+      id: bookingId,
+      pnr,
+      bookingRef,
+      flightId,
+      airline,
+      flightNumber,
+      departure,
+      arrival,
+      departureTime,
+      arrivalTime,
+      travelDate: new Date(travelDate),
+      classType,
+      passengers,
+      contactName,
+      contactEmail,
+      contactPhone,
+      totalAmount: totalAmount || 0,
+      specialRequests: specialRequests || '',
+      status: 'pending',
+      paymentStatus: 'pending',
+      createdAt: new Date()
     }
-
-    if (flight.availableSeats < passengers.length) {
-      return NextResponse.json({
-        success: false,
-        error: 'Not enough seats available'
-      }, { status: 409 })
-    }
-
-    const totalAmount = flight.price * passengers.length
-    const bookingRef = generateBookingRef()
-
-    const booking = await database.flightBooking.create({
-      data: {
-        userId,
-        flightId,
-        passengers: JSON.stringify(passengers),
-        totalAmount,
-        bookingRef,
-        contactEmail,
-        contactPhone
-      },
-      include: {
-        flight: {
-          select: {
-            airline: true,
-            flightNumber: true,
-            departure: true,
-            arrival: true,
-            departureTime: true,
-            arrivalTime: true,
-            duration: true
-          }
-        }
-      }
-    })
-
-    await database.flight.update({
-      where: { id: flightId },
-      data: {
-        availableSeats: flight.availableSeats - passengers.length
-      }
-    })
 
     return NextResponse.json({
       success: true,

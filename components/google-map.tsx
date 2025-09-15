@@ -371,11 +371,13 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
 
   // Load Google Maps API
   useEffect(() => {
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    // Get API key with fallback for testing
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g';
     
     // Debug logging for deployment
     console.log('Google Maps API Key available:', !!apiKey);
     console.log('Environment:', process.env.NODE_ENV);
+    console.log('API Key source:', process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ? 'Environment Variable' : 'Fallback');
     
     if (!apiKey) {
       console.error('Google Maps API key is missing!');

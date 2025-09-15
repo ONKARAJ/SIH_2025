@@ -2,15 +2,15 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Star } from "lucide-react"
+import { Star, Camera, X, Upload, Image as ImageIcon } from "lucide-react"
 
 interface ReviewFormProps {
-  onSubmit: (review: { name: string; rating: number; feedback: string }) => void
+  onSubmit: (review: { name: string; rating: number; feedback: string; photos?: string[] }) => void
 }
 
 export function ReviewForm({ onSubmit }: ReviewFormProps) {
@@ -19,6 +19,55 @@ export function ReviewForm({ onSubmit }: ReviewFormProps) {
   const [feedback, setFeedback] = useState("")
   const [hoveredRating, setHoveredRating] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [photos, setPhotos] = useState<string[]>([])
+  const [isDragging, setIsDragging] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleFileSelection = (files: FileList | null) => {
+    if (!files) return
+    
+    const newPhotos: string[] = []
+    const maxPhotos = 5 // Limit to 5 photos
+    const remainingSlots = maxPhotos - photos.length
+    const filesToProcess = Math.min(files.length, remainingSlots)
+    
+    for (let i = 0; i < filesToProcess; i++) {
+      const file = files[i]
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          const result = e.target?.result as string
+          if (result) {
+            newPhotos.push(result)
+            if (newPhotos.length === filesToProcess) {
+              setPhotos(prev => [...prev, ...newPhotos])
+            }
+          }
+        }
+        reader.readAsDataURL(file)
+      }
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    handleFileSelection(e.dataTransfer.files)
+  }
+
+  const removePhoto = (index: number) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,12 +78,18 @@ export function ReviewForm({ onSubmit }: ReviewFormProps) {
     // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 500))
 
-    onSubmit({ name: name.trim(), rating, feedback: feedback.trim() })
+    onSubmit({ 
+      name: name.trim(), 
+      rating, 
+      feedback: feedback.trim(),
+      photos: photos.length > 0 ? photos : undefined
+    })
 
     // Reset form
     setName("")
     setRating(0)
     setFeedback("")
+    setPhotos([])
     setIsSubmitting(false)
   }
 
@@ -101,6 +156,87 @@ export function ReviewForm({ onSubmit }: ReviewFormProps) {
               required
               className="w-full resize-none"
             />
+          </div>
+
+          {/* Photo Upload Section */}
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Add Photos <span className="text-muted-foreground">(Optional - Max 5 photos)</span>
+            </label>
+            
+            {/* Upload Area */}
+            <div
+              className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                isDragging 
+                  ? 'border-primary bg-primary/10' 
+                  : 'border-muted-foreground/25 hover:border-primary/50'
+              }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={(e) => handleFileSelection(e.target.files)}
+                className="hidden"
+              />
+              
+              <div className="flex flex-col items-center space-y-2">
+                <div className="p-3 bg-muted rounded-full">
+                  <Camera className="h-6 w-6 text-muted-foreground" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground mb-1">
+                    Drag & drop photos here, or click to browse
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    PNG, JPG, GIF up to 10MB each
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="mt-2"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Choose Photos
+                </Button>
+              </div>
+            </div>
+
+            {/* Photo Preview Grid */}
+            {photos.length > 0 && (
+              <div className="mt-4">
+                <p className="text-sm font-medium text-foreground mb-3">
+                  Selected Photos ({photos.length}/5)
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                  {photos.map((photo, index) => (
+                    <div key={index} className="relative group">
+                      <div className="aspect-square rounded-lg overflow-hidden bg-muted">
+                        <img
+                          src={photo}
+                          alt={`Preview ${index + 1}`}
+                          className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removePhoto(index)}
+                        className="absolute -top-2 -right-2 p-1 bg-destructive text-destructive-foreground rounded-full shadow-sm hover:bg-destructive/90 transition-colors"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <Button

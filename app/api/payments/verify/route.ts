@@ -32,24 +32,57 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
+    // Find the payment record
+    const payment = await db.payment.findFirst({
+      where: {
+        bookingId,
+        bookingType,
+        orderId: razorpay_order_id,
+        status: 'pending'
+      }
+    })
+
+    if (!payment) {
+      return NextResponse.json({
+        success: false,
+        error: 'Payment record not found or already processed'
+      }, { status: 404 })
+    }
+
+    // Update payment record
+    const updatedPayment = await db.payment.update({
+      where: { id: payment.id },
+      data: {
+        status: 'completed',
+        transactionId: razorpay_payment_id,
+        completedAt: new Date(),
+        metadata: JSON.stringify({
+          ...JSON.parse(payment.metadata || '{}'),
+          razorpayPaymentId: razorpay_payment_id,
+          razorpaySignature: razorpay_signature,
+          verifiedAt: new Date().toISOString()
+        })
+      }
+    })
+
     // Update booking with payment details
     let updatedBooking
     if (bookingType === 'hotel') {
       updatedBooking = await db.hotelBooking.update({
         where: { id: bookingId },
         data: {
-          paymentId: razorpay_payment_id,
           paymentStatus: 'completed',
-          status: 'confirmed'
+          status: 'confirmed',
+          updatedAt: new Date()
         }
       })
     } else if (bookingType === 'flight') {
       updatedBooking = await db.flightBooking.update({
         where: { id: bookingId },
         data: {
-          paymentId: razorpay_payment_id,
           paymentStatus: 'completed',
-          status: 'confirmed'
+          status: 'confirmed',
+          updatedAt: new Date()
         }
       })
     }
@@ -57,13 +90,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Payment verified successfully',
-      booking: updatedBooking
+      data: {
+        payment: updatedPayment,
+        booking: updatedBooking,
+        transactionId: razorpay_payment_id
+      }
     })
   } catch (error) {
     console.error('Error verifying payment:', error)
     return NextResponse.json({
       success: false,
-      error: 'Payment verification failed'
+      error: 'Payment verification failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
 }
