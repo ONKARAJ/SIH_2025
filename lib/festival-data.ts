@@ -181,7 +181,7 @@ export const festivalData: Festival[] = [
       food: ['Handia (rice beer)', 'Dhuska', 'Pittha', 'Tribal herbs and vegetables']
     },
     media: {
-      hero: '/festivals/sarhul-hero.jpg',
+  hero: 'https://st.adda247.com/https://wpassets.adda247.com/wp-content/uploads/multisite/sites/5/2022/04/07080859/Sarhul-Festival-04-1.jpg',
       gallery: [
         '/festivals/sarhul-1.jpg',
         '/festivals/sarhul-2.jpg',
@@ -452,7 +452,7 @@ export const festivalData: Festival[] = [
       food: ['Til-gud sweets', 'Kheer', 'Rice cakes', 'Winter delicacies']
     },
     media: {
-      hero: '/festivals/tusu-hero.jpg',
+  hero: 'https://i.pinimg.com/originals/d1/5e/0c/d15e0c73f97fe02eaafd28dfc88b4a0f.jpg',
       gallery: [
         '/festivals/tusu-dolls.jpg',
         '/festivals/tusu-procession.jpg',
@@ -587,7 +587,7 @@ export const festivalData: Festival[] = [
       food: ['Rice with curry', 'Bamboo shoot dishes', 'Wild vegetables', 'Traditional sweets']
     },
     media: {
-      hero: '/festivals/karma-hero.jpg',
+  hero: 'https://www.alamy.com/aggregator-api/download?url=https://c8.alamy.com/comp/DXC9AW/tribal-men-playing-musical-instruments-during-karma-puja-festival-DXC9AW.jpg',
       gallery: [
         '/festivals/karma-dance.jpg',
         '/festivals/karma-tree.jpg',
@@ -722,7 +722,7 @@ export const festivalData: Festival[] = [
       food: ['New rice preparations', 'Milk-based sweets', 'Seasonal vegetables', 'Traditional delicacies']
     },
     media: {
-      hero: '/festivals/bandna-hero.jpg',
+  hero: 'https://tribaldarshan.com/wp-content/uploads/2024/09/PTI09_25_2023_000235B-1301586945.jpg',
       gallery: [
         '/festivals/bandna-cattle.jpg',
         '/festivals/bandna-decoration.jpg',
@@ -857,7 +857,7 @@ export const festivalData: Festival[] = [
       food: ['Sattu (gram flour drink)', 'Fruits', 'Traditional sweets', 'Milk preparations']
     },
     media: {
-      hero: '/festivals/jitia-hero.jpg',
+  hero: 'https://imagepasal.com/watermark/Jitiya-Festival-janakpur-12-image-pasal-2021-09-28.jpg',
       gallery: [
         '/festivals/jitia-mothers.jpg',
         '/festivals/jitia-prayers.jpg',
@@ -967,7 +967,7 @@ export const culturalData: CulturalElement[] = [
     techniques: ['Lost-wax casting', 'Clay molding', 'Metal pouring', 'Finishing and polishing'],
     materials: ['Brass', 'Bronze', 'Beeswax', 'Clay', 'Coal'],
     media: {
-      images: ['/culture/dokra-1.jpg', '/culture/dokra-2.jpg'],
+  images: ['https://www.caratlane.com/blog/wp-content/uploads/2022/08/dhokra-craft-GB10_l.jpg'],
       videos: ['/culture/dokra-process.mp4']
     },
     artisans: [
@@ -1005,7 +1005,7 @@ export const culturalData: CulturalElement[] = [
     techniques: ['Circle formations', 'Rhythmic steps', 'Coordinated movements', 'Musical synchronization'],
     styles: ['Sarhul Jhumar', 'Sohrai Jhumar', 'Wedding Jhumar', 'Harvest Jhumar'],
     media: {
-      images: ['/culture/jhumar-1.jpg', '/culture/jhumar-2.jpg', '/culture/jhumar-group.jpg'],
+  images: ['https://www.gosahin.com/go/p/j/1576435575_jhumair-dance.jpg'],
       videos: ['/culture/jhumar-performance.mp4'],
       audio: ['/culture/jhumar-songs.mp3']
     },
@@ -1050,7 +1050,7 @@ export const culturalData: CulturalElement[] = [
     techniques: ['Weaving patterns', 'Splicing methods', 'Natural coloring', 'Traditional joining'],
     materials: ['Bamboo poles', 'Cane strips', 'Natural dyes', 'Traditional tools'],
     media: {
-      images: ['/culture/bamboo-craft-1.jpg', '/culture/bamboo-baskets.jpg', '/culture/bamboo-furniture.jpg'],
+  images: ['https://i.ytimg.com/vi/luW3jYjCDvU/maxresdefault.jpg'],
       videos: ['/culture/bamboo-making-process.mp4']
     },
     artisans: [
@@ -1095,7 +1095,7 @@ export const culturalData: CulturalElement[] = [
     materials: ['Madal drums', 'Nagara drums', 'Flutes', 'String instruments', 'Natural materials'],
     styles: ['Ritual songs', 'Work songs', 'Festival music', 'Storytelling ballads'],
     media: {
-      images: ['/culture/tribal-music-1.jpg', '/culture/musical-instruments.jpg', '/culture/musicians.jpg'],
+  images: ['https://theindiantribal.com/wp-content/uploads/2021/09/jharkhand-damkach-dance-1024x512.jpg'],
       videos: ['/culture/tribal-music-performance.mp4'],
       audio: ['/culture/traditional-songs.mp3', '/culture/instrumental-music.mp3']
     },
@@ -1135,7 +1135,7 @@ export const culturalData: CulturalElement[] = [
     materials: ['Indigenous grains', 'Forest vegetables', 'Wild herbs', 'Natural spices', 'Traditional utensils'],
     styles: ['Festival foods', 'Daily meals', 'Medicinal preparations', 'Ritual offerings'],
     media: {
-      images: ['/culture/tribal-cuisine-1.jpg', '/culture/traditional-cooking.jpg', '/culture/indigenous-ingredients.jpg'],
+  images: ['https://veganuary.com/wp-content/uploads/2022/10/Dhuska1-scaled.jpeg'],
       videos: ['/culture/cooking-demonstration.mp4']
     },
     artisans: [
