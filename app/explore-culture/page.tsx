@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Navigation } from '@/components/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -187,7 +187,7 @@ const culturalCategories = {
   }
 }
 
-export default function ExploreCulturePage() {
+function CultureContent() {
   const searchParams = useSearchParams()
   const category = searchParams.get('category') || 'tribal-art-crafts'
   const [selectedCategory, setSelectedCategory] = useState(culturalCategories[category as keyof typeof culturalCategories] || culturalCategories['tribal-art-crafts'])
@@ -200,8 +200,7 @@ export default function ExploreCulturePage() {
   }, [category])
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
+    <>
       
       {/* Hero Section */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8">
@@ -387,6 +386,17 @@ export default function ExploreCulturePage() {
           </div>
         </div>
       </section>
+    </>
+  )
+}
+
+export default function ExploreCulturePage() {
+  return (
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+        <CultureContent />
+      </Suspense>
     </div>
   )
 }
