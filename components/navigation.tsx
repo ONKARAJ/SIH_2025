@@ -15,7 +15,6 @@ export function Navigation() {
     { href: "/", label: "Home" },
     { href: "/places", label: "Places" },
     { href: "/festivals", label: "Festivals" },
-    { href: "/culture", label: "Culture" },
     { href: "/reviews", label: "Reviews" },
     { href: "/map", label: "Map" },
     { href: "/contact", label: "Contact" },

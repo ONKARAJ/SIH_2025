@@ -1,13 +1,15 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+import { Navigation } from '@/components/navigation';
 import FestivalsHero from '@/components/festivals/festivals-hero';
 import FestivalCalendar from '@/components/festivals/festival-calendar';
 import FestivalTimeline from '@/components/festivals/festival-timeline';
 import FestivalsWithFilters from '@/components/festivals/festivals-with-filters';
 import CulturalElements from '@/components/festivals/cultural-elements';
 import FolkloreSection from '@/components/festivals/folklore-section';
-import { RecipesSection, ArtisanCrafts, TravelTips, InteractiveMap as InteractiveMapComponent, MultimediaGallery as MultimediaGalleryComponent } from '@/components/festivals/placeholder-components';
+import { RecipesSection, ArtisanCrafts, TravelTips, MultimediaGallery as MultimediaGalleryComponent } from '@/components/festivals/placeholder-components';
+import { InteractiveCulturalMap } from '@/components/festivals/interactive-cultural-map';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import GamificationDashboard from '@/components/festivals/gamification-dashboard';
 import { Button } from '@/components/ui/button';
@@ -15,10 +17,6 @@ import Link from 'next/link';
 import CallToAction from '@/components/festivals/call-to-action';
 
 // Dynamic imports for performance
-const InteractiveMap = dynamic(() => import('@/components/festivals/placeholder-components').then(mod => ({ default: mod.InteractiveMap })), {
-  loading: () => <LoadingSpinner />,
-  ssr: false
-});
 
 const MultimediaGallery = dynamic(() => import('@/components/festivals/placeholder-components').then(mod => ({ default: mod.MultimediaGallery })), {
   loading: () => <LoadingSpinner />
@@ -55,6 +53,8 @@ export default function FestivalsPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Navigation />
+      
       {/* JSON-LD Schema */}
       <script
         type="application/ld+json"
@@ -169,9 +169,9 @@ export default function FestivalsPage() {
               Discover festival locations and cultural hotspots across Jharkhand
             </p>
           </div>
-          <div className="rounded-2xl overflow-hidden shadow-xl">
-            <InteractiveMap />
-          </div>
+          <Suspense fallback={<LoadingSpinner />}>
+            <InteractiveCulturalMap />
+          </Suspense>
         </div>
       </section>
 

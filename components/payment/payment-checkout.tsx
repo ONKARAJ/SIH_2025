@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -10,7 +11,7 @@ import { toast } from 'sonner'
 
 interface PaymentCheckoutProps {
   bookingId: string
-  bookingType: 'hotel' | 'flight'
+  bookingType: 'hotel' | 'flight' | 'train'
   amount: number
   currency?: string
   bookingDetails: any // Make this flexible to handle different structures
@@ -32,6 +33,7 @@ export default function PaymentCheckout({
   onPaymentSuccess,
   onPaymentError
 }: PaymentCheckoutProps) {
+  const router = useRouter()
   const { initiatePayment, isLoading, error } = usePayment()
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'processing' | 'success' | 'failed'>('idle')
   
@@ -68,6 +70,11 @@ export default function PaymentCheckout({
         // Call both new and legacy callback functions
         onSuccess?.(result)
         onPaymentSuccess?.(result)
+        
+        // Redirect to success page after a short delay
+        setTimeout(() => {
+          router.push(`/booking-success?type=${bookingType}&payment_id=${result.transactionId}`)
+        }, 1500)
       } else {
         setPaymentStatus('failed')
         toast.error(result.error || 'Payment failed')
@@ -113,6 +120,18 @@ export default function PaymentCheckout({
               {bookingDetails.travelDate && (
                 <div className="text-sm text-gray-600">
                   Travel Date: {bookingDetails.travelDate} | Class: {bookingDetails.classType} | Passengers: {bookingDetails.passengers}
+                </div>
+              )}
+            </>
+          )}
+          
+          {bookingType === 'train' && (
+            <>
+              <h3 className="font-semibold text-lg">{bookingDetails.title}</h3>
+              <p className="text-sm text-gray-600">{bookingDetails.description}</p>
+              {bookingDetails.reference && (
+                <div className="text-sm text-gray-600">
+                  Booking Reference: {bookingDetails.reference}
                 </div>
               )}
             </>

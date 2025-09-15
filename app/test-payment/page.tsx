@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,14 +12,38 @@ import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { CreditCard, TestTube, CheckCircle, XCircle } from 'lucide-react'
 
-export default function TestPaymentPage() {
+function TestPaymentContent() {
+  const searchParams = useSearchParams()
+  const typeFromQuery = searchParams.get('type') as 'hotel' | 'flight' | 'train'
+  
   const [formData, setFormData] = useState({
-    bookingType: 'hotel' as 'hotel' | 'flight',
+    bookingType: typeFromQuery || 'hotel' as 'hotel' | 'flight' | 'train',
     amount: 2500,
     customerName: 'Test Customer',
     customerEmail: 'test@example.com',
     customerPhone: '+919876543210'
   })
+  
+  const [trainBookingData, setTrainBookingData] = useState<any>(null)
+  
+  useEffect(() => {
+    // Load train booking data if it's a train booking
+    if (typeFromQuery === 'train') {
+      const storedData = localStorage.getItem('trainBookingPayload')
+      if (storedData) {
+        const data = JSON.parse(storedData)
+        setTrainBookingData(data)
+        setFormData(prev => ({
+          ...prev,
+          bookingType: 'train',
+          amount: data.pricing?.totalAmount || 2500,
+          customerName: data.passengers?.[0]?.name || 'Test Customer',
+          customerEmail: data.contactEmail || 'test@example.com',
+          customerPhone: data.contactPhone || '+919876543210'
+        }))
+      }
+    }
+  }, [typeFromQuery])
   
   const [showPayment, setShowPayment] = useState(false)
   const [mockBookingId, setMockBookingId] = useState<string>('')
@@ -26,6 +51,25 @@ export default function TestPaymentPage() {
 
   const generateMockBooking = async () => {
     try {
+      // For train bookings, use stored data or skip API call
+      if (formData.bookingType === 'train') {
+        if (trainBookingData) {
+          // Use existing train booking data
+          const mockId = 'train-' + Date.now()
+          setMockBookingId(mockId)
+          setShowPayment(true)
+          toast.success('Train booking loaded! Ready for payment test.')
+          return
+        } else {
+          // Create a mock train booking
+          const mockId = 'train-mock-' + Date.now()
+          setMockBookingId(mockId)
+          setShowPayment(true)
+          toast.success('Mock train booking created! Ready for payment test.')
+          return
+        }
+      }
+      
       // Create a mock booking for testing
       const endpoint = formData.bookingType === 'hotel' 
         ? '/api/bookings/hotels' 
@@ -118,7 +162,7 @@ export default function TestPaymentPage() {
               <Label htmlFor="bookingType">Booking Type</Label>
               <Select
                 value={formData.bookingType}
-                onValueChange={(value: 'hotel' | 'flight') => 
+                onValueChange={(value: 'hotel' | 'flight' | 'train') => 
                   setFormData({ ...formData, bookingType: value })
                 }
               >
@@ -128,6 +172,7 @@ export default function TestPaymentPage() {
                 <SelectContent>
                   <SelectItem value="hotel">Hotel Booking</SelectItem>
                   <SelectItem value="flight">Flight Booking</SelectItem>
+                  <SelectItem value="train">Train Booking</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -185,6 +230,19 @@ export default function TestPaymentPage() {
                 </p>
               </div>
             )}
+            
+            {trainBookingData && formData.bookingType === 'train' && (
+              <div className="p-3 bg-green-50 border border-green-200 rounded-md">
+                <h4 className="text-sm font-semibold text-green-800 mb-2">Train Booking Details:</h4>
+                <div className="text-xs text-green-700 space-y-1">
+                  <p><strong>Train:</strong> {trainBookingData.trainId}</p>
+                  <p><strong>Route:</strong> {trainBookingData.departureStation} → {trainBookingData.arrivalStation}</p>
+                  <p><strong>Passengers:</strong> {trainBookingData.passengers?.length || 0}</p>
+                  <p><strong>Class:</strong> {trainBookingData.class}</p>
+                  <p><strong>Amount:</strong> ₹{trainBookingData.pricing?.totalAmount || formData.amount}</p>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -195,8 +253,10 @@ export default function TestPaymentPage() {
             bookingType={formData.bookingType}
             amount={formData.amount}
             bookingDetails={{
-              title: `Test ${formData.bookingType === 'hotel' ? 'Hotel' : 'Flight'} Booking`,
-              description: 'This is a test booking for payment gateway integration',
+              title: `Test ${formData.bookingType === 'hotel' ? 'Hotel' : formData.bookingType === 'flight' ? 'Flight' : 'Train'} Booking`,
+              description: trainBookingData 
+                ? `Train: ${trainBookingData.passengers?.length || 1} passenger(s) - ${formData.customerName}`
+                : 'This is a test booking for payment gateway integration',
               reference: mockBookingId.substring(0, 8).toUpperCase(),
               customerInfo: {
                 name: formData.customerName,
@@ -289,5 +349,17 @@ export default function TestPaymentPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function TestPaymentPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8 max-w-4xl flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    }>
+      <TestPaymentContent />
+    </Suspense>
   )
 }

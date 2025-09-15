@@ -61,7 +61,7 @@ export function PlaceCardModal({ place }: PlaceCardModalProps) {
   const handleBooking = (type: 'flight' | 'train' | 'hotel') => {
     const routes = {
       flight: '/book-flights',
-      train: '/book-train', 
+      train: '/book-trains', 
       hotel: '/book-hotels'
     }
     router.push(routes[type])

@@ -16,36 +16,101 @@ import { useState, useEffect } from "react";
 import { ReviewCard } from "@/components/review-card";
 
 export default function Home() {
-  const [recentReviews, setRecentReviews] = useState([
+  // Default reviews that always show on homepage
+  const defaultReviews = [
+    // Reviews with videos (2 reviews) - Using available images as poster/fallback
     {
       name: "Priya Sharma",
       rating: 5,
       feedback:
-        "Absolutely breathtaking! The Hundru Falls were spectacular, and the tribal culture experience was authentic and enriching. Jharkhand exceeded all my expectations.",
+        "Absolutely breathtaking! The powerful cascade and surrounding greenery create a magical atmosphere. Hundru Falls is truly a spectacular natural wonder of Jharkhand!",
       date: "2 weeks ago",
+      // Using existing image since video doesn't exist
+      spotImage: "/hundru-falls-waterfall-jharkhand-rocky-cliffs-fore.jpg",
+      spotName: "Hundru Falls",
+      location: "Ranchi"
     },
     {
-      name: "Rajesh Kumar",
+      name: "Vikram Singh",
+      rating: 5,
+      feedback:
+        "The sunrise view from Parasnath Hill is simply divine! At 4,431 feet, it's the highest peak in Jharkhand with breathtaking panoramic views and sacred Jain temples.",
+      date: "1 week ago",
+      // Using existing image since video doesn't exist
+      spotImage: "/parasnath-hill-jharkhand-highest-peak-jain-temple.jpg",
+      spotName: "Parasnath Hill",
+      location: "Giridih"
+    },
+    // Reviews with photos (2 reviews)
+    {
+      name: "Meera Gupta",
       rating: 4,
       feedback:
-        "Great experience visiting Betla National Park. Saw tigers and elephants in their natural habitat. The local guides were very knowledgeable about the wildlife.",
+        "Dassam Falls during monsoon is a sight to behold! The 144-foot waterfall creates a thunderous roar and misty atmosphere. Perfect for nature photography.",
+      date: "3 weeks ago",
+      spotImage: "/dassam-falls-jharkhand-niagara-waterfall-rocks.jpg",
+      spotName: "Dassam Falls",
+      location: "Ranchi"
+    },
+    {
+      name: "Rohini Sharma",
+      rating: 5,
+      feedback:
+        "Jagannath Temple in Ranchi is a magnificent replica of the famous Puri temple! The architecture and spiritual atmosphere make it a must-visit destination for devotees.",
+      date: "5 days ago",
+      spotImage: "/jagannath-temple-ranchi-architecture-spiritual.jpg",
+      spotName: "Jagannath Temple",
+      location: "Ranchi"
+    },
+    // More photo reviews (2 additional)
+    {
+      name: "Arjun Kumar",
+      rating: 5,
+      feedback:
+        "Netarhat Hill Station is truly the 'Queen of Chotanagpur'! The sunrise and sunset views are absolutely mesmerizing. The cool climate and lush greenery make it a perfect getaway.",
+      date: "1 week ago",
+      spotImage: "/netarhat-hill-station-jharkhand-sunrise-sunset-pin.jpg",
+      spotName: "Netarhat Hill Station",
+      location: "Latehar"
+    },
+    {
+      name: "Kavita Singh",
+      rating: 4,
+      feedback:
+        "Baidyanath Temple in Deoghar is one of the most sacred Jyotirlingas! The spiritual energy during Shravan month is incredible. A must-visit for devotees and spiritual seekers.",
+      date: "4 days ago",
+      spotImage: "/baidyanath-temple-deoghar-jyotirlinga-shiva-pilgri.jpg",
+      spotName: "Baidyanath Dham",
+      location: "Deoghar"
+    },
+    // Reviews without media (2 reviews)
+    {
+      name: "Rajesh Kumar",
+      rating: 5,
+      feedback:
+        "Amazing wildlife experience! Spotted tigers, elephants, and various bird species in Betla National Park. The forest guides were incredibly knowledgeable about local wildlife and tribal traditions.",
       date: "1 month ago",
+      spotName: "Betla National Park",
+      location: "Latehar"
     },
     {
       name: "Anita Devi",
       rating: 5,
       feedback:
-        "The Sarhul festival was a once-in-a-lifetime experience. The connection between the tribal communities and nature is truly inspiring. Highly recommend visiting during festival season.",
+        "One of the most sacred Jyotirlinga temples in India. The spiritual energy at Baidyanath Dham and the devotion of pilgrims create an unforgettable divine experience. A must-visit for spiritual seekers.",
       date: "2 months ago",
+      spotName: "Baidyanath Dham",
+      location: "Deoghar"
     },
-  ]);
+  ];
+  
+  const [recentReviews, setRecentReviews] = useState(defaultReviews);
 
+  // Always show default reviews on homepage - don't override with localStorage
+  // This ensures consistent display for all visitors
   useEffect(() => {
-    const savedReviews = localStorage.getItem("jharkhand-reviews");
-    if (savedReviews) {
-      const allReviews = JSON.parse(savedReviews);
-      setRecentReviews(allReviews.slice(0, 3));
-    }
+    // Keep the default reviews as the primary display
+    setRecentReviews(defaultReviews);
   }, []);
 
   const averageRating =
@@ -60,32 +125,47 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      {/* Enhanced Hero Section */}
+      {/* Enhanced Hero Section with Background Video */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div
+        {/* Background Video with Overlay */}
+        <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('/jharkhand-forest-landscape-with-tribal-culture-ele.jpg')`,
+            backgroundImage: "url('/jharkhand-forest-landscape-with-tribal-culture-ele.jpg')"
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/60"></div>
+          <video 
+            className="w-full h-full object-cover"
+            autoPlay 
+            muted 
+            loop 
+            playsInline
+            poster="/jharkhand-forest-landscape-with-tribal-culture-ele.jpg"
+            onError={(e) => {
+              // Hide video if it fails to load, fallback to background image
+              e.currentTarget.style.display = 'none';
+            }}
+          >
+            <source src="/jharkhand-landscape-video.mp4" type="video/mp4" />
+            <source src="/jharkhand-landscape-video.webm" type="video/webm" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70"></div>
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 text-center text-white max-w-6xl mx-auto px-4">
-          <div className="mb-6">
-            <span className="inline-block bg-secondary/90 text-secondary-foreground px-4 py-2 rounded-full text-sm font-medium mb-4">
+        <div className="relative z-10 text-center text-white max-w-6xl mx-auto px-4 animate-fade-in">
+          <div className="mb-6 animate-fade-in-delay-200">
+            <span className="inline-block bg-orange-500/90 text-white px-6 py-3 rounded-full text-sm font-medium mb-4 shadow-lg">
               Explore India's Hidden Gem
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-balance leading-tight">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-balance leading-tight animate-fade-in-delay-400">
             Discover the Untouched Beauty of
-            <span className="text-secondary"> Jharkhand</span>
+            <span className="text-orange-400"> Jharkhand</span>
           </h1>
 
-          <div className="max-w-4xl mx-auto mb-8">
+          <div className="max-w-4xl mx-auto mb-8 animate-fade-in-delay-600">
             <p className="text-lg md:text-xl lg:text-2xl mb-6 text-pretty leading-relaxed opacity-95">
               Journey through India's mineral-rich heartland where ancient
               tribal traditions meet pristine wilderness. Experience the harmony
@@ -95,38 +175,38 @@ export default function Home() {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-sm md:text-base">
-              <div className="flex items-center justify-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg py-3 px-4">
-                <Leaf className="h-5 w-5 text-primary" />
+              <div className="flex items-center justify-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg py-3 px-4 hover:bg-white/20 transition-all duration-300">
+                <Leaf className="h-5 w-5 text-green-400" />
                 <span>Eco-Tourism Paradise</span>
               </div>
-              <div className="flex items-center justify-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg py-3 px-4">
-                <Users className="h-5 w-5 text-secondary" />
+              <div className="flex items-center justify-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg py-3 px-4 hover:bg-white/20 transition-all duration-300">
+                <Users className="h-5 w-5 text-orange-400" />
                 <span>Rich Tribal Heritage</span>
               </div>
-              <div className="flex items-center justify-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg py-3 px-4">
-                <Mountain className="h-5 w-5 text-accent" />
+              <div className="flex items-center justify-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg py-3 px-4 hover:bg-white/20 transition-all duration-300">
+                <Mountain className="h-5 w-5 text-blue-400" />
                 <span>Untouched Landscapes</span>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-delay-800">
             <Link href="/places">
               <Button
                 size="lg"
-                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground text-lg px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-orange-500 hover:bg-orange-600 text-white text-lg px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 Explore Places
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link href="/culture">
+            <Link href="/festivals">
               <Button
                 variant="outline"
                 size="lg"
-                className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 text-lg px-8 py-4"
+                className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 text-lg px-8 py-4 transition-all duration-300 transform hover:scale-105"
               >
-                Discover Culture
+                Discover Festivals
               </Button>
             </Link>
           </div>
@@ -214,15 +294,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 bg-background">
+      <section className="py-20 bg-gradient-to-b from-background to-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              What Travelers Say
+              Traveler Experiences
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover why visitors fall in love with Jharkhand through their
-              authentic experiences and stories.
+              Discover what makes Jharkhand special through authentic stories and 
+              experiences from fellow travelers who have explored our beautiful state.
             </p>
             <div className="flex items-center justify-center mt-6 space-x-2">
               <div className="flex items-center space-x-1">
@@ -246,7 +326,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             {recentReviews.map((review, index) => (
               <ReviewCard
                 key={index}
@@ -254,6 +334,10 @@ export default function Home() {
                 rating={review.rating}
                 feedback={review.feedback}
                 date={review.date}
+                spotImage={review.spotImage}
+                spotVideo={review.spotVideo}
+                spotName={review.spotName}
+                location={review.location}
               />
             ))}
           </div>
@@ -306,10 +390,10 @@ export default function Home() {
                   Places to Visit
                 </Link>
                 <Link
-                  href="/culture"
+                  href="/festivals"
                   className="block text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Festivals & Culture
+                  Festivals & Heritage
                 </Link>
                 <Link
                   href="/reviews"

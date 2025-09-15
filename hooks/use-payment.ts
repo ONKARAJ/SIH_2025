@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 interface PaymentOptions {
   bookingId: string
-  bookingType: 'hotel' | 'flight'
+  bookingType: 'hotel' | 'flight' | 'train'
   amount: number
   currency?: string
   customerInfo?: {
@@ -98,7 +98,7 @@ export function usePayment() {
           amount: orderData.data.amount,
           currency: orderData.data.currency,
           name: 'Jharkhand Tourism',
-          description: `${options.bookingType === 'hotel' ? 'Hotel' : 'Flight'} Booking Payment`,
+          description: `${options.bookingType === 'hotel' ? 'Hotel' : options.bookingType === 'flight' ? 'Flight' : 'Train'} Booking Payment`,
           order_id: orderData.data.orderId,
           handler: async (response: any) => {
             try {

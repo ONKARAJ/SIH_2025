@@ -22,6 +22,7 @@ model User {
   
   hotelBookings  HotelBooking[]
   flightBookings FlightBooking[]
+  trainBookings  TrainBooking[]
   hotelReviews   HotelReview[]
   sessions       UserSession[]
   paymentMethods PaymentMethod[]
@@ -322,4 +323,70 @@ model PaymentMethod {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@map("payment_methods")
+}
+
+model Train {
+  id            String   @id @default(uuid())
+  trainNumber   String   @unique
+  trainName     String
+  departure     String   // Source station
+  arrival       String   // Destination station
+  departureTime String   // HH:MM format
+  arrivalTime   String   // HH:MM format
+  duration      String   // Journey duration
+  distance      Int      // Distance in km
+  frequency     Json     @default("[1,2,3,4,5,6,7]") // Days of week (1=Monday)
+  trainType     String   @default("Express") // Express, Superfast, Passenger, etc.
+  classes       Json     @default("[\"SL\", \"3A\", \"2A\", \"1A\"]") // Available classes
+  basePrice     Float    // Base price for SL class
+  priceMultiplier Json   @default("{}")
+  totalSeats    Int      @default(800)
+  availableSeats Int
+  route         Json     @default("[]") // Array of intermediate stations
+  amenities     Json     @default("[]") // Available amenities
+  isActive      Boolean  @default(true)
+  isFeatured    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  bookings TrainBooking[]
+  
+  @@map("trains")
+}
+
+model TrainBooking {
+  id            String   @id @default(uuid())
+  userId        String
+  trainId       String
+  bookingRef    String   @unique
+  pnr           String?  @unique
+  passengers    Json     // Array of passenger objects
+  seatNumbers   Json     @default("[]")
+  class         String   @default("SL") // SL, 3A, 2A, 1A
+  travelDate    DateTime @db.Date
+  departureStation String
+  arrivalStation String
+  baseAmount    Float
+  taxAmount     Float    @default(0)
+  convenienceFee Float   @default(0)
+  discountAmount Float   @default(0)
+  totalAmount   Float
+  status        String   @default("pending") // pending, confirmed, cancelled, completed
+  paymentId     String?
+  paymentStatus String   @default("pending") // pending, paid, failed, refunded
+  contactEmail  String
+  contactPhone  String
+  specialRequests String? @db.Text
+  mealPreference String? // veg, non-veg, jain
+  confirmationNumber String? @unique
+  ticketNumber  String?
+  boardingPoint String?
+  droppingPoint String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  train Train @relation(fields: [trainId], references: [id], onDelete: Cascade)
+  
+  @@map("train_bookings")
 }

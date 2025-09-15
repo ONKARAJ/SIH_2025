@@ -25,105 +25,152 @@ import {
 import { useState, useEffect } from "react";
 
 export default function ReviewsPage() {
-  const [reviews, setReviews] = useState([
+  // Default reviews with 12 total reviews (3 with photos, 9 without photos)
+  const defaultReviews = [
+    // Reviews WITH photos (3 reviews)
     {
       name: "Priya Sharma",
       rating: 5,
       feedback:
-        "Absolutely breathtaking! The Hundru Falls were spectacular, and the tribal culture experience was authentic and enriching. The local guides were incredibly knowledgeable about the history and traditions. Jharkhand exceeded all my expectations and I'm already planning my next visit.",
+        "Absolutely breathtaking! The powerful cascade and surrounding greenery create a magical atmosphere. The 320-foot waterfall is truly spectacular and a must-visit destination in Jharkhand.",
       date: "2 weeks ago",
       location: "Hundru Falls",
       category: "Nature",
-      photos: [
-        "https://images.unsplash.com/photo-1544198365-f5d60b6d8190?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=400&fit=crop"
-      ],
+      spotImage: "/hundru-falls-waterfall-jharkhand-rocky-cliffs-fore.jpg",
+      spotName: "Hundru Falls"
     },
     {
-      name: "Rajesh Kumar",
+      name: "Vikram Singh",
+      rating: 5,
+      feedback:
+        "The sunrise view from Parasnath Hill is simply divine! At 4,431 feet, it's the highest peak in Jharkhand. The trek is challenging but absolutely worth it for the panoramic views and sacred Jain temples.",
+      date: "1 week ago",
+      location: "Parasnath Hill",
+      category: "Adventure",
+      spotImage: "/parasnath-hill-jharkhand-highest-peak-sunrise-panor.jpg",
+      spotName: "Parasnath Hill"
+    },
+    {
+      name: "Meera Gupta",
       rating: 4,
       feedback:
-        "Great experience visiting Betla National Park. Saw tigers and elephants in their natural habitat. The safari was well-organized and the local guides were very knowledgeable about the wildlife. The accommodation was comfortable and the food was delicious.",
+        "Dassam Falls during monsoon is a sight to behold! The 144-foot waterfall creates a thunderous roar and misty atmosphere. Perfect for nature photography and peaceful meditation.",
+      date: "3 weeks ago",
+      location: "Dassam Falls",
+      category: "Nature",
+      spotImage: "/dassam-falls-jharkhand-monsoon-waterfall-mist-thund.jpg",
+      spotName: "Dassam Falls"
+    },
+    // Reviews WITHOUT photos (9 reviews)
+    {
+      name: "Rajesh Kumar",
+      rating: 5,
+      feedback:
+        "Amazing wildlife experience! Spotted tigers, elephants, and various bird species in Betla National Park. The forest guides were incredibly knowledgeable about local wildlife and tribal traditions. A true gem for nature lovers.",
       date: "1 month ago",
       location: "Betla National Park",
       category: "Wildlife",
-      photos: [
-        "https://images.unsplash.com/photo-1549366021-9f761d040fff?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=400&h=400&fit=crop"
-      ],
+      spotName: "Betla National Park"
     },
     {
       name: "Anita Devi",
       rating: 5,
       feedback:
-        "The Sarhul festival was a once-in-a-lifetime experience. The connection between the tribal communities and nature is truly inspiring. The traditional dances, music, and rituals were mesmerizing. Highly recommend visiting during festival season.",
+        "One of the most sacred Jyotirlinga temples in India. The spiritual energy at Baidyanath Dham and the devotion of pilgrims create an unforgettable divine experience. A must-visit for spiritual seekers.",
       date: "2 months ago",
-      location: "Ranchi",
-      category: "Culture",
-      photos: [
-        "https://images.unsplash.com/photo-1524863479829-916d8e77f114?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1583521214690-73421a1829a9?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1561048877-4d8006de7b0d?w=400&h=400&fit=crop"
-      ],
-    },
-    {
-      name: "Vikram Singh",
-      rating: 4,
-      feedback:
-        "Netarhat hill station was perfect for a peaceful getaway. The sunrise views were incredible, and the cool climate was a welcome relief from the city heat. The colonial architecture and pine forests create a magical atmosphere.",
-      date: "3 months ago",
-      location: "Netarhat",
-      category: "Hill Station",
-    },
-    {
-      name: "Meera Patel",
-      rating: 5,
-      feedback:
-        "Visited Deoghar during Shravan month - what an incredible spiritual experience! The Baidyanath Temple is magnificent and the devotion of pilgrims is deeply moving. The town has excellent facilities for visitors.",
-      date: "3 months ago",
       location: "Deoghar",
       category: "Spiritual",
+      spotName: "Baidyanath Dham"
     },
     {
-      name: "Arjun Reddy",
+      name: "Arjun Mahato",
       rating: 4,
       feedback:
-        "Dassam Falls during monsoon was absolutely stunning. The power of the water and the lush green surroundings create a perfect natural setting. Great for photography and nature lovers.",
-      date: "4 months ago",
-      location: "Dassam Falls",
-      category: "Nature",
+        "Netarhat is truly the 'Queen of Chotanagpur'! The hill station offers cool climate, stunning sunsets, and lush green valleys. The tribal culture here is authentic and welcoming. Perfect for a peaceful retreat.",
+      date: "6 weeks ago",
+      location: "Netarhat",
+      category: "Hill Station",
+      spotName: "Netarhat Hill Station"
     },
     {
-      name: "Kavita Joshi",
+      name: "Kavita Singh",
       rating: 5,
       feedback:
-        "The Sohrai festival and wall paintings were extraordinary. Staying in a tribal village and learning about their art traditions was educational and heartwarming. The hospitality was exceptional.",
-      date: "5 months ago",
+        "The Sohrai festival and traditional wall paintings were extraordinary. Staying in a tribal village and learning about their ancient art traditions was educational and heartwarming. The hospitality was exceptional.",
+      date: "2 months ago",
       location: "Hazaribagh",
       category: "Culture",
+      spotName: "Sohrai Festival"
     },
     {
-      name: "Rohit Gupta",
+      name: "Deepak Verma",
       rating: 4,
       feedback:
-        "Parasnath Hill trek was challenging but rewarding. The Jain temples at the summit are beautiful and the panoramic views are worth the effort. Well-maintained trails and good facilities.",
-      date: "6 months ago",
-      location: "Parasnath Hill",
-      category: "Adventure",
+        "Jonha Falls (Gautamdhara) is a hidden gem! The 43-meter waterfall surrounded by dense forest creates a serene atmosphere. The natural pool at the bottom is perfect for a refreshing dip.",
+      date: "3 months ago",
+      location: "Jonha Falls",
+      category: "Nature",
+      spotName: "Jonha Falls"
     },
-  ]);
+    {
+      name: "Sunita Rani",
+      rating: 5,
+      feedback:
+        "Jagannath Temple in Ranchi during Rath Yatra was an incredible spiritual experience. The festival celebrations, devotional atmosphere, and architectural beauty make it a must-visit destination.",
+      date: "4 months ago",
+      location: "Ranchi",
+      category: "Spiritual",
+      spotName: "Jagannath Temple"
+    },
+    {
+      name: "Manoj Kumar",
+      rating: 4,
+      feedback:
+        "Dalma Wildlife Sanctuary offers great opportunities for wildlife spotting and trekking. Saw elephants, sloth bears, and various bird species. The natural beauty and biodiversity are remarkable.",
+      date: "5 months ago",
+      location: "Dalma Wildlife Sanctuary",
+      category: "Wildlife",
+      spotName: "Dalma Wildlife Sanctuary"
+    },
+    {
+      name: "Ravi Prakash",
+      rating: 4,
+      feedback:
+        "Birsa Zoological Park is perfect for families! The variety of animals, well-maintained enclosures, and educational exhibits make it an enjoyable and informative experience. Kids will love the safari.",
+      date: "7 weeks ago",
+      location: "Ranchi",
+      category: "Wildlife",
+      spotName: "Birsa Zoological Park"
+    },
+    {
+      name: "Rohini Sharma",
+      rating: 5,
+      feedback:
+        "Rock Garden in Ranchi is a masterpiece of creativity! The sculptures carved from rocks and the beautiful landscaping make it a perfect spot for family picnics and photography. A must-see attraction.",
+      date: "5 days ago",
+      location: "Ranchi",
+      category: "Nature",
+      spotName: "Rock Garden"
+    }
+  ];
+  
+  const [reviews, setReviews] = useState(defaultReviews);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRating, setSelectedRating] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
 
+  // Initialize with default reviews and save to localStorage if not exists
   useEffect(() => {
     const savedReviews = localStorage.getItem("jharkhand-reviews");
     if (savedReviews) {
+      // Load saved reviews from localStorage
       setReviews(JSON.parse(savedReviews));
+    } else {
+      // First time loading - save default reviews to localStorage
+      localStorage.setItem("jharkhand-reviews", JSON.stringify(defaultReviews));
+      setReviews(defaultReviews);
     }
   }, []);
 
@@ -132,12 +179,16 @@ export default function ReviewsPage() {
     rating: number;
     feedback: string;
     photos?: string[];
+    videos?: string[];
   }) => {
     const reviewWithDetails = {
       ...newReview,
       date: "Just now",
       location: "Jharkhand",
       category: "General",
+      spotVideo: newReview.videos?.[0], // Use first video if available
+      spotImage: newReview.photos?.[0], // Use first photo if available
+      spotName: "Jharkhand Experience"
     };
     const updatedReviews = [reviewWithDetails, ...reviews];
     setReviews(updatedReviews);
@@ -426,7 +477,10 @@ export default function ReviewsPage() {
                       rating={review.rating}
                       feedback={review.feedback}
                       date={review.date}
-                      photos={review.photos}
+                      spotImage={review.spotImage}
+                      spotVideo={review.spotVideo}
+                      spotName={review.spotName}
+                      location={review.location}
                     />
                     <div className="flex items-center space-x-2 mt-2 ml-6">
                       <Badge variant="outline" className="text-xs">
