@@ -1,0 +1,101 @@
+[
+  {
+    "id": "ranchi",
+    "name": "Ranchi",
+    "type": "city",
+    "district": "Ranchi",
+    "description": "Capital city of Jharkhand, known for its pleasant climate and educational institutions",
+    "coordinates": {
+      "lat": 23.3441,
+      "lng": 85.3096
+    },
+    "attractions": ["Rock Garden", "Tagore Hill", "Jagannath Temple"],
+    "connectivity": {
+      "airport": "Birsa Munda Airport",
+      "railway": "Ranchi Junction",
+      "highways": ["NH33", "NH75"]
+    }
+  },
+  {
+    "id": "jamshedpur",
+    "name": "Jamshedpur",
+    "type": "city",
+    "district": "East Singhbhum",
+    "description": "Industrial city known as the Steel City of India, founded by Jamsetji Tata",
+    "coordinates": {
+      "lat": 22.8046,
+      "lng": 86.2029
+    },
+    "attractions": ["Jubilee Park", "Tata Steel Zoological Park", "Dimna Lake"],
+    "connectivity": {
+      "airport": "Sonari Airport",
+      "railway": "Tatanagar Junction",
+      "highways": ["NH33", "NH18"]
+    }
+  },
+  {
+    "id": "deoghar",
+    "name": "Deoghar",
+    "type": "religious_city",
+    "district": "Deoghar",
+    "description": "Sacred city home to the famous Baidyanath Jyotirlinga temple",
+    "coordinates": {
+      "lat": 24.4854,
+      "lng": 86.6992
+    },
+    "attractions": ["Baidyanath Temple", "Nandan Pahar", "Tapovan"],
+    "connectivity": {
+      "railway": "Jasidih Junction",
+      "highways": ["NH114A", "SH7"]
+    }
+  },
+  {
+    "id": "netarhat",
+    "name": "Netarhat",
+    "type": "hill_station",
+    "district": "Latehar",
+    "description": "Hill station known as the Queen of Chotanagpur, famous for sunrise and sunset views",
+    "coordinates": {
+      "lat": 23.4667,
+      "lng": 84.2667
+    },
+    "elevation": "1128 meters",
+    "attractions": ["Sunrise Point", "Sunset Point", "Lodh Falls", "Pine Forest"],
+    "connectivity": {
+      "nearest_railway": "Latehar Railway Station (35 km)",
+      "highways": ["SH1"]
+    }
+  },
+  {
+    "id": "hazaribagh",
+    "name": "Hazaribagh",
+    "type": "city",
+    "district": "Hazaribagh",
+    "description": "District headquarters known for its lakes and Hazaribagh National Park",
+    "coordinates": {
+      "lat": 23.9929,
+      "lng": 85.3644
+    },
+    "attractions": ["Hazaribagh Lake", "Canary Hill", "Rajrappa Temple"],
+    "connectivity": {
+      "railway": "Hazaribagh Road Railway Station",
+      "highways": ["NH100", "SH1"]
+    }
+  },
+  {
+    "id": "giridih",
+    "name": "Giridih",
+    "type": "city",
+    "district": "Giridih",
+    "description": "District known for coal mining and home to Parasnath Hill",
+    "coordinates": {
+      "lat": 24.1901,
+      "lng": 86.3000
+    },
+    "attractions": ["Parasnath Hill", "Usri Falls", "Khandoli Park"],
+    "connectivity": {
+      "railway": "Giridih Railway Station",
+      "highways": ["NH114A", "SH9"]
+    }
+  }
+]
