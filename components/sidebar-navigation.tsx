@@ -302,8 +302,17 @@ export function SidebarNavigation() {
                             <Link href="/about" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
                               Glimpses of Jharkhand
                             </Link>
+                            <Link href="/cultural-heritage" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
+                              Cultural Heritage
+                            </Link>
+                            <Link href="/cuisine-of-jharkhand" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
+                              Cuisine of Jharkhand
+                            </Link>
                             <Link href="/festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
                               Events of Jharkhand
+                            </Link>
+                            <Link href="/explore-festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
+                              Explore Festivals
                             </Link>
                             <Link href="/reviews" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
                               Social Wall

@@ -183,6 +183,12 @@ const nextConfig = {
         hostname: 'www.shutterstock.com',
         port: '',
         pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'imagepasal.com',
+        port: '',
+        pathname: '**',
       }
     ],
   },

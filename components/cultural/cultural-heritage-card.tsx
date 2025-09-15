@@ -10,23 +10,32 @@ import {
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Festival } from '@/lib/festival-data';
 
-interface EnhancedFestivalCardProps {
-  festival: Festival;
+interface CulturalElement {
+  id: string;
+  title: string;
+  briefDescription: string;
+  fullDescription: string;
+  image: string;
+  category: string;
+  highlights: string[];
+}
+
+interface CulturalHeritageCardProps {
+  culturalElement: CulturalElement;
   index: number;
-  onFestivalClick: (festival: Festival) => void;
-  onToggleFavorite: (festivalId: string) => void;
+  onElementClick: (element: CulturalElement) => void;
+  onToggleFavorite: (elementId: string) => void;
   favorites: string[];
 }
 
-export default function EnhancedFestivalCard({ 
-  festival, 
+export default function CulturalHeritageCard({ 
+  culturalElement, 
   index, 
-  onFestivalClick, 
+  onElementClick, 
   onToggleFavorite, 
   favorites 
-}: EnhancedFestivalCardProps) {
+}: CulturalHeritageCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const cardRef = useRef<HTMLDivElement>(null);
@@ -42,7 +51,7 @@ export default function EnhancedFestivalCard({
     // Throttle updates to reduce re-renders
     setMousePosition(prev => {
       if (Math.abs(prev.x - x) < 2 && Math.abs(prev.y - y) < 2) {
-        return prev; // Don't update if change is too small
+        return prev;
       }
       return { x, y };
     });
@@ -57,16 +66,16 @@ export default function EnhancedFestivalCard({
     setMousePosition({ x: 50, y: 50 });
   }, []);
 
-  const isFavorited = favorites.includes(festival.id);
+  const isFavorited = favorites.includes(culturalElement.id);
   
-  // Memoize random values to prevent infinite re-renders
+  // Memoize random values for engagement
   const { rating, views, popularity } = useMemo(() => ({
-    rating: 4.2 + (Math.random() * 0.8),
-    views: Math.floor(Math.random() * 10000) + 1000,
+    rating: 4.3 + (Math.random() * 0.6),
+    views: Math.floor(Math.random() * 5000) + 2000,
     popularity: Math.floor(Math.random() * 100)
-  }), [festival.id]);
+  }), [culturalElement.id]);
 
-  // Memoize transform style to prevent excessive re-renders
+  // Memoize transform style
   const transformStyle = useMemo(() => ({
     transform: isHovered 
       ? `rotateX(${(mousePosition.y - 50) * 0.1}deg) rotateY(${(mousePosition.x - 50) * 0.1}deg) translateZ(20px)` 
@@ -93,7 +102,7 @@ export default function EnhancedFestivalCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={() => router.push(`/explore-festivals#${festival.id}`)}
+      onClick={() => router.push(`/cultural-heritage/${culturalElement.id}`)}
       style={transformStyle}
     >
       <Card className="cursor-pointer transition-all duration-500 overflow-hidden bg-gradient-to-br from-background via-background to-primary/5 border-2 hover:border-primary/20 hover:shadow-2xl relative">
@@ -106,8 +115,8 @@ export default function EnhancedFestivalCard({
         <CardHeader className="p-0 relative overflow-hidden">
           <div className="relative h-56 group-hover:h-64 transition-all duration-500">
             <Image
-              src={festival.media.hero}
-              alt={festival.name}
+              src={culturalElement.image}
+              alt={culturalElement.title}
               fill
               className={`object-cover transition-all duration-700 ${
                 isHovered ? 'scale-110 brightness-110' : 'scale-100'
@@ -126,16 +135,18 @@ export default function EnhancedFestivalCard({
             <div className="absolute top-4 left-4 flex flex-col gap-2">
               <Badge 
                 className={`${
-                  festival.season === 'spring' ? 'bg-green-500' :
-                  festival.season === 'summer' ? 'bg-yellow-500' :
-                  festival.season === 'monsoon' ? 'bg-blue-500' :
-                  'bg-purple-500'
+                  culturalElement.category === 'Metal Craft' ? 'bg-amber-600' :
+                  culturalElement.category === 'Folk Dance' ? 'bg-blue-500' :
+                  culturalElement.category === 'Handicraft' ? 'bg-green-600' :
+                  culturalElement.category === 'Music' ? 'bg-purple-500' :
+                  culturalElement.category === 'Cuisine' ? 'bg-red-500' :
+                  'bg-gray-500'
                 } text-white px-3 py-1 transform transition-transform duration-300 ${
                   isHovered ? 'scale-110 -translate-y-1' : ''
                 }`}
               >
                 <Sparkles className="h-3 w-3 mr-1" />
-                {festival.season}
+                {culturalElement.category}
               </Badge>
               
               {popularity > 70 && (
@@ -145,7 +156,7 @@ export default function EnhancedFestivalCard({
                   }`}
                 >
                   <TrendingUp className="h-3 w-3 mr-1" />
-                  Trending
+                  Popular
                 </Badge>
               )}
             </div>
@@ -160,7 +171,7 @@ export default function EnhancedFestivalCard({
                 }`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  onToggleFavorite(festival.id);
+                  onToggleFavorite(culturalElement.id);
                 }}
               >
                 <Heart 
@@ -182,8 +193,8 @@ export default function EnhancedFestivalCard({
                   e.stopPropagation();
                   if (navigator.share) {
                     navigator.share({
-                      title: festival.name,
-                      text: festival.description.short,
+                      title: culturalElement.title,
+                      text: culturalElement.briefDescription,
                     });
                   }
                 }}
@@ -209,7 +220,7 @@ export default function EnhancedFestivalCard({
               </div>
             </div>
 
-            {/* Duration Badge */}
+            {/* Tradition Badge */}
             <div className="absolute bottom-4 right-4">
               <Badge 
                 variant="secondary" 
@@ -218,7 +229,7 @@ export default function EnhancedFestivalCard({
                 }`}
               >
                 <Clock className="h-3 w-3 mr-1" />
-                {festival.dates.duration} days
+                Ancient
               </Badge>
             </div>
           </div>
@@ -230,15 +241,14 @@ export default function EnhancedFestivalCard({
             <h3 className={`text-xl font-bold transition-all duration-300 ${
               isHovered ? 'text-primary scale-105' : ''
             }`}>
-              {festival.name}
+              {culturalElement.title}
             </h3>
-            <p className="text-muted-foreground text-sm">{festival.nameLocal}</p>
           </div>
 
           {/* Description with Animated Lines */}
           <div className="relative">
-            <p className="text-muted-foreground line-clamp-2 leading-relaxed">
-              {festival.description.short}
+            <p className="text-muted-foreground line-clamp-3 leading-relaxed text-sm">
+              {culturalElement.briefDescription}
             </p>
             <div 
               className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-primary to-secondary transition-all duration-500 ${
@@ -247,55 +257,35 @@ export default function EnhancedFestivalCard({
             />
           </div>
 
-          {/* Details with Hover Animations */}
+          {/* Highlights with Hover Animations */}
           <div className="space-y-3">
-            {[
-              { icon: Calendar, text: festival.dates.lunar },
-              { icon: MapPin, text: festival.location.primary },
-              { icon: Users, text: festival.category }
-            ].map((item, idx) => (
-              <div 
-                key={idx}
-                className={`flex items-center gap-2 text-muted-foreground transition-all duration-300 ${
-                  isHovered ? 'translate-x-2 text-foreground' : ''
-                }`}
-                style={{ transitionDelay: `${idx * 50}ms` }}
-              >
-                <item.icon className={`h-4 w-4 transition-all duration-300 ${
-                  isHovered ? 'text-primary scale-110' : ''
-                }`} />
-                <span className="truncate text-sm">{item.text}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Months with Staggered Animation */}
-          <div className="flex flex-wrap gap-2">
-            {festival.months.slice(0, 2).map((month, idx) => (
-              <Badge 
-                key={month} 
-                variant="outline" 
-                size="sm"
-                className={`transition-all duration-300 ${
-                  isHovered ? 'scale-110 -translate-y-1 border-primary' : ''
-                }`}
-                style={{ transitionDelay: `${idx * 100}ms` }}
-              >
-                {month}
-              </Badge>
-            ))}
-            {festival.months.length > 2 && (
-              <Badge 
-                variant="outline" 
-                size="sm"
-                className={`transition-all duration-300 ${
-                  isHovered ? 'scale-110 -translate-y-1 border-primary' : ''
-                }`}
-                style={{ transitionDelay: '200ms' }}
-              >
-                +{festival.months.length - 2} more
-              </Badge>
-            )}
+            <div className="flex flex-wrap gap-2">
+              {culturalElement.highlights.slice(0, 3).map((highlight, idx) => (
+                <Badge 
+                  key={highlight} 
+                  variant="outline" 
+                  size="sm"
+                  className={`transition-all duration-300 text-xs ${
+                    isHovered ? 'scale-110 -translate-y-1 border-primary' : ''
+                  }`}
+                  style={{ transitionDelay: `${idx * 100}ms` }}
+                >
+                  {highlight}
+                </Badge>
+              ))}
+              {culturalElement.highlights.length > 3 && (
+                <Badge 
+                  variant="outline" 
+                  size="sm"
+                  className={`transition-all duration-300 text-xs ${
+                    isHovered ? 'scale-110 -translate-y-1 border-primary' : ''
+                  }`}
+                  style={{ transitionDelay: '300ms' }}
+                >
+                  +{culturalElement.highlights.length - 3} more
+                </Badge>
+              )}
+            </div>
           </div>
         </CardContent>
 
@@ -307,7 +297,7 @@ export default function EnhancedFestivalCard({
               }`}
               onClick={(e) => {
                 e.stopPropagation();
-                router.push(`/explore-festivals#${festival.id}`);
+                router.push(`/cultural-heritage/${culturalElement.id}`);
               }}
             >
               {/* Button Background Animation */}
@@ -320,7 +310,7 @@ export default function EnhancedFestivalCard({
               
               <span className="relative flex items-center justify-center gap-2">
                 <Zap className="h-4 w-4" />
-                Explore Festival
+                Explore Heritage
                 <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${
                   isHovered ? 'translate-x-2' : ''
                 }`} />

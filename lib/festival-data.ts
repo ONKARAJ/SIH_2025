@@ -816,8 +816,8 @@ export const festivalData: Festival[] = [
     }
   },
   {
-    id: 'jitia',
-    name: 'Jitia Festival',
+    id: 'jitiya',
+    name: 'Jitiya Festival',
     nameLocal: 'जितिया व्रत',
     category: 'religious',
     season: 'monsoon',
