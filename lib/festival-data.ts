@@ -988,7 +988,7 @@ export const culturalData: CulturalElement[] = [
           contact: '+91-9234567890'
         }
       ],
-      museums: ['Tribal Research Institute Museum, Ranchi'],
+      museums: ['Jharkhand State Museum'],
       culturalCenters: ['Jharkhand State Museum']
     }
   },
@@ -1033,7 +1033,7 @@ export const culturalData: CulturalElement[] = [
           contact: '+91-9876543210'
         }
       ],
-      museums: ['Tribal Research Institute Museum', 'Jharkhand State Museum'],
+      museums: ['Jharkhand State Museum'],
       culturalCenters: ['Ranchi Cultural Center', 'Dumka Folk Arts Center']
     }
   },
