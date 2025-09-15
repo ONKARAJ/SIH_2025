@@ -1,0 +1,177 @@
+[
+  {
+    "id": "hundru_falls",
+    "name": "Hundru Falls",
+    "category": "waterfall",
+    "location": "Ranchi",
+    "coordinates": {
+      "lat": 23.4264,
+      "lng": 85.5910
+    },
+    "description": "98-meter high waterfall formed by the Subarnarekha River, spectacular during monsoons",
+    "height": "98 meters",
+    "best_time": "July to February",
+    "distance_from_ranchi": "45 km",
+    "activities": ["Photography", "Trekking", "Nature walks"],
+    "entry_fee": "₹20 per person",
+    "timings": "9:00 AM - 6:00 PM"
+  },
+  {
+    "id": "dassam_falls",
+    "name": "Dassam Falls",
+    "category": "waterfall",
+    "location": "Ranchi",
+    "coordinates": {
+      "lat": 23.3795,
+      "lng": 85.5321
+    },
+    "description": "44-meter waterfall known as the 'Niagara of Jharkhand', formed by Kanchi River",
+    "height": "44 meters",
+    "best_time": "July to February",
+    "distance_from_ranchi": "40 km",
+    "activities": ["Rock climbing", "Rappelling", "Photography"],
+    "entry_fee": "₹15 per person",
+    "timings": "8:00 AM - 6:00 PM"
+  },
+  {
+    "id": "betla_national_park",
+    "name": "Betla National Park",
+    "category": "wildlife",
+    "location": "Latehar",
+    "coordinates": {
+      "lat": 23.8697,
+      "lng": 84.1906
+    },
+    "description": "Tiger reserve and national park with diverse wildlife including tigers, elephants, and leopards",
+    "area": "979 sq km",
+    "best_time": "November to March",
+    "distance_from_ranchi": "170 km",
+    "animals": ["Tigers", "Elephants", "Leopards", "Sambars", "Wild boars"],
+    "safari_timings": {
+      "morning": "6:00 AM - 9:00 AM",
+      "evening": "3:00 PM - 6:00 PM"
+    },
+    "entry_fee": "₹50 per person + vehicle charges"
+  },
+  {
+    "id": "baidyanath_temple",
+    "name": "Baidyanath Dham",
+    "category": "religious",
+    "location": "Deoghar",
+    "coordinates": {
+      "lat": 24.4854,
+      "lng": 86.6992
+    },
+    "description": "One of the 12 sacred Jyotirlingas dedicated to Lord Shiva, major pilgrimage site",
+    "significance": "Jyotirlinga",
+    "best_time": "October to March",
+    "distance_from_ranchi": "250 km",
+    "festivals": ["Shravan Mela", "Shivaratri"],
+    "timings": "4:00 AM - 9:00 PM",
+    "darshan_fee": "Free (VIP darshan available)"
+  },
+  {
+    "id": "parasnath_hill",
+    "name": "Parasnath Hill",
+    "category": "religious_trekking",
+    "location": "Giridih",
+    "coordinates": {
+      "lat": 23.9629,
+      "lng": 86.1661
+    },
+    "description": "Highest peak in Jharkhand, sacred to Jains with 20 Tirthankara temples",
+    "elevation": "1365 meters",
+    "best_time": "October to March",
+    "distance_from_ranchi": "160 km",
+    "significance": "20 Jain Tirthankaras attained salvation here",
+    "trek_duration": "4-6 hours (round trip)",
+    "temples": 20,
+    "entry_fee": "₹50 per person"
+  },
+  {
+    "id": "lodh_falls",
+    "name": "Lodh Falls",
+    "category": "waterfall",
+    "location": "Latehar (near Netarhat)",
+    "coordinates": {
+      "lat": 23.5978,
+      "lng": 84.2503
+    },
+    "description": "Highest waterfall in Jharkhand at 143 meters, surrounded by dense forests",
+    "height": "143 meters",
+    "best_time": "July to February",
+    "distance_from_ranchi": "180 km",
+    "activities": ["Photography", "Trekking", "Nature exploration"],
+    "accessibility": "15 km trek from Netarhat",
+    "entry_fee": "No entry fee"
+  },
+  {
+    "id": "tagore_hill",
+    "name": "Tagore Hill",
+    "category": "heritage",
+    "location": "Ranchi",
+    "coordinates": {
+      "lat": 23.3719,
+      "lng": 85.3284
+    },
+    "description": "Historic hill where Rabindranath Tagore spent time, now houses Tagore Hill Observatory",
+    "significance": "Rabindranath Tagore's residence",
+    "best_time": "October to March",
+    "distance_from_city_center": "8 km",
+    "attractions": ["Observatory", "Museum", "Gardens"],
+    "timings": "9:00 AM - 5:00 PM",
+    "entry_fee": "₹10 per person"
+  },
+  {
+    "id": "rock_garden_ranchi",
+    "name": "Rock Garden",
+    "category": "garden",
+    "location": "Ranchi",
+    "coordinates": {
+      "lat": 23.4105,
+      "lng": 85.4381
+    },
+    "description": "Artistic garden featuring sculptures and structures made from natural rocks",
+    "best_time": "October to March",
+    "distance_from_city_center": "12 km",
+    "activities": ["Photography", "Family outing", "Evening walks"],
+    "facilities": ["Restaurant", "Boating", "Children's park"],
+    "timings": "9:00 AM - 6:00 PM",
+    "entry_fee": "₹20 per person"
+  },
+  {
+    "id": "jonha_falls",
+    "name": "Jonha Falls (Gautamdhara)",
+    "category": "waterfall",
+    "location": "Ranchi",
+    "coordinates": {
+      "lat": 23.5031,
+      "lng": 85.4408
+    },
+    "description": "43-meter waterfall with religious significance, believed to be blessed by Lord Buddha",
+    "height": "43 meters",
+    "best_time": "July to March",
+    "distance_from_ranchi": "40 km",
+    "significance": "Buddhist meditation site",
+    "activities": ["Meditation", "Photography", "Swimming"],
+    "entry_fee": "₹15 per person",
+    "timings": "8:00 AM - 6:00 PM"
+  },
+  {
+    "id": "jubilee_park",
+    "name": "Jubilee Park",
+    "category": "park",
+    "location": "Jamshedpur",
+    "coordinates": {
+      "lat": 22.7868,
+      "lng": 86.1890
+    },
+    "description": "225-acre park with rose gardens, lake, and recreational facilities",
+    "area": "225 acres",
+    "best_time": "November to February",
+    "attractions": ["Rose Garden", "Lake", "Zoological Park nearby"],
+    "activities": ["Boating", "Walking", "Family recreation"],
+    "timings": "6:00 AM - 8:00 PM",
+    "entry_fee": "₹10 per person"
+  }
+]

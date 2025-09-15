@@ -13,15 +13,18 @@ import {
   Bot,
   User,
   Minimize2,
-  HelpCircle,
   RotateCcw,
+  MapPin,
 } from "lucide-react";
+import { useGeolocation } from "@/hooks/useGeolocation";
 
 interface ChatMessage {
   id: string;
   content: string;
   isBot: boolean;
   timestamp: Date;
+  source?: string;
+  hasLocalData?: boolean;
 }
 
 interface ChatbotProps {
@@ -34,8 +37,20 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [sessionId, setSessionId] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Geolocation hook
+  const {
+    position,
+    error: locationError,
+    loading: locationLoading,
+    supported: locationSupported,
+    requestLocation,
+    clearLocation,
+    getCurrentLocationName
+  } = useGeolocation();
 
   // Scroll to bottom when new messages are added
   useEffect(() => {
@@ -54,9 +69,10 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     if (isOpen && messages.length === 0) {
       const welcomeMessage: ChatMessage = {
         id: "welcome",
-        content: "Hello! 👋 I'm your AI assistant for Jharkhand Tourism. I can help you with:\n\n🏞️ **Tourism** - Places to visit, travel tips, best times\n🎭 **Culture** - Festivals, tribal heritage, traditions\n📍 **Distance Calculation** - Real-time distances between any two places\n📰 **Current Affairs** - Latest news, government updates\n💬 **General Chat** - Ask me anything about any topic!\n\n*Powered by DeepSeek AI with Google Maps integration*\n\nWhat would you like to explore today?",
+        content: "👋 **Hi! I'm your Jharkhand Travel Assistant**\n\nI help with:\n• 📍 Distance & travel routes\n• 🎯 Tourist spots & attractions  \n• 🚌 Transport options & booking\n• 💬 General questions\n• 📍 Location-based recommendations\n\n**Try asking:**\n• \"Distance from Ranchi to Deoghar\"\n• \"Best places in Jharkhand\"\n• \"Who is power star Pawan Singh?\"\n\n📍 **Tip**: Click the location button 📍 for personalized recommendations!\n\nWhat can I help you with?",
         isBot: true,
         timestamp: new Date(),
+        source: 'system'
       };
       setMessages([welcomeMessage]);
     }
@@ -86,34 +102,10 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     return null;
   };
 
-  // Get AI response from DeepSeek API
-  const getAIResponse = async (userMessage: string): Promise<string> => {
+  // Get AI response from enhanced API
+  const getAIResponse = async (userMessage: string): Promise<{content: string, source: string, sessionId: string, hasLocalData?: boolean}> => {
     try {
-      // Check if it's a distance query first
-      const distanceQuery = extractDistanceQuery(userMessage);
-      if (distanceQuery) {
-        try {
-          const distanceResponse = await fetch('/api/distance', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              origin: distanceQuery.origin,
-              destination: distanceQuery.destination,
-            }),
-          });
-          
-          if (distanceResponse.ok) {
-            const distanceData = await distanceResponse.json();
-            return `📍 **Distance from ${distanceData.origin} to ${distanceData.destination}:**\n\n🚗 **By Road**: ${distanceData.distance.text} (${distanceData.distance.kilometers} km)\n⏱️ **Travel Time**: ${distanceData.duration.text} (approximately ${distanceData.duration.hours} hours)\n\n*Travel times are estimated for driving and may vary based on traffic conditions and route taken.*\n\nWould you like to know about any attractions or places to visit along this route?`;
-          }
-        } catch (error) {
-          console.log('Distance API failed, falling back to general response');
-        }
-      }
-      
-      // Get general AI response from DeepSeek
+      // Get AI response from enhanced API
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
@@ -121,19 +113,44 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
         },
         body: JSON.stringify({
           message: userMessage,
+          sessionId: sessionId
         }),
       });
       
       if (response.ok) {
         const data = await response.json();
-        return data.message;
+        // Handle the response structure safely
+        return {
+          content: data.message || 'No response received',
+          source: data.source || 'fallback',
+          sessionId: data.sessionId || sessionId || `session_${Date.now()}`,
+          hasLocalData: data.hasLocalData || false
+        };
       } else {
-        throw new Error('API request failed');
+        console.error(`API request failed with status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`API request failed: ${response.status} - ${errorData.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('AI response error:', error);
-      // Fallback to local responses
-      return getFallbackResponse(userMessage);
+      // Fallback to local responses with safe error handling
+      try {
+        const fallbackContent = getFallbackResponse(userMessage);
+        return {
+          content: fallbackContent,
+          source: 'fallback',
+          sessionId: sessionId || `fallback_${Date.now()}`,
+          hasLocalData: true
+        };
+      } catch (fallbackError) {
+        console.error('Fallback error:', fallbackError);
+        return {
+          content: "I'm having trouble processing your request right now. Please try again!",
+          source: 'error',
+          sessionId: sessionId || `error_${Date.now()}`,
+          hasLocalData: false
+        };
+      }
     }
   };
 
@@ -191,23 +208,50 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     setIsTyping(true);
 
     try {
-      // Get AI response (with distance calculation support)
-      const botResponse = await getAIResponse(userMessage.content);
+      // Get AI response with error handling
+      const aiResponse = await getAIResponse(userMessage.content);
+      
+      // Validate response structure
+      if (!aiResponse || typeof aiResponse !== 'object') {
+        throw new Error('Invalid response format received');
+      }
+      
+      // Update session ID if we got a new one
+      if (aiResponse.sessionId && aiResponse.sessionId !== sessionId) {
+        setSessionId(aiResponse.sessionId);
+      }
+      
       const botMessage: ChatMessage = {
         id: `bot-${Date.now()}`,
-        content: botResponse,
+        content: aiResponse.content || 'Sorry, I couldn\'t process that request.',
         isBot: true,
         timestamp: new Date(),
+        source: aiResponse.source || 'fallback',
+        hasLocalData: aiResponse.hasLocalData || false
       };
 
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       console.error('Error getting response:', error);
+      
+      // Try to provide a more helpful error message
+      let errorContent = "I'm having trouble connecting right now. Please try again in a moment!";
+      
+      if (error instanceof Error) {
+        if (error.message.includes('API key')) {
+          errorContent = "🔧 The AI service needs configuration. Using local knowledge for now!\n\n" + getFallbackResponse(userMessage.content);
+        } else if (error.message.includes('network')) {
+          errorContent = "🌐 Network issue detected. Please check your internet connection and try again.";
+        }
+      }
+      
       const errorMessage: ChatMessage = {
         id: `bot-${Date.now()}`,
-        content: "I'm having trouble connecting right now. Please try again in a moment! In the meantime, I can still help with basic Jharkhand tourism questions.",
+        content: errorContent,
         isBot: true,
         timestamp: new Date(),
+        source: 'fallback',
+        hasLocalData: true
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
@@ -222,8 +266,55 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     }
   };
 
+  const handleLocationRequest = async () => {
+    if (position) {
+      // If location is already available, show current location info
+      try {
+        const locationName = await getCurrentLocationName(position);
+        const locationMessage: ChatMessage = {
+          id: `location-${Date.now()}`,
+          content: `📍 **Current Location**: ${locationName}\n\nCoordinates: ${position.latitude.toFixed(4)}, ${position.longitude.toFixed(4)}\n\nI can now provide better recommendations based on your location! Try asking:\n• \"Places near me\"\n• \"Distance to Ranchi from here\"\n• \"Nearest tourist attractions\"`,
+          isBot: true,
+          timestamp: new Date(),
+          source: 'location'
+        };
+        setMessages(prev => [...prev, locationMessage]);
+      } catch (error) {
+        console.error('Error getting location name:', error);
+      }
+    } else {
+      // Request location permission
+      const success = await requestLocation();
+      if (success && position) {
+        try {
+          const locationName = await getCurrentLocationName(position);
+          const successMessage: ChatMessage = {
+            id: `location-success-${Date.now()}`,
+            content: `✅ **Location enabled!** 📍\n\nCurrent location: ${locationName}\n\nI can now help you with:\n• Nearby attractions and places\n• Distance calculations from your location\n• Local travel recommendations\n\nWhat would you like to explore?`,
+            isBot: true,
+            timestamp: new Date(),
+            source: 'location'
+          };
+          setMessages(prev => [...prev, successMessage]);
+        } catch (error) {
+          console.error('Error getting location name:', error);
+        }
+      } else if (locationError) {
+        const errorMessage: ChatMessage = {
+          id: `location-error-${Date.now()}`,
+          content: `❌ **Location Error**\n\n${locationError}\n\n💡 **To enable location:**\n1. Click the location icon 📍 in your browser address bar\n2. Select \"Allow\" for location access\n3. Click the location button again\n\nDon\'t worry - I can still help with travel questions using place names!`,
+          isBot: true,
+          timestamp: new Date(),
+          source: 'location_error'
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      }
+    }
+  };
+
   const handleClearConversation = () => {
     setMessages([]);
+    setSessionId("");
     setTimeout(() => {
       const welcomeMessage: ChatMessage = {
         id: "welcome-new",
@@ -234,6 +325,7 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
       setMessages([welcomeMessage]);
     }, 100);
   };
+
 
   const formatMessageContent = (content: string) => {
     return content.split('\n').map((line, index) => {
@@ -254,15 +346,20 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     });
   };
 
-  const quickSuggestions = [
-    "Distance between Ranchi and Jamshedpur",
-    "What are the tourist spots in Ranchi?",
-    "Tell me about festivals in Jharkhand",
+  const quickSuggestions = position ? [
+    "Places near me",
+    "Distance to Ranchi from here", 
+    "Tourist spots nearby",
     "Best waterfalls to visit",
-    "How far is Deoghar from Ranchi?",
-    "Who is the CM of Jharkhand?",
-    "Tell me about artificial intelligence",
-    "Weather and climate in Jharkhand"
+    "Who is power star Pawan Singh?",
+    "Transport options near me"
+  ] : [
+    "Distance Ranchi to Deoghar",
+    "Tourist spots in Jharkhand",
+    "Festivals in Jharkhand",
+    "Best waterfalls to visit",
+    "Who is power star Pawan Singh?",
+    "CM of Jharkhand"
   ];
 
   const handleSuggestionClick = async (suggestion: string) => {
@@ -277,21 +374,38 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     setIsTyping(true);
 
     try {
-      const botResponse = await getAIResponse(suggestion);
+      const aiResponse = await getAIResponse(suggestion);
+      
+      // Validate response structure
+      if (!aiResponse || typeof aiResponse !== 'object') {
+        throw new Error('Invalid response format received');
+      }
+      
+      // Update session ID if we got a new one
+      if (aiResponse.sessionId && aiResponse.sessionId !== sessionId) {
+        setSessionId(aiResponse.sessionId);
+      }
+      
       const botMessage: ChatMessage = {
         id: `bot-${Date.now()}`,
-        content: botResponse,
+        content: aiResponse.content || getFallbackResponse(suggestion),
         isBot: true,
         timestamp: new Date(),
+        source: aiResponse.source || 'fallback',
+        hasLocalData: aiResponse.hasLocalData || false
       };
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       console.error('Error getting suggestion response:', error);
+      
+      // Provide helpful fallback response
       const errorMessage: ChatMessage = {
         id: `bot-${Date.now()}`,
         content: getFallbackResponse(suggestion),
         isBot: true,
         timestamp: new Date(),
+        source: 'fallback',
+        hasLocalData: true
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
@@ -302,88 +416,104 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
   if (!isOpen) return null;
 
   return (
-    <Card className={`fixed bottom-4 right-4 w-96 max-w-[calc(100vw-2rem)] shadow-2xl border-border bg-background z-50 transition-all duration-300 overflow-hidden ${
-      isMinimized ? "h-16" : "h-[600px] max-h-[80vh]"
+    <Card className={`fixed bottom-4 right-4 w-[380px] max-w-[calc(100vw-2rem)] shadow-2xl border-border bg-background z-50 transition-all duration-300 overflow-hidden ${
+      isMinimized ? "h-12" : "h-[580px] max-h-[85vh]"
     }`}>
       {/* Header */}
-      <CardHeader className="px-4 py-3 border-b border-border bg-gradient-to-r from-primary to-primary/90 text-primary-foreground rounded-t-lg">
+      <CardHeader className="px-2 py-1 border-b border-border bg-gradient-to-r from-primary to-primary/90 text-primary-foreground rounded-t-lg">
         <div className="flex items-center justify-between min-w-0">
-          <div className="flex items-center space-x-3 min-w-0 flex-1">
-            <div className="w-9 h-9 bg-primary-foreground rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-              <Bot className="h-5 w-5 text-primary" />
+          <div className="flex items-center space-x-2 min-w-0 flex-1">
+            <div className="w-7 h-7 bg-primary-foreground rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
+              <Bot className="h-3.5 w-3.5 text-primary" />
             </div>
             <div className="min-w-0 flex-1">
-              <CardTitle className="text-sm font-semibold truncate">
-                Jharkhand Tourism Assistant
+              <CardTitle className="text-sm font-semibold truncate leading-tight">
+                Travel Assistant
               </CardTitle>
-              <div className="flex items-center space-x-2 mt-0.5">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse flex-shrink-0"></div>
-                <span className="text-xs opacity-90 font-medium">AI Powered • Online</span>
+              <div className="flex items-center space-x-1.5 mt-0">
+                <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse flex-shrink-0"></div>
+                <span className="text-xs opacity-90 font-medium leading-tight">AI • Online</span>
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-0.5 ml-2">
+          <div className="flex items-center space-x-0.5 ml-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleLocationRequest()}
+              className={`text-primary-foreground hover:bg-primary-foreground/20 w-7 h-7 p-0 rounded-md transition-colors ${
+                position ? 'bg-green-500/20' : ''
+              }`}
+              title={position ? 'Location enabled' : 'Enable location for better recommendations'}
+              disabled={locationLoading}
+            >
+              <MapPin className={`h-3 w-3 ${
+                locationLoading ? 'animate-pulse' : ''
+              } ${
+                position ? 'text-green-300' : ''
+              }`} />
+            </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleClearConversation}
-              className="text-primary-foreground hover:bg-primary-foreground/20 w-8 h-8 p-0 rounded-md transition-colors"
+              className="text-primary-foreground hover:bg-primary-foreground/20 w-7 h-7 p-0 rounded-md transition-colors"
               title="Clear conversation"
             >
-              <RotateCcw className="h-3.5 w-3.5" />
+              <RotateCcw className="h-3 w-3" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsMinimized(!isMinimized)}
-              className="text-primary-foreground hover:bg-primary-foreground/20 w-8 h-8 p-0 rounded-md transition-colors"
+              className="text-primary-foreground hover:bg-primary-foreground/20 w-7 h-7 p-0 rounded-md transition-colors"
               title={isMinimized ? "Expand" : "Minimize"}
             >
-              <Minimize2 className="h-3.5 w-3.5" />
+              <Minimize2 className="h-3 w-3" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={onToggle}
-              className="text-primary-foreground hover:bg-primary-foreground/20 w-8 h-8 p-0 rounded-md transition-colors"
+              className="text-primary-foreground hover:bg-primary-foreground/20 w-7 h-7 p-0 rounded-md transition-colors"
               title="Close chat"
             >
-              <X className="h-3.5 w-3.5" />
+              <X className="h-3 w-3" />
             </Button>
           </div>
         </div>
       </CardHeader>
 
       {!isMinimized && (
-        <CardContent className="p-0 flex flex-col h-[calc(100%-76px)] overflow-hidden">
+        <CardContent className="p-0 flex flex-col h-[calc(100%-46px)] overflow-hidden">
           {/* Messages Area */}
-          <ScrollArea className="flex-1 p-4 overflow-x-hidden">
-            <div className="space-y-4 overflow-x-hidden">
+          <ScrollArea className="flex-1 px-2 pt-1 pb-2 overflow-x-hidden">
+            <div className="space-y-2 overflow-x-hidden">
               {messages.map((message) => (
                 <div
                   key={message.id}
                   className={`flex w-full ${message.isBot ? "justify-start" : "justify-end"}`}
                 >
                   <div
-                    className={`flex items-start space-x-2 max-w-[85%] min-w-0 ${
+                    className={`flex items-start space-x-1.5 max-w-[85%] min-w-0 ${
                       message.isBot ? "flex-row" : "flex-row-reverse space-x-reverse"
                     }`}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
                         message.isBot
                           ? "bg-primary text-primary-foreground"
                           : "bg-secondary text-secondary-foreground"
                       }`}
                     >
                       {message.isBot ? (
-                        <Bot className="h-4 w-4" />
+                        <Bot className="h-3.5 w-3.5" />
                       ) : (
-                        <User className="h-4 w-4" />
+                        <User className="h-3.5 w-3.5" />
                       )}
                     </div>
                     <div
-                      className={`rounded-lg p-3 min-w-0 flex-1 word-wrap ${
+                      className={`rounded-lg p-2 min-w-0 flex-1 word-wrap ${
                         message.isBot
                           ? "bg-muted text-foreground"
                           : "bg-primary text-primary-foreground"
@@ -397,6 +527,8 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
                           <div className="overflow-hidden break-words whitespace-normal">{message.content}</div>
                         )}
                       </div>
+                      
+                      
                       <div
                         className={`text-xs mt-1 opacity-70 ${
                           message.isBot ? "text-muted-foreground" : "text-primary-foreground/70"
@@ -415,11 +547,11 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
               {/* Typing indicator */}
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="flex items-start space-x-2">
-                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
-                      <Bot className="h-4 w-4" />
+                  <div className="flex items-start space-x-1.5">
+                    <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                      <Bot className="h-3.5 w-3.5" />
                     </div>
-                    <div className="bg-muted rounded-lg p-3">
+                    <div className="bg-muted rounded-lg p-2">
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
                         <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
@@ -435,14 +567,14 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
 
           {/* Quick Suggestions */}
           {messages.length <= 1 && (
-            <div className="p-4 border-t border-border">
-              <div className="mb-2 text-xs text-muted-foreground font-medium">Quick Questions:</div>
+            <div className="px-2 py-1.5 border-t border-border">
+              <div className="mb-1 text-xs text-muted-foreground font-medium">Try asking:</div>
               <div className="flex flex-wrap gap-1">
-                {quickSuggestions.slice(0, 4).map((suggestion, index) => (
+                {quickSuggestions.map((suggestion, index) => (
                   <Badge
                     key={index}
                     variant="outline"
-                    className="cursor-pointer text-xs px-2 py-1 hover:bg-primary hover:text-primary-foreground transition-colors"
+                    className="cursor-pointer text-xs px-2 py-0.5 hover:bg-primary hover:text-primary-foreground transition-colors"
                     onClick={() => handleSuggestionClick(suggestion)}
                   >
                     {suggestion}
@@ -453,7 +585,7 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
           )}
 
           {/* Input Area */}
-          <div className="p-4 border-t border-border">
+          <div className="p-2 border-t border-border">
             <div className="flex space-x-2">
               <Input
                 ref={inputRef}
@@ -473,16 +605,10 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
                 <Send className="h-4 w-4" />
               </Button>
             </div>
-            <div className="flex items-center justify-between mt-2">
-              <div className="text-xs text-muted-foreground">
-                Press Enter to send
-              </div>
-              <div className="flex items-center space-x-1">
-                <HelpCircle className="h-3 w-3 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">
-                  Ask about distances, tourism, culture, current affairs, or any topic!
-                </span>
-              </div>
+            <div className="text-center mt-1">
+              <span className="text-xs text-muted-foreground">
+                Press Enter to send • Ask about tourism, distances, or any topic!
+              </span>
             </div>
           </div>
         </CardContent>
