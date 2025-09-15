@@ -20,6 +20,384 @@ interface SearchResult {
 }
 
 const searchData: SearchResult[] = [
+  // Major Cities
+  {
+    id: 'ranchi',
+    title: 'Ranchi',
+    description: 'Capital city of Jharkhand, known for its pleasant climate and educational institutions',
+    type: 'place',
+    category: 'city',
+    url: '/places',
+    tags: ['capital', 'city', 'cultural hub', 'waterfalls', 'temples', 'rock garden', 'tagore hill']
+  },
+  {
+    id: 'jamshedpur',
+    title: 'Jamshedpur',
+    description: 'Industrial city known as the Steel City of India, founded by Jamsetji Tata',
+    type: 'place',
+    category: 'city', 
+    url: '/places',
+    tags: ['steel city', 'industrial', 'jubilee park', 'tata', 'dimna lake']
+  },
+  {
+    id: 'deoghar',
+    title: 'Deoghar',
+    description: 'Sacred city home to the famous Baidyanath Jyotirlinga temple',
+    type: 'place',
+    category: 'religious',
+    url: '/religious-site',
+    tags: ['spiritual', 'temple', 'pilgrimage', 'religious', 'baidyanath', 'jyotirlinga']
+  },
+  {
+    id: 'hazaribagh',
+    title: 'Hazaribagh',
+    description: 'District headquarters known for its lakes and Hazaribagh National Park',
+    type: 'place',
+    category: 'city',
+    url: '/places',
+    tags: ['lakes', 'national park', 'canary hill', 'district']
+  },
+  {
+    id: 'giridih',
+    title: 'Giridih',
+    description: 'District known for coal mining and home to Parasnath Hill',
+    type: 'place',
+    category: 'city',
+    url: '/places',
+    tags: ['coal mining', 'parasnath hill', 'usri falls', 'district']
+  },
+
+  // Waterfalls
+  {
+    id: 'hundru-falls',
+    title: 'Hundru Falls',
+    description: '98-meter spectacular waterfall cascading down rocky cliffs, surrounded by dense forests',
+    type: 'place',
+    category: 'waterfall',
+    url: '/waterfall',
+    tags: ['waterfall', '98 meters', 'ranchi', 'subarnarekha river', 'photography', 'trekking']
+  },
+  {
+    id: 'dassam-falls',
+    title: 'Dassam Falls',
+    description: 'Known as the "Niagara of Jharkhand", this 44-meter waterfall creates a mesmerizing curtain of water',
+    type: 'place',
+    category: 'waterfall',
+    url: '/waterfall',
+    tags: ['waterfall', '44 meters', 'niagara of jharkhand', 'ranchi', 'kanchi river', 'rock climbing']
+  },
+  {
+    id: 'jonha-falls',
+    title: 'Jonha Falls (Gautamdhara)',
+    description: '43-meter waterfall with religious significance, believed to be blessed by Lord Buddha',
+    type: 'place',
+    category: 'waterfall',
+    url: '/waterfall',
+    tags: ['waterfall', '43 meters', 'gautamdhara', 'buddha', 'meditation', 'ranchi', 'religious']
+  },
+  {
+    id: 'lodh-falls',
+    title: 'Lodh Falls',
+    description: 'Jharkhand\'s highest waterfall at 143 meters, creating a spectacular cascade through multiple tiers',
+    type: 'place',
+    category: 'waterfall',
+    url: '/waterfall',
+    tags: ['waterfall', '143 meters', 'highest', 'netarhat', 'latehar', 'trekking']
+  },
+  {
+    id: 'hirni-falls',
+    title: 'Hirni Falls',
+    description: 'Hidden gem nestled in dense forests, offering a serene escape with natural pools',
+    type: 'place',
+    category: 'waterfall',
+    url: '/waterfall',
+    tags: ['waterfall', '37 meters', 'hidden gem', 'ranchi', 'natural pools', 'swimming']
+  },
+  {
+    id: 'usri-falls',
+    title: 'Usri Falls',
+    description: 'Picturesque waterfall near Giridih, perfect for picnics and photography',
+    type: 'place',
+    category: 'waterfall',
+    url: '/waterfall',
+    tags: ['waterfall', 'giridih', 'picnic', 'photography', 'family friendly']
+  },
+  {
+    id: 'nakti-falls',
+    title: 'Nakti Falls',
+    description: 'Pristine waterfall hidden in dense forests with crystal-clear natural pools',
+    type: 'place',
+    category: 'waterfall',
+    url: '/waterfall',
+    tags: ['waterfall', '25 meters', 'pristine', 'ranchi', 'crystal clear', 'swimming', 'trekking']
+  },
+  {
+    id: 'bhatinda-falls',
+    title: 'Bhatinda Falls',
+    description: 'Spectacular waterfall cascading down rocky terrain, surrounded by dense forests',
+    type: 'place',
+    category: 'waterfall',
+    url: '/waterfall',
+    tags: ['waterfall', 'dhanbad', 'rocky terrain', 'dense forests', 'trekking', 'adventure']
+  },
+
+  // Hill Stations
+  {
+    id: 'netarhat',
+    title: 'Netarhat',
+    description: 'Known as the "Queen of Chotanagpur", offering breathtaking sunrise and sunset views',
+    type: 'place',
+    category: 'hill station',
+    url: '/hill-station',
+    tags: ['hill station', 'queen of chotanagpur', 'sunrise', 'sunset', 'latehar', 'cool climate']
+  },
+  {
+    id: 'parasnath-hills',
+    title: 'Parasnath Hills',
+    description: 'Highest peak in Jharkhand at 1,365 meters, sacred to Jains with 20 Tirthankara temples',
+    type: 'place',
+    category: 'hill station',
+    url: '/hill-station',
+    tags: ['hill station', 'highest peak', '1365 meters', 'jain', 'tirthankara', 'giridih', 'trekking']
+  },
+  {
+    id: 'dalma-hills',
+    title: 'Dalma Hills',
+    description: 'Wildlife sanctuary and hill station near Jamshedpur, home to elephants and leopards',
+    type: 'place',
+    category: 'wildlife sanctuary',
+    url: '/wildlife-sanctuary',
+    tags: ['wildlife sanctuary', 'hill station', 'elephants', 'leopards', 'jamshedpur', 'migration corridor']
+  },
+  {
+    id: 'rajmahal-hills',
+    title: 'Rajmahal Hills',
+    description: 'Ancient hills with archaeological significance, featuring prehistoric rock paintings and fossil sites',
+    type: 'place',
+    category: 'historic site',
+    url: '/historic-site',
+    tags: ['historic site', 'prehistoric', 'rock paintings', 'fossils', 'sahibganj', 'archaeology']
+  },
+
+  // Religious Sites & Temples
+  {
+    id: 'baidyanath-temple',
+    title: 'Baba Baidyanath Temple',
+    description: 'One of the 12 Jyotirlingas, ancient temple dedicated to Lord Shiva attracting millions of devotees',
+    type: 'place',
+    category: 'religious site',
+    url: '/religious-site',
+    tags: ['jyotirlinga', 'shiva temple', 'pilgrimage', 'deoghar', 'shravan', 'religious']
+  },
+  {
+    id: 'rajrappa-temple',
+    title: 'Rajrappa Temple',
+    description: 'Ancient temple dedicated to Goddess Chinnamasta at confluence of rivers',
+    type: 'place',
+    category: 'religious site',
+    url: '/religious-site',
+    tags: ['chinnamasta', 'goddess temple', 'river confluence', 'ramgarh', 'tantric', 'religious']
+  },
+  {
+    id: 'jagannath-temple-ranchi',
+    title: 'Jagannath Temple Ranchi',
+    description: 'Replica of famous Puri Jagannath Temple featuring traditional Kalinga architecture',
+    type: 'place',
+    category: 'religious site',
+    url: '/religious-site',
+    tags: ['jagannath temple', 'kalinga architecture', 'rath yatra', 'ranchi', 'replica']
+  },
+  {
+    id: 'pahari-mandir',
+    title: 'Pahari Mandir',
+    description: 'Hilltop temple dedicated to Lord Shiva offering panoramic views of Ranchi city',
+    type: 'place',
+    category: 'religious site',
+    url: '/religious-site',
+    tags: ['hilltop temple', 'shiva temple', 'panoramic views', 'ranchi', '468 steps', 'sunrise']
+  },
+  {
+    id: 'kunderdoba-temple',
+    title: 'Kunderdoba Temple',
+    description: 'Ancient temple dedicated to Lord Shiva located on hilltop with panoramic views',
+    type: 'place',
+    category: 'religious site',
+    url: '/religious-site',
+    tags: ['shiva temple', 'ancient', 'hilltop', 'sahibganj', 'panoramic views']
+  },
+  {
+    id: 'ganges-ghats-sahibganj',
+    title: 'Ganges River Ghats Sahibganj',
+    description: 'Sacred ghats along holy Ganges River offering spiritual experiences and boat rides',
+    type: 'place',
+    category: 'religious site',
+    url: '/religious-site',
+    tags: ['ganges ghats', 'holy river', 'spiritual', 'boat rides', 'sahibganj', 'pilgrimage']
+  },
+
+  // National Parks & Wildlife
+  {
+    id: 'betla-national-park',
+    title: 'Betla National Park',
+    description: 'First national park of Jharkhand, home to tigers, elephants, leopards and diverse wildlife',
+    type: 'place',
+    category: 'national park',
+    url: '/national-park',
+    tags: ['national park', 'tigers', 'elephants', 'safari', 'palamu', 'betla fort', 'wildlife']
+  },
+  {
+    id: 'hazaribagh-national-park',
+    title: 'Hazaribagh National Park',
+    description: 'Dense forest sanctuary known for tiger population and scenic beauty',
+    type: 'place',
+    category: 'national park',
+    url: '/national-park',
+    tags: ['national park', 'tigers', 'dense forest', 'hazaribagh', 'wildlife photography']
+  },
+  {
+    id: 'udhwa-lake-bird-sanctuary',
+    title: 'Udhwa Lake Bird Sanctuary',
+    description: 'Important bird sanctuary around Udhwa Lake, home to migratory and resident bird species',
+    type: 'place',
+    category: 'wildlife sanctuary',
+    url: '/wildlife-sanctuary',
+    tags: ['bird sanctuary', 'migratory birds', 'udhwa lake', 'sahibganj', 'bird watching']
+  },
+
+  // Lakes & Dams
+  {
+    id: 'kanke-dam',
+    title: 'Kanke Dam',
+    description: 'Scenic reservoir surrounded by hills and forests, perfect for picnics and water sports',
+    type: 'place',
+    category: 'lake',
+    url: '/lake',
+    tags: ['dam', 'reservoir', 'ranchi', 'water sports', 'fishing', 'picnic']
+  },
+  {
+    id: 'dimna-lake',
+    title: 'Dimna Lake',
+    description: 'Artificial lake created by Dimna Dam, surrounded by Dalma Hills offering boating and fishing',
+    type: 'place',
+    category: 'lake',
+    url: '/lake',
+    tags: ['artificial lake', 'dimna dam', 'dalma hills', 'jamshedpur', 'boating', 'water sports']
+  },
+  {
+    id: 'maithon-dam',
+    title: 'Maithon Dam',
+    description: 'Major dam on Damodar River creating large reservoir perfect for boating and water sports',
+    type: 'place',
+    category: 'dam',
+    url: '/dam',
+    tags: ['major dam', 'damodar river', 'dhanbad', 'reservoir', 'engineering marvel', 'boating']
+  },
+  {
+    id: 'panchet-dam',
+    title: 'Panchet Dam',
+    description: 'Beautiful dam creating scenic reservoir perfect for fishing and boating',
+    type: 'place',
+    category: 'dam',
+    url: '/dam',
+    tags: ['dam', 'damodar river', 'dhanbad', 'fishing', 'boating', 'peaceful']
+  },
+  {
+    id: 'tilaiya-dam',
+    title: 'Tilaiya Dam',
+    description: 'Scenic dam and reservoir offering water sports, fishing and beautiful sunset views',
+    type: 'place',
+    category: 'dam',
+    url: '/dam',
+    tags: ['dam', 'barakar river', 'koderma', 'water sports', 'sunset views', 'photography']
+  },
+  {
+    id: 'patratu-valley',
+    title: 'Patratu Valley',
+    description: 'Breathtaking valley known as "Kashmir of Jharkhand" with scenic beauty and Patratu Dam',
+    type: 'place',
+    category: 'valley',
+    url: '/valley',
+    tags: ['valley', 'kashmir of jharkhand', 'patratu dam', 'ramgarh', 'photography', 'panoramic views']
+  },
+  {
+    id: 'udhuwa-lake',
+    title: 'Udhuwa Lake',
+    description: 'Serene artificial lake surrounded by hills and forests, perfect for picnics and water activities',
+    type: 'place',
+    category: 'lake',
+    url: '/lake',
+    tags: ['artificial lake', 'dhanbad', 'picnic', 'water activities', 'bird watching']
+  },
+  {
+    id: 'topchachi-lake',
+    title: 'Topchachi Lake',
+    description: 'Pristine natural lake surrounded by lush forests offering boating, fishing and scenic beauty',
+    type: 'place',
+    category: 'lake',
+    url: '/lake',
+    tags: ['natural lake', 'crystal clear', 'dhanbad', 'boating', 'fishing', 'bird watching']
+  },
+
+  // Parks & Gardens
+  {
+    id: 'rock-garden-ranchi',
+    title: 'Rock Garden Ranchi',
+    description: 'Artistic garden featuring sculptures and structures made from natural rocks and stones',
+    type: 'place',
+    category: 'park',
+    url: '/park',
+    tags: ['rock garden', 'sculptures', 'ranchi', 'family friendly', 'artistic', 'musical fountains']
+  },
+  {
+    id: 'jubilee-park',
+    title: 'Jubilee Park',
+    description: 'Sprawling 225-acre urban park with beautiful lake, rose garden and recreational facilities',
+    type: 'place',
+    category: 'park',
+    url: '/park',
+    tags: ['urban park', '225 acres', 'jamshedpur', 'rose garden', 'lake', 'zoo', 'boating']
+  },
+
+  // Historic Sites
+  {
+    id: 'palamu-fort',
+    title: 'Palamu Fort',
+    description: 'Ancient fort complex with old and new sections showcasing medieval architecture by Chero rulers',
+    type: 'place',
+    category: 'historic site',
+    url: '/historic-site',
+    tags: ['ancient fort', 'medieval architecture', 'chero rulers', 'palamu', 'stone work']
+  },
+  {
+    id: 'maluti-temples',
+    title: 'Maluti Temples',
+    description: 'Group of 72 ancient terracotta temples showcasing exquisite craftsmanship from 17th-18th centuries',
+    type: 'place',
+    category: 'historic site',
+    url: '/historic-site',
+    tags: ['72 temples', 'terracotta', 'ancient', 'dumka', '17th century', 'craftsmanship']
+  },
+  {
+    id: 'tagore-hill',
+    title: 'Tagore Hill',
+    description: 'Historic hill where Rabindranath Tagore stayed, featuring gardens, observatory and cultural significance',
+    type: 'place',
+    category: 'historic site',
+    url: '/historic-site',
+    tags: ['tagore', 'historic', 'observatory', 'ranchi', 'literary heritage', 'cultural']
+  },
+
+  // Adventure Sports
+  {
+    id: 'getalsud-dam',
+    title: 'Getalsud Dam',
+    description: 'Perfect destination for adventure sports including water skiing, jet skiing and parasailing',
+    type: 'place',
+    category: 'adventure sports',
+    url: '/adventure-sports',
+    tags: ['adventure sports', 'water skiing', 'jet skiing', 'parasailing', 'ranchi', 'reservoir']
+  },
+
   // Festivals
   {
     id: 'sohrai',
@@ -49,6 +427,15 @@ const searchData: SearchResult[] = [
     tags: ['winter', 'harvest', 'singing', 'january', 'kurukh', 'tribal']
   },
   {
+    id: 'sarhul',
+    title: 'Sarhul Festival',
+    description: 'Spring festival welcoming the new year and Sal blossoms',
+    type: 'festival',
+    category: 'spring',
+    url: '/festivals#sarhul',
+    tags: ['spring', 'new year', 'sal tree', 'march', 'munda', 'tribal']
+  },
+  {
     id: 'bandna',
     title: 'Bandna Festival',
     description: 'Festival dedicated to cattle and livestock worship',
@@ -76,15 +463,6 @@ const searchData: SearchResult[] = [
     tags: ['youth', 'tree', 'dance', 'august', 'ho', 'tribal']
   },
   {
-    id: 'sarhul',
-    title: 'Sarhul Festival',
-    description: 'Spring festival welcoming the new year and Sal blossoms',
-    type: 'festival',
-    category: 'spring',
-    url: '/festivals#sarhul',
-    tags: ['spring', 'new year', 'sal tree', 'march', 'munda', 'tribal']
-  },
-  {
     id: 'baha',
     title: 'Baha Festival',
     description: 'Flower festival celebrating the arrival of spring',
@@ -93,6 +471,7 @@ const searchData: SearchResult[] = [
     url: '/festivals#baha',
     tags: ['flower', 'spring', 'nature', 'february', 'santhal', 'tribal']
   },
+
   // Cultural Elements
   {
     id: 'jhumair',
@@ -139,6 +518,7 @@ const searchData: SearchResult[] = [
     url: '/festivals#crafts',
     tags: ['textile', 'weaving', 'natural dyes', 'patterns', 'handloom']
   },
+
   // Recipes
   {
     id: 'pitha',
@@ -166,25 +546,6 @@ const searchData: SearchResult[] = [
     category: 'curry',
     url: '/festivals#recipes',
     tags: ['mushroom', 'curry', 'wild', 'traditional', 'tribal']
-  },
-  // Places
-  {
-    id: 'ranchi',
-    title: 'Ranchi',
-    description: 'Capital city and cultural hub of Jharkhand',
-    type: 'place',
-    category: 'city',
-    url: '/places/ranchi',
-    tags: ['capital', 'city', 'cultural hub', 'waterfalls', 'temples']
-  },
-  {
-    id: 'deoghar',
-    title: 'Deoghar',
-    description: 'Spiritual city famous for Baidyanath Temple',
-    type: 'place',
-    category: 'religious',
-    url: '/places/deoghar',
-    tags: ['spiritual', 'temple', 'pilgrimage', 'religious', 'baidyanath']
   }
 ];
 

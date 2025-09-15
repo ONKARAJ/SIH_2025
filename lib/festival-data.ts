@@ -316,9 +316,9 @@ export const festivalData: Festival[] = [
       food: ['Rice preparations', 'Seasonal vegetables', 'Sweet delicacies', 'Local liquor']
     },
     media: {
-      hero: '/festivals/sohrai-hero.jpg',
+      hero: 'https://pbs.twimg.com/media/EmwhdmKVkAA5nCm.jpg',
       gallery: [
-        '/festivals/sohrai-paintings-1.jpg',
+        'https://pbs.twimg.com/media/EmwhdmKVkAA5nCm.jpg',
         '/festivals/sohrai-paintings-2.jpg',
         '/festivals/sohrai-cattle.jpg',
         '/festivals/sohrai-celebration.jpg'

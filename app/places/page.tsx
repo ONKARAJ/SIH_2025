@@ -26,7 +26,7 @@ import {
   Train,
   Hotel
 } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import type { Place } from "@/types/place";
 import Image from "next/image";
@@ -577,72 +577,73 @@ export default function ModernPlacesPage() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      <section className="relative pt-32 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+
+        <div className="max-w-7xl mx-auto relative z-20">
           <div className="text-center mb-16">
             {/* Main heading */}
             <div className="space-y-4 mb-12">
               <div className="inline-block">
-                <Badge className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 text-blue-700 border-blue-200/30 px-6 py-2 rounded-full text-sm font-medium backdrop-blur-sm">
+                <Badge className="bg-blue-50 text-blue-700 border-blue-200 px-6 py-2 rounded-full text-sm font-medium hover:bg-blue-100 transition-all duration-300">
                   ✨ Discover Amazing Places
                 </Badge>
               </div>
               
-              <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-gray-800 via-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight">
+              <h1 className="text-5xl md:text-7xl font-bold text-gray-800 leading-tight animate-in slide-in-from-bottom-6 duration-1000">
                 Beautiful Jharkhand
               </h1>
               
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light animate-in slide-in-from-bottom-4 duration-1000 delay-200">
                 Explore breathtaking destinations, from serene waterfalls to ancient temples. 
                 Your perfect adventure awaits in the heart of India.
               </p>
             </div>
 
             {/* Stats cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-16">
-              <Card className="bg-white/60 backdrop-blur-sm border-0 shadow-soft hover:shadow-md transition-all duration-300 rounded-2xl group hover:-translate-y-1">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-16 animate-in slide-in-from-bottom-2 duration-1000 delay-400">
+              <Card className="bg-white/90 backdrop-blur-md border border-white/20 shadow-2xl hover:shadow-3xl hover:bg-white/95 transition-all duration-300 rounded-2xl group hover:-translate-y-1">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                     <MapPin className="h-6 w-6 text-white" />
                   </div>
                   <div className="text-3xl font-bold text-gray-800 mb-1">{stats.totalPlaces}</div>
-                  <div className="text-sm text-gray-500 font-medium">Amazing Places</div>
+                  <div className="text-sm text-gray-600 font-medium">Amazing Places</div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/60 backdrop-blur-sm border-0 shadow-soft hover:shadow-md transition-all duration-300 rounded-2xl group hover:-translate-y-1">
+              <Card className="bg-white/90 backdrop-blur-md border border-white/20 shadow-2xl hover:shadow-3xl hover:bg-white/95 transition-all duration-300 rounded-2xl group hover:-translate-y-1">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                     <Star className="h-6 w-6 text-white fill-current" />
                   </div>
                   <div className="text-3xl font-bold text-gray-800 mb-1">{stats.averageRating}</div>
-                  <div className="text-sm text-gray-500 font-medium">Avg Rating</div>
+                  <div className="text-sm text-gray-600 font-medium">Avg Rating</div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/60 backdrop-blur-sm border-0 shadow-soft hover:shadow-md transition-all duration-300 rounded-2xl group hover:-translate-y-1">
+              <Card className="bg-white/90 backdrop-blur-md border border-white/20 shadow-2xl hover:shadow-3xl hover:bg-white/95 transition-all duration-300 rounded-2xl group hover:-translate-y-1">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                     <Filter className="h-6 w-6 text-white" />
                   </div>
                   <div className="text-3xl font-bold text-gray-800 mb-1">{categories.length}</div>
-                  <div className="text-sm text-gray-500 font-medium">Categories</div>
+                  <div className="text-sm text-gray-600 font-medium">Categories</div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/60 backdrop-blur-sm border-0 shadow-soft hover:shadow-md transition-all duration-300 rounded-2xl group hover:-translate-y-1">
+              <Card className="bg-white/90 backdrop-blur-md border border-white/20 shadow-2xl hover:shadow-3xl hover:bg-white/95 transition-all duration-300 rounded-2xl group hover:-translate-y-1">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                     <Users className="h-6 w-6 text-white" />
                   </div>
                   <div className="text-3xl font-bold text-gray-800 mb-1">50K+</div>
-                  <div className="text-sm text-gray-500 font-medium">Happy Travelers</div>
+                  <div className="text-sm text-gray-600 font-medium">Happy Travelers</div>
                 </CardContent>
               </Card>
             </div>
 
             {/* Search section */}
-            <Card className="bg-white/70 backdrop-blur-md border-0 shadow-intense rounded-3xl p-8 max-w-5xl mx-auto">
+            <Card className="bg-white/90 backdrop-blur-md border border-white/20 shadow-2xl rounded-3xl p-8 max-w-5xl mx-auto animate-in slide-in-from-bottom-2 duration-1000 delay-600">
               <div className="space-y-8">
                 {/* Search bar */}
                 <div className="relative">
