@@ -3,6 +3,22 @@ import { db } from '@/lib/db'
 
 export async function GET(request: NextRequest) {
   try {
+    // Check if database is available, if not return mock data
+    if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('placeholder')) {
+      return NextResponse.json({
+        success: true,
+        stats: {
+          totalBookings: 0,
+          totalRevenue: 0,
+          hotelBookings: 0,
+          flightBookings: 0,
+          pendingPayments: 0,
+          completedPayments: 0,
+          recentBookings: []
+        }
+      })
+    }
+
     // Get total bookings count
     const totalHotelBookings = await db.hotelBooking.count()
     const totalFlightBookings = await db.flightBooking.count()

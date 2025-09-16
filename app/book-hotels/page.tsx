@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { citiesData, getCityBySlug } from '@/lib/cities-data'
 
@@ -52,7 +52,7 @@ function getAllHotels() {
 // Get all hotels from cities data
 const featuredHotels = getAllHotels();
 
-export default function BookHotelsPage() {
+function BookHotelsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedHotel, setSelectedHotel] = useState(null);
@@ -425,5 +425,13 @@ export default function BookHotelsPage() {
         </div>
       </section>
     </div>
+  )
+}
+
+export default function BookHotelsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="text-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div><p>Loading hotels...</p></div></div>}>
+      <BookHotelsContent />
+    </Suspense>
   )
 }
