@@ -19,6 +19,7 @@ interface TouristSpot {
 interface InteractiveJharkhandMapProps {
   touristSpots: TouristSpot[];
   onLocationSelect: (locationId: string) => void;
+  selectedLocationId?: string | null;
 }
 
 // Declare Google Maps types
@@ -29,7 +30,7 @@ declare global {
   }
 }
 
-export function InteractiveJharkhandMap({ touristSpots, onLocationSelect }: InteractiveJharkhandMapProps) {
+export function InteractiveJharkhandMap({ touristSpots, onLocationSelect, selectedLocationId }: InteractiveJharkhandMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,6 +38,7 @@ export function InteractiveJharkhandMap({ touristSpots, onLocationSelect }: Inte
   const [map, setMap] = useState<any>(null);
   const [selectedSpot, setSelectedSpot] = useState<TouristSpot | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [markers, setMarkers] = useState<any[]>([]);
 
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -91,7 +93,31 @@ export function InteractiveJharkhandMap({ touristSpots, onLocationSelect }: Inte
         existingScript.parentNode.removeChild(existingScript);
       }
     };
-  }, [apiKey]);
+  }, []);
+
+  // Effect to center map on selected location from Popular Destinations
+  useEffect(() => {
+    if (map && selectedLocationId) {
+      const selectedSpot = touristSpots.find(spot => spot.id === selectedLocationId);
+      if (selectedSpot) {
+        // Center the map on the selected spot
+        map.setCenter({ lat: selectedSpot.lat, lng: selectedSpot.lng });
+        map.setZoom(12); // Zoom in for better view
+        
+        // Optional: Add a subtle animation effect
+        setTimeout(() => {
+          const marker = markers.find(m => m.title === selectedSpot.name);
+          if (marker) {
+            // Bounce the marker to draw attention
+            marker.setAnimation(window.google.maps.Animation.BOUNCE);
+            setTimeout(() => {
+              marker.setAnimation(null);
+            }, 2000);
+          }
+        }, 500);
+      }
+    }
+  }, [selectedLocationId, map, touristSpots]);
 
   const initializeMap = () => {
     if (!mapRef.current || !window.google) return;
@@ -129,6 +155,7 @@ export function InteractiveJharkhandMap({ touristSpots, onLocationSelect }: Inte
 
       // Add markers for all tourist spots
       const infoWindow = new window.google.maps.InfoWindow();
+      const newMarkers: any[] = [];
       
       touristSpots.forEach((spot) => {
         // Create custom marker icon based on type
@@ -165,6 +192,9 @@ export function InteractiveJharkhandMap({ touristSpots, onLocationSelect }: Inte
           icon: getMarkerIcon(spot.type, spot.color),
           animation: window.google.maps.Animation.DROP,
         });
+
+        // Store marker for later access
+        newMarkers.push(marker);
 
         // Get image for the tourist spot
         const getSpotImage = (spotType: string, spotName: string) => {
@@ -298,6 +328,9 @@ export function InteractiveJharkhandMap({ touristSpots, onLocationSelect }: Inte
           onLocationSelect(spot.id);
         });
       });
+
+      // Store all markers in state
+      setMarkers(newMarkers);
 
       // Listen for messages from info windows
       window.addEventListener('message', (event) => {

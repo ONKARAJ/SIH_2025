@@ -285,6 +285,7 @@ export default function MapPage() {
             <MapWrapper 
               touristSpots={touristSpots} 
               onLocationSelect={setSelectedLocation}
+              selectedLocationId={selectedLocation}
             />
           </div>
 
