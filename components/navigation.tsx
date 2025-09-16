@@ -14,7 +14,9 @@ export function Navigation() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/places", label: "Places" },
+    { href: "/cities", label: "Cities" },
     { href: "/festivals", label: "Festivals" },
+    { href: "/about", label: "About" },
     { href: "/reviews", label: "Reviews" },
     { href: "/map", label: "Map" },
     { href: "/contact", label: "Contact" },

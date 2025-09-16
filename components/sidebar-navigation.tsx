@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import "./sidebar-animations.css";
+import { citiesData } from '@/lib/cities-data';
 import { 
   Menu, 
   X,
@@ -305,6 +306,9 @@ export function SidebarNavigation() {
                             <Link href="/cultural-heritage" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
                               Cultural Heritage
                             </Link>
+                            <Link href="/artisan-crafts" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
+                              Artisan Crafts
+                            </Link>
                             <Link href="/cuisine-of-jharkhand" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
                               Cuisine of Jharkhand
                             </Link>
@@ -371,24 +375,65 @@ export function SidebarNavigation() {
                           <h3 className="text-orange-400 text-lg font-bold mb-4 text-center uppercase tracking-wider">
                             Major Cities
                           </h3>
-                          <div className="grid grid-cols-2 gap-3">
-                            <Link href="/about" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
-                              Ranchi
+                          <div className="space-y-3">
+                            <Link href="/cities/ranchi" onClick={() => setIsSidebarOpen(false)} className="flex items-center p-3 bg-slate-700/50 rounded-lg hover:bg-slate-600/50 transition-all duration-200 hover:translate-x-1 group">
+                              <div className="w-8 h-8 bg-gradient-to-br from-green-500/20 to-blue-500/20 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                                <span className="text-sm">🏛️</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-white font-semibold text-sm">Ranchi</h4>
+                                <p className="text-gray-400 text-xs">Capital city • City of Waterfalls</p>
+                              </div>
                             </Link>
-                            <Link href="/about" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
-                              Jamshedpur
+                            
+                            <Link href="/cities/jamshedpur" onClick={() => setIsSidebarOpen(false)} className="flex items-center p-3 bg-slate-700/50 rounded-lg hover:bg-slate-600/50 transition-all duration-200 hover:translate-x-1 group">
+                              <div className="w-8 h-8 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                                <span className="text-sm">🏭</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-white font-semibold text-sm">Jamshedpur</h4>
+                                <p className="text-gray-400 text-xs">Steel City • Tata Steel Legacy</p>
+                              </div>
                             </Link>
-                            <Link href="/about" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
-                              Dhanbad
+                            
+                            <Link href="/cities/dhanbad" onClick={() => setIsSidebarOpen(false)} className="flex items-center p-3 bg-slate-700/50 rounded-lg hover:bg-slate-600/50 transition-all duration-200 hover:translate-x-1 group">
+                              <div className="w-8 h-8 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                                <span className="text-sm">⛏️</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-white font-semibold text-sm">Dhanbad</h4>
+                                <p className="text-gray-400 text-xs">Coal Capital • IIT Dhanbad</p>
+                              </div>
                             </Link>
-                            <Link href="/about" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
-                              Bokaro
+                            
+                            <Link href="/cities/bokaro" onClick={() => setIsSidebarOpen(false)} className="flex items-center p-3 bg-slate-700/50 rounded-lg hover:bg-slate-600/50 transition-all duration-200 hover:translate-x-1 group">
+                              <div className="w-8 h-8 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                                <span className="text-sm">🏗️</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-white font-semibold text-sm">Bokaro</h4>
+                                <p className="text-gray-400 text-xs">Planned City • Steel Plants</p>
+                              </div>
                             </Link>
-                            <Link href="/about" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
-                              Deoghar
+                            
+                            <Link href="/cities/deoghar" onClick={() => setIsSidebarOpen(false)} className="flex items-center p-3 bg-slate-700/50 rounded-lg hover:bg-slate-600/50 transition-all duration-200 hover:translate-x-1 group">
+                              <div className="w-8 h-8 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                                <span className="text-sm">🕉️</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-white font-semibold text-sm">Deoghar</h4>
+                                <p className="text-gray-400 text-xs">Holy City • Baidyanath Jyotirlinga</p>
+                              </div>
                             </Link>
-                            <Link href="/about" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
-                              All Cities
+                            
+                            <Link href="/cities" onClick={() => setIsSidebarOpen(false)} className="flex items-center p-3 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-lg hover:from-orange-500/30 hover:to-yellow-500/30 transition-all duration-200 hover:translate-x-1 group border border-orange-500/30">
+                              <div className="w-8 h-8 bg-gradient-to-br from-orange-500/30 to-yellow-500/30 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                                <span className="text-sm">🏙️</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-orange-300 font-semibold text-sm">All Cities</h4>
+                                <p className="text-orange-200 text-xs">Explore with Google Maps</p>
+                              </div>
                             </Link>
                           </div>
                         </div>
