@@ -125,98 +125,149 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      {/* Enhanced Hero Section with Background Video */}
+      {/* Enhanced Hero Section with Cinematic Background Video */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Video with Overlay */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: "url('/jharkhand-forest-landscape-with-tribal-culture-ele.jpg')"
-          }}
-        >
+        {/* Background Video with Enhanced Overlays */}
+        <div className="absolute inset-0">
           <video 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover scale-105 transition-transform duration-1000"
             autoPlay 
             muted 
             loop 
             playsInline
-            poster="/jharkhand-forest-landscape-with-tribal-culture-ele.jpg"
+            poster="/images/home-hero-poster.jpg"
             onError={(e) => {
               // Hide video if it fails to load, fallback to background image
               e.currentTarget.style.display = 'none';
             }}
           >
-            <source src="/jharkhand-landscape-video.mp4" type="video/mp4" />
-            <source src="/jharkhand-landscape-video.webm" type="video/webm" />
+            <source src="/videos/home-background.mp4" type="video/mp4" />
+            <source src="/videos/home-background.webm" type="video/webm" />
           </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70"></div>
+          
+          {/* Multiple Overlay Layers for Cinematic Effect */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20"></div>
+          
+          {/* Animated Particles Effect */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white rounded-full animate-ping" style={{animationDelay: '0s'}}></div>
+            <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-orange-300 rounded-full animate-ping" style={{animationDelay: '2s'}}></div>
+            <div className="absolute bottom-1/3 left-1/2 w-1.5 h-1.5 bg-green-300 rounded-full animate-ping" style={{animationDelay: '4s'}}></div>
+            <div className="absolute top-2/3 right-1/4 w-1 h-1 bg-blue-300 rounded-full animate-ping" style={{animationDelay: '6s'}}></div>
+          </div>
+          
+          {/* Subtle Pattern Overlay */}
+          <div className="absolute inset-0 opacity-5" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M20 20c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8 8 3.6 8 8zm0-20v20c0-4.4-3.6-8-8-8s-8 3.6-8 8v-20h16zm0 0'/%3E%3C/g%3E%3C/svg%3E")`
+          }}></div>
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 text-center text-white max-w-6xl mx-auto px-4 animate-fade-in">
-          <div className="mb-6 animate-fade-in-delay-200">
-            <span className="inline-block bg-orange-500/90 text-white px-6 py-3 rounded-full text-sm font-medium mb-4 shadow-lg">
+        {/* Interactive Hero Content with Enhanced Animations */}
+        <div className="relative z-20 text-center text-white max-w-7xl mx-auto px-4">
+          {/* Floating Badge with Glow Effect */}
+          <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-1000 delay-300">
+            <span className="inline-flex items-center bg-gradient-to-r from-orange-500/90 to-red-500/90 backdrop-blur-md text-white px-8 py-4 rounded-full text-sm font-semibold shadow-2xl border border-white/20 hover:scale-105 transition-all duration-300 cursor-pointer group">
+              <span className="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></span>
               Explore India's Hidden Gem
+              <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">✨</span>
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-balance leading-tight animate-fade-in-delay-400">
-            Discover the Untouched Beauty of
-            <span className="text-orange-400"> Jharkhand</span>
-          </h1>
+          {/* Main Heading with Text Effects */}
+          <div className="mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-balance leading-[0.9] tracking-tight">
+              <span className="block bg-gradient-to-r from-white via-white to-gray-100 bg-clip-text text-transparent drop-shadow-2xl">
+                Discover the
+              </span>
+              <span className="block bg-gradient-to-r from-orange-300 via-orange-400 to-red-400 bg-clip-text text-transparent mt-2 drop-shadow-2xl">
+                Untouched Beauty
+              </span>
+              <span className="block text-white/90 text-4xl md:text-5xl lg:text-6xl mt-3 font-light drop-shadow-2xl">
+                of Jharkhand
+              </span>
+            </h1>
+          </div>
 
-          <div className="max-w-4xl mx-auto mb-8 animate-fade-in-delay-600">
-            <p className="text-lg md:text-xl lg:text-2xl mb-6 text-pretty leading-relaxed opacity-95">
+          {/* Enhanced Description */}
+          <div className="max-w-5xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-700">
+            <p className="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed text-white/95 drop-shadow-lg mb-8">
               Journey through India's mineral-rich heartland where ancient
-              tribal traditions meet pristine wilderness. Experience the harmony
-              of 32 tribal communities, witness sacred festivals like Sarhul and
-              Sohrai, and explore breathtaking waterfalls, dense forests, and
-              spiritual temples.
+              tribal traditions meet pristine wilderness.
             </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-sm md:text-base">
-              <div className="flex items-center justify-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg py-3 px-4 hover:bg-white/20 transition-all duration-300">
-                <Leaf className="h-5 w-5 text-green-400" />
-                <span>Eco-Tourism Paradise</span>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 hover:scale-105 transition-all duration-300 cursor-pointer">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                    <Leaf className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Eco-Tourism Paradise</h3>
+                <p className="text-sm text-white/80">32 tribal communities in harmony with nature</p>
               </div>
-              <div className="flex items-center justify-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg py-3 px-4 hover:bg-white/20 transition-all duration-300">
-                <Users className="h-5 w-5 text-orange-400" />
-                <span>Rich Tribal Heritage</span>
+              
+              <div className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 hover:scale-105 transition-all duration-300 cursor-pointer">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                    <Users className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Rich Tribal Heritage</h3>
+                <p className="text-sm text-white/80">Sacred festivals and ancient traditions</p>
               </div>
-              <div className="flex items-center justify-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg py-3 px-4 hover:bg-white/20 transition-all duration-300">
-                <Mountain className="h-5 w-5 text-blue-400" />
-                <span>Untouched Landscapes</span>
+              
+              <div className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 hover:scale-105 transition-all duration-300 cursor-pointer">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+                    <Mountain className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Untouched Landscapes</h3>
+                <p className="text-sm text-white/80">Pristine waterfalls and dense forests</p>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-delay-800">
+          {/* Enhanced Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-1000">
             <Link href="/places">
               <Button
                 size="lg"
-                className="bg-orange-500 hover:bg-orange-600 text-white text-lg px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                className="group bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-xl px-12 py-6 shadow-2xl hover:shadow-orange-500/25 border-0 rounded-2xl transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
               >
-                Explore Places
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <span className="mr-3">Explore Places</span>
+                <ArrowRight className="h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
             </Link>
+            
             <Link href="/festivals">
               <Button
                 variant="outline"
                 size="lg"
-                className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 text-lg px-8 py-4 transition-all duration-300 transform hover:scale-105"
+                className="group bg-white/10 backdrop-blur-md border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 text-xl px-12 py-6 rounded-2xl transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 shadow-lg hover:shadow-white/10"
               >
-                Discover Festivals
+                <span className="mr-3">Discover Culture</span>
+                <Calendar className="h-6 w-6 group-hover:rotate-12 transition-transform duration-300" />
               </Button>
             </Link>
           </div>
 
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-              <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-pulse"></div>
+          {/* Enhanced Scroll Indicator */}
+          <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-in fade-in duration-1000 delay-1200">
+            <div className="flex flex-col items-center space-y-2 cursor-pointer group" onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})}>
+              <span className="text-white/60 text-sm font-medium group-hover:text-white transition-colors duration-300">Explore More</span>
+              <div className="w-6 h-12 border-2 border-white/40 group-hover:border-white/60 rounded-full flex justify-center transition-all duration-300">
+                <div className="w-1.5 h-4 bg-white/60 group-hover:bg-white rounded-full mt-2 animate-bounce"></div>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Corner Decorative Elements */}
+        <div className="absolute top-8 left-8 w-24 h-24 border border-white/20 rounded-full animate-spin-slow"></div>
+        <div className="absolute bottom-8 right-8 w-32 h-32 border border-orange-400/20 rounded-full animate-pulse"></div>
+        <div className="absolute top-1/3 right-12 w-16 h-16 bg-gradient-to-br from-white/5 to-transparent rounded-full animate-float"></div>
       </section>
 
       {/* Enhanced Quick Stats Section */}

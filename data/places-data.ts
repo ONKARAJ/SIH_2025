@@ -122,7 +122,7 @@ export const allPlaces = [
     id: '8',
     title: 'Baba Baidyanath Temple',
     shortDescription: 'One of the 12 Jyotirlingas, this ancient temple dedicated to Lord Shiva attracts millions of devotees annually. The temple complex showcases beautiful architecture and spiritual atmosphere.',
-    category: 'Religious Site',
+    category: 'Temples & Monuments',
     image: 'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80',
     location: 'Deoghar, Jharkhand',
     rating: 4.7,
@@ -138,7 +138,7 @@ export const allPlaces = [
     id: '9',
     title: 'Rajrappa Temple',
     shortDescription: 'Ancient temple dedicated to Goddess Chinnamasta, located at the confluence of Damodar and Bhairavi rivers. Known for its unique tantric traditions and peaceful riverside location.',
-    category: 'Religious Site',
+    category: 'Temples & Monuments',
     image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
     location: 'Ramgarh, Jharkhand',
     rating: 4.3,
@@ -154,7 +154,7 @@ export const allPlaces = [
     id: '10',
     title: 'Jagannath Temple Ranchi',
     shortDescription: 'Replica of the famous Puri Jagannath Temple, featuring traditional Kalinga architecture. Annual Rath Yatra celebration attracts thousands of devotees and showcases rich cultural heritage.',
-    category: 'Religious Site',
+    category: 'Temples & Monuments',
     image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
     location: 'Ranchi, Jharkhand',
     rating: 4.2,
@@ -172,7 +172,7 @@ export const allPlaces = [
     id: '11',
     title: 'Rock Garden Ranchi',
     shortDescription: 'Artistic garden featuring sculptures and structures made from natural rocks and stones. Perfect for family outings with beautiful landscaping, musical fountains, and peaceful walking paths.',
-    category: 'Garden',
+    category: 'Park',
     image: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=800&q=80',
     location: 'Ranchi, Jharkhand',
     rating: 4.0,
@@ -274,7 +274,7 @@ export const allPlaces = [
     id: '17',
     title: 'Palamu Fort',
     shortDescription: 'Ancient fort complex with old and new sections showcasing medieval architecture. Built by Chero rulers, offers insights into regional history and stunning architectural details.',
-    category: 'Historical Site',
+    category: 'Historic Site',
     image: 'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80',
     location: 'Palamu, Jharkhand',
     rating: 4.1,
@@ -290,7 +290,7 @@ export const allPlaces = [
     id: '18',
     title: 'Maluti Temples',
     shortDescription: 'Group of 72 ancient terracotta temples showcasing exquisite craftsmanship. Dating back to 17th-18th centuries, these temples represent unique architectural heritage of Bengal-Jharkhand region.',
-    category: 'Historical Site',
+    category: 'Temples & Monuments',
     image: 'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80',
     location: 'Dumka, Jharkhand',
     rating: 4.4,
@@ -334,22 +334,6 @@ export const allPlaces = [
     reviews: [
       { name: 'Family Traveler', rating: 4, comment: 'Great place for family outings and picnics.', date: 'March 2, 2024' },
       { name: 'Nature Lover', rating: 4, comment: 'Beautiful waterfall with easy access.', date: 'February 8, 2024' }
-    ]
-  },
-  {
-    id: '21',
-    title: 'McCluskieganj',
-    shortDescription: 'Historic Anglo-Indian settlement known as "Mini London", featuring colonial architecture and unique cultural heritage. Offers glimpse into Anglo-Indian community lifestyle.',
-    category: 'Historical Town',
-    image: 'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80',
-    location: 'Ranchi, Jharkhand',
-    rating: 3.9,
-    bestTimeToVisit: 'October to March',
-    overview: 'McCluskieganj, often called "Mini London," is a unique Anglo-Indian settlement established in the 1930s by Ernest Timothy McCluskie. This historic town was designed as a homeland for the Anglo-Indian community and features colonial-style architecture, bungalows, and churches that reflect its unique heritage. The town offers visitors a glimpse into the lifestyle and culture of the Anglo-Indian community, with its distinct architectural style and cultural traditions.',
-    attractions: ['Historic Anglo-Indian settlement', 'Colonial architecture', 'Unique cultural heritage', 'Churches and bungalows', 'Mini London atmosphere'],
-    reviews: [
-      { name: 'Heritage Explorer', rating: 4, comment: 'Unique place with interesting Anglo-Indian history.', date: 'February 25, 2024' },
-      { name: 'Culture Enthusiast', rating: 4, comment: 'Fascinating glimpse into colonial-era lifestyle.', date: 'January 30, 2024' }
     ]
   },
   {
@@ -402,38 +386,6 @@ export const allPlaces = [
   },
 
   // 🎨 Cultural & Tribal Heritage
-  {
-    id: '25',
-    title: 'Tribal Research Institute Museum',
-    shortDescription: 'Comprehensive museum showcasing rich tribal heritage of Jharkhand through artifacts, traditional items, and cultural displays. Essential for understanding indigenous culture.',
-    category: 'Museum',
-    image: 'https://images.unsplash.com/photo-1554072675-66db59dba46f?w=800&q=80',
-    location: 'Ranchi, Jharkhand',
-    rating: 4.2,
-    bestTimeToVisit: 'Year-round',
-    overview: 'The Tribal Research Institute Museum in Ranchi is a treasure trove of tribal heritage, showcasing the rich cultural diversity of Jharkhand\'s indigenous communities. The museum houses an extensive collection of tribal artifacts, traditional weapons, musical instruments, costumes, and handicrafts. Through its comprehensive displays, visitors can learn about the lifestyle, traditions, and cultural practices of various tribal communities including Santhal, Oraon, Munda, and Ho tribes.',
-    attractions: ['Extensive tribal artifact collection', 'Traditional weapons and tools', 'Cultural costumes and ornaments', 'Musical instruments display', 'Educational tribal history'],
-    reviews: [
-      { name: 'Culture Student', rating: 4, comment: 'Excellent collection showcasing tribal heritage.', date: 'February 28, 2024' },
-      { name: 'Researcher', rating: 4, comment: 'Very informative about indigenous communities.', date: 'January 20, 2024' }
-    ]
-  },
-  {
-    id: '26',
-    title: 'Ranchi Science Centre',
-    shortDescription: 'Interactive science museum with hands-on exhibits, planetarium shows, and educational displays. Perfect for families and students to explore science and technology.',
-    category: 'Museum',
-    image: 'https://images.unsplash.com/photo-1554072675-66db59dba46f?w=800&q=80',
-    location: 'Ranchi, Jharkhand',
-    rating: 4.0,
-    bestTimeToVisit: 'Year-round',
-    overview: 'Ranchi Science Centre is an interactive science museum designed to promote scientific awareness and education through hands-on exhibits and demonstrations. The center features various galleries covering different aspects of science and technology, including physics, chemistry, biology, and environmental science. The planetarium offers regular shows about astronomy and space science, making it an educational and entertaining destination for students and families.',
-    attractions: ['Interactive science exhibits', 'Planetarium shows', 'Hands-on demonstrations', 'Educational galleries', 'Student-friendly programs'],
-    reviews: [
-      { name: 'Science Teacher', rating: 4, comment: 'Great place for educational school trips.', date: 'March 5, 2024' },
-      { name: 'Parent', rating: 4, comment: 'Kids loved the interactive exhibits and planetarium.', date: 'February 18, 2024' }
-    ]
-  },
 
   // 🏞️ Adventure & Sports Destinations
   {
@@ -452,29 +404,13 @@ export const allPlaces = [
       { name: 'Sports Lover', rating: 4, comment: 'Great place for adrenaline-pumping activities.', date: 'February 22, 2024' }
     ]
   },
-  {
-    id: '28',
-    title: 'Birsa Munda Athletics Stadium',
-    shortDescription: 'Modern sports complex and stadium hosting various sporting events. Perfect for sports enthusiasts to witness live games and athletic competitions.',
-    category: 'Sports Complex',
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80',
-    location: 'Ranchi, Jharkhand',
-    rating: 3.9,
-    bestTimeToVisit: 'October to March',
-    overview: 'Birsa Munda Athletics Stadium is a modern sports complex named after the legendary tribal leader Birsa Munda. This state-of-the-art facility hosts various national and international sporting events, including athletics competitions, football matches, and cultural programs. The stadium has a seating capacity of over 25,000 and features modern amenities including synthetic tracks, professional-grade facilities, and excellent spectator arrangements.',
-    attractions: ['Modern athletic facilities', 'National and international events', 'Large seating capacity', 'Professional sports infrastructure', 'Cultural event venue'],
-    reviews: [
-      { name: 'Sports Fan', rating: 4, comment: 'Great stadium with excellent facilities for events.', date: 'February 25, 2024' },
-      { name: 'Event Attendee', rating: 4, comment: 'Well-organized venue with good crowd management.', date: 'January 28, 2024' }
-    ]
-  },
 
   // 🏛️ Modern Attractions
   {
     id: '29',
     title: 'Pahari Mandir',
     shortDescription: 'Hilltop temple dedicated to Lord Shiva, offering panoramic views of Ranchi city. The temple requires a climb of 468 steps and provides spiritual experience with scenic beauty.',
-    category: 'Religious Site',
+    category: 'Temples & Monuments',
     image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
     location: 'Ranchi, Jharkhand',
     rating: 4.3,
@@ -553,6 +489,125 @@ export const allPlaces = [
     reviews: [
       { name: 'Weekend Traveler', rating: 4, comment: 'Perfect for a peaceful weekend getaway. Great for family picnics.', date: 'January 18, 2024' },
       { name: 'Bird Watcher', rating: 4, comment: 'Lovely lake with good bird watching opportunities in winter.', date: 'December 25, 2023' }
+    ]
+  },
+  {
+    id: '34',
+    title: 'Topchachi Lake',
+    shortDescription: 'A pristine natural lake surrounded by lush forests and hills, offering boating, fishing, and scenic beauty. Perfect for picnics and nature photography with crystal-clear waters.',
+    category: 'Lake',
+    image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+    images: ['https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80', 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80'],
+    location: 'Dhanbad, Jharkhand',
+    rating: 4.3,
+    bestTimeToVisit: 'October to March',
+    overview: 'Topchachi Lake is a beautiful natural lake located in Dhanbad district, surrounded by dense forests and rolling hills. This pristine water body offers excellent opportunities for boating, fishing, and water sports. The lake is known for its crystal-clear waters and serene environment, making it a popular destination for nature lovers and photographers. The surrounding area is rich in biodiversity and provides excellent spots for bird watching, especially during winter months when migratory birds visit the lake.',
+    attractions: ['Crystal-clear natural lake', 'Boating and water sports', 'Forest surroundings', 'Bird watching opportunities', 'Photography spots'],
+    reviews: [
+      { name: 'Lake Explorer', rating: 4, comment: 'Beautiful pristine lake with excellent boating facilities.', date: 'March 12, 2024' },
+      { name: 'Nature Photographer', rating: 4, comment: 'Perfect for nature photography, crystal clear waters!', date: 'February 18, 2024' }
+    ]
+  },
+  {
+    id: '35',
+    title: 'Bhatinda Falls',
+    shortDescription: 'A spectacular waterfall cascading down rocky terrain, surrounded by dense forests. Popular for trekking, photography, and experiencing the raw beauty of nature.',
+    category: 'Waterfall',
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+    images: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80', 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80'],
+    location: 'Dhanbad, Jharkhand',
+    rating: 4.2,
+    bestTimeToVisit: 'July to February',
+    overview: 'Bhatinda Falls is a magnificent waterfall located in the Dhanbad district, cascading down from a considerable height through rocky terrain. The falls are surrounded by dense forests and offer a spectacular sight, especially during the monsoon season when the water flow is at its peak. The area around the falls provides excellent trekking opportunities and is perfect for adventure enthusiasts and nature photographers. The natural pools formed at the base of the falls offer a refreshing experience for visitors.',
+    attractions: ['Spectacular waterfall cascade', 'Dense forest trekking', 'Natural swimming pools', 'Adventure activities', 'Photography opportunities'],
+    reviews: [
+      { name: 'Trekking Enthusiast', rating: 4, comment: 'Amazing waterfall with great trekking trails to reach it.', date: 'August 20, 2023' },
+      { name: 'Adventure Seeker', rating: 4, comment: 'Beautiful falls surrounded by pristine forests.', date: 'September 15, 2023' }
+    ]
+  },
+  {
+    id: '36',
+    title: 'Dimna Lake',
+    shortDescription: 'Artificial lake created by Dimna Dam, offering boating, fishing, and scenic beauty. Surrounded by Dalma Hills, it provides a perfect setting for water sports and relaxation.',
+    category: 'Lake',
+    image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+    images: ['https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80', 'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80'],
+    location: 'Jamshedpur, Jharkhand',
+    rating: 4.2,
+    bestTimeToVisit: 'November to February',
+    overview: 'Dimna Lake is a beautiful artificial lake created by the Dimna Dam, surrounded by the scenic Dalma Hills. This popular tourist destination offers excellent opportunities for boating, fishing, and water sports. The lake\'s serene environment and picturesque surroundings make it a perfect spot for relaxation and photography. The area around the lake has been developed with facilities for tourists, including restaurants and recreational activities. The lake is particularly beautiful during sunset when the hills reflect in the calm waters.',
+    attractions: ['Artificial lake surrounded by hills', 'Boating and water sports', 'Fishing opportunities', 'Tourist facilities', 'Scenic photography spots'],
+    reviews: [
+      { name: 'Rajesh Gupta', rating: 4, comment: 'Perfect place for boating and relaxation.', date: 'March 5, 2024' },
+      { name: 'Pooja Singh', rating: 4, comment: 'Beautiful lake with good facilities for tourists.', date: 'February 20, 2024' }
+    ]
+  },
+  {
+    id: '37',
+    title: 'Rajmahal Hills',
+    shortDescription: 'Ancient hills with archaeological significance, featuring prehistoric rock paintings and fossil sites. Offers trekking opportunities and insights into geological history.',
+    category: 'Historic Site',
+    image: 'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80',
+    images: ['https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80', 'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80'],
+    location: 'Sahibganj, Jharkhand',
+    rating: 4.1,
+    bestTimeToVisit: 'October to March',
+    overview: 'Rajmahal Hills are ancient hills of immense archaeological and geological importance, located in Sahibganj district. These hills are famous for their prehistoric rock paintings, fossil sites, and ancient ruins that provide glimpses into early human civilization. The area is rich in flora and fauna and offers excellent trekking opportunities for adventure enthusiasts. The hills are also known for their unique geological formations and are a significant site for paleontological research.',
+    attractions: ['Prehistoric rock paintings', 'Fossil sites and geological formations', 'Archaeological significance', 'Trekking trails', 'Paleontological research site'],
+    reviews: [
+      { name: 'Archaeology Student', rating: 4, comment: 'Fascinating place with rich historical and geological significance.', date: 'February 28, 2024' },
+      { name: 'Rock Art Enthusiast', rating: 4, comment: 'Amazing prehistoric paintings and fossils.', date: 'January 15, 2024' }
+    ]
+  },
+  {
+    id: '38',
+    title: 'Ganges River Ghats Sahibganj',
+    shortDescription: 'Sacred ghats along the holy Ganges River, offering spiritual experiences, boat rides, and sunset views. Important pilgrimage site with cultural and religious significance.',
+    category: 'Religious Site',
+    image: 'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80',
+    images: ['https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80', 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80'],
+    location: 'Sahibganj, Jharkhand',
+    rating: 4.4,
+    bestTimeToVisit: 'October to March',
+    overview: 'The Ganges River Ghats in Sahibganj are sacred steps leading down to the holy Ganges River, offering spiritual experiences and cultural immersion. These ghats serve as important pilgrimage sites where devotees come to perform religious rituals, take holy dips, and offer prayers. The area provides beautiful views of the river, especially during sunrise and sunset. Boat rides along the Ganges offer visitors a chance to experience the spiritual atmosphere and natural beauty of the sacred river.',
+    attractions: ['Sacred Ganges River ghats', 'Spiritual and religious significance', 'Boat rides on Ganges', 'Sunrise and sunset views', 'Cultural immersion'],
+    reviews: [
+      { name: 'Spiritual Seeker', rating: 5, comment: 'Deeply spiritual experience by the holy Ganges.', date: 'March 8, 2024' },
+      { name: 'Cultural Explorer', rating: 4, comment: 'Beautiful ghats with rich cultural significance.', date: 'February 12, 2024' }
+    ]
+  },
+  {
+    id: '39',
+    title: 'Kunderdoba Temple',
+    shortDescription: 'Ancient temple dedicated to Lord Shiva, located on a hilltop with panoramic views. Known for its architectural beauty and spiritual significance among devotees.',
+    category: 'Temples & Monuments',
+    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+    images: ['https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80', 'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80'],
+    location: 'Sahibganj, Jharkhand',
+    rating: 4.2,
+    bestTimeToVisit: 'October to March',
+    overview: 'Kunderdoba Temple is an ancient temple dedicated to Lord Shiva, situated on a hilltop in Sahibganj district. The temple is known for its beautiful architecture and spiritual atmosphere that attracts devotees from far and wide. The hilltop location offers panoramic views of the surrounding landscape and the Ganges River. The temple is particularly significant during Shivratri and other religious festivals when thousands of pilgrims visit to seek blessings.',
+    attractions: ['Ancient Lord Shiva temple', 'Hilltop location with views', 'Beautiful architecture', 'Spiritual significance', 'Festival celebrations'],
+    reviews: [
+      { name: 'Devotee Ram', rating: 4, comment: 'Peaceful temple with beautiful hilltop views.', date: 'February 25, 2024' },
+      { name: 'Temple Visitor', rating: 4, comment: 'Ancient temple with great spiritual atmosphere.', date: 'January 30, 2024' }
+    ]
+  },
+  {
+    id: '40',
+    title: 'Udhwa Lake Bird Sanctuary',
+    shortDescription: 'Important bird sanctuary around Udhwa Lake, home to numerous migratory and resident bird species. Perfect for bird watching, nature photography, and ecological studies.',
+    category: 'Wildlife Sanctuary',
+    image: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
+    images: ['https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80', 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80'],
+    location: 'Sahibganj, Jharkhand',
+    rating: 4.3,
+    bestTimeToVisit: 'November to February',
+    overview: 'Udhwa Lake Bird Sanctuary is an important ecological site in Sahibganj district, centered around the beautiful Udhwa Lake. The sanctuary is home to numerous species of migratory and resident birds, making it a paradise for bird watchers and nature enthusiasts. During winter months, the sanctuary attracts various migratory birds from different parts of Asia. The area also supports diverse flora and fauna, creating a rich ecosystem perfect for ecological studies and nature photography.',
+    attractions: ['Diverse bird species', 'Migratory bird watching', 'Ecological diversity', 'Nature photography', 'Scientific research opportunities'],
+    reviews: [
+      { name: 'Bird Watcher Pro', rating: 4, comment: 'Excellent bird watching opportunities, saw many migratory species.', date: 'December 20, 2023' },
+      { name: 'Nature Researcher', rating: 4, comment: 'Rich ecosystem perfect for ecological studies.', date: 'January 8, 2024' }
     ]
   }
 ];

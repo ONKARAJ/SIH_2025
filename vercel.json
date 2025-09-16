@@ -8,15 +8,6 @@
   "env": {
     "NODE_ENV": "production"
   },
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY": "@google_maps_api_key",
-      "DATABASE_URL": "@database_url",
-      "RAZORPAY_KEY_ID": "@razorpay_key_id",
-      "RAZORPAY_SECRET": "@razorpay_secret",
-      "RAZORPAY_WEBHOOK_SECRET": "@razorpay_webhook_secret"
-    }
-  },
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 30

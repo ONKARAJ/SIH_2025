@@ -97,6 +97,88 @@ export function Navigation() {
                     {link.label}
                   </Link>
                 ))}
+                
+                {/* Mobile Discover Section */}
+                <div className="pt-2 border-t border-border">
+                  <div className="px-4 py-2 text-lg font-semibold text-card-foreground flex items-center gap-2">
+                    🧭 Discover
+                  </div>
+                  
+                  {/* Attractions Subsection */}
+                  <div className="ml-2">
+                    <div className="px-4 py-1 text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                      Attractions
+                    </div>
+                    <div className="space-y-1 ml-2">
+                      <Link href="/waterfall" className="block px-4 py-2 text-sm text-card-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-1 transition-all duration-200 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                        <span className="flex items-center gap-3">
+                          <span>🌊</span>
+                          <span>Waterfalls</span>
+                        </span>
+                      </Link>
+                      <Link href="/hill-station" className="block px-4 py-2 text-sm text-card-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-1 transition-all duration-200 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                        <span className="flex items-center gap-3">
+                          <span>⛰️</span>
+                          <span>Hill Stations</span>
+                        </span>
+                      </Link>
+                      <Link href="/national-park" className="block px-4 py-2 text-sm text-card-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-1 transition-all duration-200 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                        <span className="flex items-center gap-3">
+                          <span>🌲</span>
+                          <span>National Parks</span>
+                        </span>
+                      </Link>
+                      <Link href="/adventure-sports" className="block px-4 py-2 text-sm text-card-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-1 transition-all duration-200 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                        <span className="flex items-center gap-3">
+                          <span>🏕️</span>
+                          <span>Adventure Sports</span>
+                        </span>
+                      </Link>
+                      <Link href="/lake" className="block px-4 py-2 text-sm text-card-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-1 transition-all duration-200 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                        <span className="flex items-center gap-3">
+                          <span>🏞️</span>
+                          <span>Lakes</span>
+                        </span>
+                      </Link>
+                      <Link href="/dam" className="block px-4 py-2 text-sm text-card-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-1 transition-all duration-200 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                        <span className="flex items-center gap-3">
+                          <span>🏗️</span>
+                          <span>Dams</span>
+                        </span>
+                      </Link>
+                      <Link href="/historic-site" className="block px-4 py-2 text-sm text-card-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-1 transition-all duration-200 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                        <span className="flex items-center gap-3">
+                          <span>🏛️</span>
+                          <span>Historic Sites</span>
+                        </span>
+                      </Link>
+                      <Link href="/park" className="block px-4 py-2 text-sm text-card-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-1 transition-all duration-200 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                        <span className="flex items-center gap-3">
+                          <span>🌳</span>
+                          <span>Parks</span>
+                        </span>
+                      </Link>
+                      <Link href="/religious-site" className="block px-4 py-2 text-sm text-card-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-1 transition-all duration-200 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                        <span className="flex items-center gap-3">
+                          <span>🕉️</span>
+                          <span>Religious Sites</span>
+                        </span>
+                      </Link>
+                      <Link href="/valley" className="block px-4 py-2 text-sm text-card-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-1 transition-all duration-200 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                        <span className="flex items-center gap-3">
+                          <span>⛰️</span>
+                          <span>Valleys</span>
+                        </span>
+                      </Link>
+                      <Link href="/wildlife-sanctuary" className="block px-4 py-2 text-sm text-card-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-1 transition-all duration-200 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                        <span className="flex items-center gap-3">
+                          <span>🦌</span>
+                          <span>Wildlife Sanctuaries</span>
+                        </span>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               </nav>
               
               <div className="pt-4 space-y-3 border-t border-border">

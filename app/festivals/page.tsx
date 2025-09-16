@@ -5,7 +5,7 @@ import { Navigation } from '@/components/navigation';
 import FestivalsHero from '@/components/festivals/festivals-hero';
 import FestivalCalendar from '@/components/festivals/festival-calendar';
 import FestivalTimeline from '@/components/festivals/festival-timeline';
-import FestivalsWithFilters from '@/components/festivals/festivals-with-filters';
+import FestivalGrid from '@/components/festivals/festival-grid';
 import CulturalElements from '@/components/festivals/cultural-elements';
 import FolkloreSection from '@/components/festivals/folklore-section';
 import { RecipesSection, ArtisanCrafts, TravelTips, MultimediaGallery as MultimediaGalleryComponent } from '@/components/festivals/placeholder-components';
@@ -135,12 +135,12 @@ export default function FestivalsPage() {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">Explore Festivals</h2>
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-              Filter and discover festivals by season, category, or region
+              Discover the vibrant festivals and celebrations of Jharkhand
             </p>
           </div>
           
           <Suspense fallback={<LoadingSpinner />}>
-            <FestivalsWithFilters />
+            <FestivalGrid />
           </Suspense>
         </div>
       </section>
