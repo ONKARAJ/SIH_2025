@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, X, Expand, Minimize2 } from 'lucide-react';
-import { StreetViewModal } from './street-view-modal';
+import { IframeStreetView } from './iframe-street-view';
 
 interface TouristSpot {
   id: string;
@@ -51,15 +51,17 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
   const [isMapLoading, setIsMapLoading] = useState(true);
+  const [clickMarker, setClickMarker] = useState<any>(null);
+  const [clickedLocation, setClickedLocation] = useState<{lat: number, lng: number} | null>(null);
 
-  // Constants
+  // Constants - Exact geographical limits of Jharkhand
   const JHARKHAND_BOUNDS = {
-    north: 25.35,
-    south: 21.95,
-    east: 87.57,
-    west: 83.32
+    north: 25.4333, // 25°26' N
+    south: 21.9667, // 21°58' N
+    east: 87.9167,  // 87°55' E
+    west: 83.3167   // 83°19' E
   };
-  const JHARKHAND_CENTER = { lat: 23.6102, lng: 85.2799 };
+  const JHARKHAND_CENTER = { lat: 23.7, lng: 85.6167 }; // Updated center based on exact bounds
 
   // Utility functions
   const getSpotIcon = (type: string): string => {
@@ -189,17 +191,33 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
     `;
   };
 
-  // Check Street View availability and open modal
-  const checkStreetViewAndOpen = useCallback((spot: TouristSpot) => {
-    console.log('Opening Street View modal for:', spot.name);
+  // Street View modal functionality removed - now opens directly in Google Maps
+
+  // Open Street View in iframe modal with multiple approaches
+  const openStreetViewAtCoordinates = useCallback((lat: number, lng: number) => {
+    console.log('Opening Street View iframe modal for coordinates:', lat, lng);
     
-    // Always open the modal - the StreetViewModal component handles availability checking internally
+    // Create a temporary spot object for the clicked location
+    const clickedSpot: TouristSpot = {
+      id: `clicked-${lat}-${lng}`,
+      name: 'Street View Location',
+      type: 'Location',
+      color: '#4285f4',
+      description: `360° Street View at coordinates ${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+      bestTime: '',
+      lat: lat,
+      lng: lng,
+      googleMaps: `https://maps.google.com/?q=${lat},${lng}`
+    };
+    
     setStreetViewModal({
       isOpen: true,
-      spot: spot,
-      hasStreetView: true // The modal component will handle fallback if needed
+      spot: clickedSpot,
+      hasStreetView: true
     });
   }, []);
+
+  // Position synchronization removed since Street View opens in external tab
 
   // Handle marker click with map popup only (no side panel update)
   const handleMarkerClick = useCallback((spot: TouristSpot, marker: any) => {
@@ -233,10 +251,14 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
     // Create unique handlers for the popup buttons
     const uniqueId = spot.id.replace(/[^a-zA-Z0-9]/g, '');
     
-    // Street View handler
+    // Street View handler - opens iframe modal
     (window as any)[`handleStreetView_${uniqueId}`] = () => {
       console.log('Street View clicked for:', spot.name);
-      checkStreetViewAndOpen(spot);
+      setStreetViewModal({
+        isOpen: true,
+        spot: spot,
+        hasStreetView: true
+      });
     };
     
     // Satellite view handler
@@ -251,7 +273,7 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
     };
     
     console.log('Map popup opened for:', spot.name);
-  }, [checkStreetViewAndOpen]);
+  }, []); // No dependencies needed since all references are now direct
 
   // Initialize map
   const initializeMap = useCallback(() => {
@@ -282,14 +304,65 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
 
     infoWindowRef.current = new window.google.maps.InfoWindow();
 
-    // Add map click listener to close info windows when clicking on map
-    mapInstanceRef.current.addListener('click', () => {
+    // Add map click listener to handle clicks anywhere on the map
+    mapInstanceRef.current.addListener('click', (event: any) => {
+      // Close any open info windows first
       if (infoWindowRef.current) {
         infoWindowRef.current.close();
       }
+      
+      // Get the clicked coordinates
+      const clickedLat = event.latLng.lat();
+      const clickedLng = event.latLng.lng();
+      
+      console.log('Map clicked at:', clickedLat, clickedLng);
+      
+      // Remove any existing click marker
+      if (clickMarker) {
+        clickMarker.setMap(null);
+      }
+      
+      // Create a new marker at the clicked location with enhanced styling
+      const newClickMarker = new window.google.maps.Marker({
+        position: { lat: clickedLat, lng: clickedLng },
+        map: mapInstanceRef.current,
+        title: `Street View Location (${clickedLat.toFixed(6)}, ${clickedLng.toFixed(6)})`,
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          fillColor: '#ff4757',
+          fillOpacity: 0.9,
+          strokeColor: '#ffffff',
+          strokeWeight: 3,
+          scale: 12
+        },
+        animation: window.google.maps.Animation.BOUNCE,
+        zIndex: 1000 // Ensure it appears above other markers
+      });
+      
+      // Store the marker and coordinates
+      setClickMarker(newClickMarker);
+      setClickedLocation({ lat: clickedLat, lng: clickedLng });
+      
+      // Stop the bounce animation after 1 second
+      setTimeout(() => {
+        if (newClickMarker) {
+          newClickMarker.setAnimation(null);
+        }
+      }, 1000);
+      
+      // Automatically open Street View modal after a short delay (to show the marker animation)
+      setTimeout(() => {
+        openStreetViewAtCoordinates(clickedLat, clickedLng);
+      }, 800);
     });
 
     clearMarkers();
+    
+    // Clear any existing click marker
+    if (clickMarker) {
+      clickMarker.setMap(null);
+      setClickMarker(null);
+    }
 
     touristSpots.forEach((spot, index) => {
       console.log(`Creating marker ${index + 1} for:`, spot.name);
@@ -354,8 +427,12 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
         // Prevent any scrolling or page movement
         document.body.style.overflow = 'hidden';
         
-        // Handle double-click immediately
-        checkStreetViewAndOpen(spot);
+        // Handle double-click immediately - open Street View iframe modal
+        setStreetViewModal({
+          isOpen: true,
+          spot: spot,
+          hasStreetView: true
+        });
         
         // Restore overflow after a brief delay
         setTimeout(() => {
@@ -367,7 +444,7 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
     });
 
     setIsMapLoaded(true);
-  }, [touristSpots, mapType, handleMarkerClick, checkStreetViewAndOpen]);
+  }, [touristSpots, mapType, handleMarkerClick, openStreetViewAtCoordinates, clickMarker]);
 
   // Load Google Maps API
   useEffect(() => {
@@ -700,16 +777,58 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
         </Button>
       </div>
 
-      {/* Map Container */}
+      {/* Map Container - Static Jharkhand Map */}
       <div 
-        ref={mapRef}
-        className="w-full h-full min-h-[600px]"
+        className="w-full h-full min-h-[600px] relative bg-gradient-to-br from-green-50 to-blue-50"
         style={{
           minHeight: '600px',
           width: '100%',
-          height: '100%'
+          height: '100%',
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="800" height="600" fill="%23f0f9ff"/%3E%3Cg transform="translate(100,80)"%3E%3C!-- Jharkhand State Outline --%3E%3Cpath d="M50,100 L150,50 L300,80 L400,120 L450,200 L400,350 L300,380 L200,360 L100,320 L50,250 Z" fill="%2322c55e" stroke="%23166534" stroke-width="2" opacity="0.7"/%3E%3C!-- District boundaries --%3E%3Cpath d="M150,120 L250,100 L320,140 L300,200 L200,220 L150,180 Z" fill="%2334d399" stroke="%23065f46" stroke-width="1" opacity="0.6"/%3E%3Cpath d="M250,150 L350,130 L380,190 L340,240 L250,220 Z" fill="%236ee7b7" stroke="%23065f46" stroke-width="1" opacity="0.6"/%3E%3Cpath d="M150,200 L280,180 L320,240 L280,300 L180,320 L150,260 Z" fill="%2394f3e4" stroke="%23065f46" stroke-width="1" opacity="0.6"/%3E%3Ctext x="225" y="30" font-family="Arial" font-size="18" font-weight="bold" fill="%23166534" text-anchor="middle"%3EJharkhand State%3C/text%3E%3C/g%3E%3C/svg%3E")',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center'
         }}
-      />
+      >
+        {/* Interactive overlay for markers */}
+        <div 
+          ref={mapRef}
+          className="absolute inset-0 w-full h-full"
+          style={{
+            background: 'transparent'
+          }}
+        />
+        
+        {/* Fallback to Google Maps if needed */}
+        {isMapLoaded && window.google && (
+          <div className="absolute inset-0 opacity-0 pointer-events-none">
+            <div id="google-map-fallback" style={{ width: '100%', height: '100%' }} />
+          </div>
+        )}
+      </div>
+
+      {/* Instructions Panel */}
+      <div className="absolute bottom-4 right-4 z-10 max-w-sm">
+        <div className="bg-white/95 backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg p-4">
+          <h3 className="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
+            <span className="text-lg">👆</span> How to use
+          </h3>
+          <div className="space-y-1 text-xs text-gray-600">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              <span>Click anywhere on the map for 360° Street View</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span>Click markers for info, double-click for Street View</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+              <span>Red markers show your clicked locations</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Fullscreen Button */}
       <div className="absolute bottom-4 left-4 z-10">
@@ -759,15 +878,13 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
         </div>
       )}
 
-      {/* Street View Modal - Using the advanced modal component */}
+      {/* Robust Street View Modal with multiple iframe approaches */}
       {streetViewModal.isOpen && streetViewModal.spot && (
-        <StreetViewModal
+        <IframeStreetView
           isOpen={streetViewModal.isOpen}
           onClose={() => setStreetViewModal({ isOpen: false, spot: null, hasStreetView: false })}
           title={streetViewModal.spot.name}
-          description={streetViewModal.spot.description.length > 150 
-            ? streetViewModal.spot.description.substring(0, 150) + '...' 
-            : streetViewModal.spot.description}
+          description={streetViewModal.spot.description}
           location={`${streetViewModal.spot.type} • Jharkhand, India`}
           lat={streetViewModal.spot.lat}
           lng={streetViewModal.spot.lng}

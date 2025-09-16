@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jharkhand State Map - Tourism Website</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+        .info-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-top: 3px solid #667eea;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .info-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #FF0000;
+        }
+        .info-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 1.2em;
+        }
+        .info-card p {
+            margin: 0;
+            color: #666;
+            line-height: 1.5;
+        }
+        .coordinates {
+            font-family: monospace;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗺️ Jharkhand State Map</h1>
+            <p>Explore the Land of Forests - Interactive Tourism Map</p>
+        </div>
+        
+        <div id="map"></div>
+        
+        <div class="info-panel">
+            <h2 style="margin: 0 0 15px 0; color: #333;">📍 Jharkhand Geographical Information</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>🧭 Extreme Coordinates</h3>
+                    <p>
+                        <strong>North:</strong> <span class="coordinates">25.433° N</span><br>
+                        <strong>South:</strong> <span class="coordinates">21.967° N</span><br>
+                        <strong>East:</strong> <span class="coordinates">87.917° E</span><br>
+                        <strong>West:</strong> <span class="coordinates">83.317° E</span>
+                    </p>
+                </div>
+                <div class="info-card">
+                    <h3>🏛️ State Information</h3>
+                    <p>
+                        <strong>Capital:</strong> Ranchi<br>
+                        <strong>Area:</strong> 79,710 km²<br>
+                        <strong>Districts:</strong> 24<br>
+                        <strong>Formation:</strong> November 15, 2000
+                    </p>
+                </div>
+                <div class="info-card">
+                    <h3>🌟 Tourism Highlights</h3>
+                    <p>
+                        Rich in waterfalls, hill stations, wildlife sanctuaries, and ancient temples. Famous for tribal culture, natural beauty, and mineral wealth.
+                    </p>
+                </div>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                <p style="margin: 0; color: #856404;">
+                    <strong>🔴 Red Border:</strong> The red outlined area shows the exact geographical boundaries of Jharkhand state. 
+                    The map is restricted to these coordinates for focused tourism exploration.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let map;
+        let jharkhandPolygon;
+
+        // Exact geographical limits of Jharkhand
+        const JHARKHAND_BOUNDS = {
+            north: 25.433,  // 25°26' N
+            south: 21.967,  // 21°58' N  
+            east: 87.917,   // 87°55' E
+            west: 83.317    // 83°19' E
+        };
+
+        // Jharkhand center coordinates
+        const JHARKHAND_CENTER = {
+            lat: 23.61,
+            lng: 85.28
+        };
+
+        function initMap() {
+            try {
+                // Initialize the map centered on Jharkhand
+                map = new google.maps.Map(document.getElementById("map"), {
+                    center: JHARKHAND_CENTER,
+                    zoom: 7,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    
+                    // Apply map restrictions to Jharkhand boundaries
+                    restriction: {
+                        latLngBounds: {
+                            north: JHARKHAND_BOUNDS.north,
+                            south: JHARKHAND_BOUNDS.south,
+                            east: JHARKHAND_BOUNDS.east,
+                            west: JHARKHAND_BOUNDS.west,
+                        },
+                        strictBounds: true, // Prevent panning outside bounds
+                    },
+                    
+                    // Map controls
+                    zoomControl: true,
+                    mapTypeControl: true,
+                    scaleControl: true,
+                    streetViewControl: true,
+                    rotateControl: false,
+                    fullscreenControl: true
+                });
+
+                // Create polygon coordinates using extreme geographical points
+                const jharkhandCoordinates = [
+                    // Creating rectangular boundary using extreme coordinates
+                    { lat: JHARKHAND_BOUNDS.north, lng: JHARKHAND_BOUNDS.west }, // Northwest corner
+                    { lat: JHARKHAND_BOUNDS.north, lng: JHARKHAND_BOUNDS.east }, // Northeast corner  
+                    { lat: JHARKHAND_BOUNDS.south, lng: JHARKHAND_BOUNDS.east }, // Southeast corner
+                    { lat: JHARKHAND_BOUNDS.south, lng: JHARKHAND_BOUNDS.west }, // Southwest corner
+                    { lat: JHARKHAND_BOUNDS.north, lng: JHARKHAND_BOUNDS.west }  // Back to start
+                ];
+
+                // Create the Jharkhand state boundary polygon
+                jharkhandPolygon = new google.maps.Polygon({
+                    paths: jharkhandCoordinates,
+                    strokeColor: "#FF0000",    // Red border
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: "#FF0000",      // Red fill
+                    fillOpacity: 0.1,          // Semi-transparent fill
+                    clickable: true
+                });
+
+                // Add the polygon to the map
+                jharkhandPolygon.setMap(map);
+
+                // Add click event to show state information
+                jharkhandPolygon.addListener("click", showStateInfo);
+
+                // Zoom to fit the Jharkhand polygon
+                const bounds = new google.maps.LatLngBounds();
+                jharkhandCoordinates.forEach(coord => {
+                    bounds.extend(coord);
+                });
+                map.fitBounds(bounds);
+
+                // Add a slight padding to the bounds
+                setTimeout(() => {
+                    map.fitBounds(bounds, 20); // 20px padding
+                }, 500);
+
+                console.log("✅ Jharkhand map initialized successfully!");
+                console.log(`📍 Bounds: N:${JHARKHAND_BOUNDS.north}° S:${JHARKHAND_BOUNDS.south}° E:${JHARKHAND_BOUNDS.east}° W:${JHARKHAND_BOUNDS.west}°`);
+
+            } catch (error) {
+                console.error("❌ Error initializing map:", error);
+                document.getElementById("map").innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; height: 600px; background: #f8f9fa; color: #6c757d;">
+                        <div style="text-align: center;">
+                            <h3>⚠️ Map Loading Error</h3>
+                            <p>Please check your Google Maps API key and try again.</p>
+                            <p style="font-size: 0.9em; color: #dc3545;">Error: ${error.message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function showStateInfo(event) {
+            const infoWindow = new google.maps.InfoWindow({
+                content: `
+                    <div style="padding: 15px; max-width: 300px;">
+                        <h3 style="margin: 0 0 10px 0; color: #FF0000; font-size: 18px;">
+                            🏛️ Jharkhand State
+                        </h3>
+                        <div style="margin: 8px 0; font-size: 14px; line-height: 1.6;">
+                            <strong>📍 Geographical Extent:</strong><br>
+                            <span style="font-family: monospace; background: #f8f9fa; padding: 2px 4px; border-radius: 3px;">
+                                ${JHARKHAND_BOUNDS.north}°N to ${JHARKHAND_BOUNDS.south}°N<br>
+                                ${JHARKHAND_BOUNDS.west}°E to ${JHARKHAND_BOUNDS.east}°E
+                            </span>
+                        </div>
+                        <div style="margin: 10px 0; padding: 8px; background: #fff3cd; border-radius: 5px; font-size: 13px;">
+                            <strong>🎯 Tourism:</strong> Explore waterfalls, wildlife sanctuaries, hill stations, and rich tribal heritage within these boundaries.
+                        </div>
+                        <div style="margin-top: 10px; text-align: center;">
+                            <button onclick="map.fitBounds(new google.maps.LatLngBounds(
+                                {lat: ${JHARKHAND_BOUNDS.south}, lng: ${JHARKHAND_BOUNDS.west}},
+                                {lat: ${JHARKHAND_BOUNDS.north}, lng: ${JHARKHAND_BOUNDS.east}}
+                            ))" style="background: #667eea; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">
+                                🔍 Fit to Jharkhand
+                            </button>
+                        </div>
+                    </div>
+                `,
+                position: event.latLng
+            });
+            
+            infoWindow.open(map);
+        }
+
+        // Global error handler for Google Maps API
+        window.gm_authFailure = function() {
+            console.error("❌ Google Maps API authentication failed");
+            document.getElementById("map").innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; height: 600px; background: #f8f9fa; color: #dc3545; text-align: center;">
+                    <div>
+                        <h3>🔑 API Key Required</h3>
+                        <p>Please add your Google Maps API key to use this map.</p>
+                        <p style="font-size: 0.9em;">Replace 'YOUR_API_KEY' in the script src with your actual API key.</p>
+                    </div>
+                </div>
+            `;
+        };
+    </script>
+
+    <!-- Google Maps JavaScript API -->
+    <!-- API key configured for Jharkhand tourism map -->
+    <script async defer 
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&callback=initMap">
+    </script>
+</body>
+</html>
