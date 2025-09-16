@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { GoogleMap } from "./google-map";
+import { InteractiveJharkhandMap } from "./interactive-jharkhand-map";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface TouristSpot {
@@ -19,9 +19,10 @@ interface TouristSpot {
 interface MapWrapperProps {
   touristSpots: TouristSpot[];
   onLocationSelect: (locationId: string) => void;
+  selectedLocationId?: string | null;
 }
 
-export function MapWrapper({ touristSpots, onLocationSelect }: MapWrapperProps) {
+export function MapWrapper({ touristSpots, onLocationSelect, selectedLocationId }: MapWrapperProps) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -44,9 +45,16 @@ export function MapWrapper({ touristSpots, onLocationSelect }: MapWrapperProps) 
   }
 
   return (
-    <GoogleMap 
-      touristSpots={touristSpots} 
-      onLocationSelect={onLocationSelect}
-    />
+    <Card className="border-border bg-card">
+      <CardContent className="p-0">
+        <div style={{ height: "600px", width: "100%" }}>
+          <InteractiveJharkhandMap
+            touristSpots={touristSpots} 
+            onLocationSelect={onLocationSelect}
+            selectedLocationId={selectedLocationId}
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 }
