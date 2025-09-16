@@ -92,7 +92,7 @@ One year, the village well dried up completely. Desperate villagers followed the
 After hours of digging, fresh, sweet water bubbled up from the ground. The villagers realized the elephant had taught them that nature provides solutions if we work with patience and wisdom.
 
 From that day, the village honored elephants as sacred animals and included them in their harvest festivals as symbols of wisdom and abundance.`,
-    moral: 'Nature's wisdom guides us to solutions when we observe and learn patiently.',
+    moral: 'Nature\'s wisdom guides us to solutions when we observe and learn patiently.',
     audio: 'https://actions.google.com/sounds/v1/animals/elephant_trumpet.ogg'
   }
 ];
