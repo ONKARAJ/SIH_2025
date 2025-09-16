@@ -60,16 +60,22 @@ export default function BookHotelsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [selectedCity, setSelectedCity] = useState('');
+  const [highlightedHotel, setHighlightedHotel] = useState('');
   
-  // Handle city filtering from URL parameter
+  // Handle city and hotel filtering from URL parameters
   useEffect(() => {
     const cityParam = searchParams?.get('city');
+    const hotelParam = searchParams?.get('hotel');
+    
     if (cityParam) {
       const city = getCityBySlug(cityParam);
       if (city) {
         setSelectedCity(cityParam);
-        setSearchQuery(city.name);
+        setSearchQuery(hotelParam || city.name);
         setIsSearching(true);
+        if (hotelParam) {
+          setHighlightedHotel(hotelParam);
+        }
       }
     }
   }, [searchParams]);
@@ -105,9 +111,11 @@ export default function BookHotelsPage() {
     setSearchQuery('');
     setIsSearching(false);
     setSelectedCity('');
+    setHighlightedHotel('');
     // Clear URL parameters
     const url = new URL(window.location.href);
     url.searchParams.delete('city');
+    url.searchParams.delete('hotel');
     window.history.replaceState({}, '', url);
   };
   
@@ -247,7 +255,11 @@ export default function BookHotelsPage() {
           {filteredHotels.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredHotels.map((hotel) => (
-              <Card key={hotel.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              <Card key={hotel.id} className={`overflow-hidden hover:shadow-lg transition-all duration-300 ${
+                highlightedHotel && hotel.name === highlightedHotel 
+                  ? 'ring-2 ring-blue-500 ring-offset-2 shadow-xl bg-blue-50/50' 
+                  : ''
+              }`}>
                 <div className="relative">
                   <img
                     src={hotel.image}
@@ -257,6 +269,11 @@ export default function BookHotelsPage() {
                   {hotel.originalPrice > hotel.price && (
                     <Badge className="absolute top-3 right-3 bg-red-500 text-white">
                       Save ₹{hotel.originalPrice - hotel.price}
+                    </Badge>
+                  )}
+                  {highlightedHotel && hotel.name === highlightedHotel && (
+                    <Badge className="absolute top-3 left-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold">
+                      🌟 Featured Hotel
                     </Badge>
                   )}
                   <div className="absolute bottom-3 left-3">

@@ -40,8 +40,28 @@ import {
   Info,
   X
 } from 'lucide-react'
-import { CityData } from '@/lib/cities-data'
+import { CityData, citiesData } from '@/lib/cities-data'
 import { InteractiveCityMap } from '@/components/interactive-city-map'
+
+// Function to calculate hotel ID based on global position
+const calculateHotelId = (cityId: string, hotelIndex: number) => {
+  let globalHotelIndex = 1;
+  
+  // Iterate through cities to find the global position
+  for (const city of citiesData) {
+    if (city.id === cityId) {
+      // Found the target city, add the hotel index
+      globalHotelIndex += hotelIndex;
+      break;
+    }
+    // Add all hotels from this city to the global index
+    globalHotelIndex += city.hotels.length;
+  }
+  
+  return {
+    hotelId: `hotel-${String(globalHotelIndex).padStart(3, '0')}`
+  };
+};
 
 interface CityPageTemplateProps {
   city: CityData
@@ -88,10 +108,14 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
     setReviewData({ name: '', rating: 5, comment: '', images: [] })
   }
 
-  // Get video path based on city name
-  const getVideoPath = () => {
+  // Get video paths with multiple sources for better fallback
+  const getVideoPaths = () => {
     const cityNameLower = city.name.toLowerCase().replace(/\s+/g, '-')
-    return `/videos/cities/${cityNameLower}.mp4`
+    return {
+      mp4: `/videos/cities/${cityNameLower}.mp4`,
+      webm: `/videos/cities/${cityNameLower}.webm`,
+      fallback: `/videos/cities/default-city.mp4`
+    }
   }
 
   // Get brief specialty descriptions for cards
@@ -181,7 +205,7 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
             playsInline
             preload="metadata"
             onError={(e) => {
-              console.log('Video failed to load:', getVideoPath())
+              console.log('Video failed to load for city:', city.name)
               // Fallback to image if video fails to load
               const target = e.target as HTMLVideoElement
               target.style.display = 'none'
@@ -191,7 +215,9 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
               }
             }}
           >
-            <source src={getVideoPath()} type="video/mp4" />
+            <source src={getVideoPaths().mp4} type="video/mp4" />
+            <source src={getVideoPaths().webm} type="video/webm" />
+            <source src={getVideoPaths().fallback} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
           
@@ -643,10 +669,42 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
                   
                   <div className="border-t border-gray-700 pt-4">
                     <div className="flex items-center justify-between">
-                      <div className="text-right">
+                      <div className="text-left">
                         <div className="text-2xl font-bold text-white">{hotel.price}</div>
                         <div className="text-gray-400 text-sm">per night</div>
                       </div>
+                      <Button 
+                        asChild
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-6 py-2"
+                        onClick={() => {
+                          // Calculate hotel ID based on its position across all cities
+                          const { hotelId } = calculateHotelId(city.id, index);
+                          // Store hotel data in localStorage for the booking page
+                          const hotelData = {
+                            id: hotelId,
+                            name: hotel.name,
+                            location: city.name,
+                            description: hotel.description,
+                            rating: hotel.rating,
+                            reviews: Math.floor(Math.random() * 150) + 50,
+                            price: parseInt(hotel.price.match(/(\d{1,3}(?:,\d{3})*)/) ? hotel.price.match(/(\d{1,3}(?:,\d{3})*)/)[1].replace(/,/g, '') : '3000'),
+                            originalPrice: Math.floor(parseInt(hotel.price.match(/(\d{1,3}(?:,\d{3})*)/) ? hotel.price.match(/(\d{1,3}(?:,\d{3})*)/)[1].replace(/,/g, '') : '3000') * 1.25),
+                            image: hotel.image,
+                            amenities: hotel.amenities,
+                            rooms: [{
+                              type: hotel.category === 'luxury' ? 'Luxury Suite' : hotel.category === 'business' ? 'Business Room' : 'Standard Room',
+                              price: parseInt(hotel.price.match(/(\d{1,3}(?:,\d{3})*)/) ? hotel.price.match(/(\d{1,3}(?:,\d{3})*)/)[1].replace(/,/g, '') : '3000'),
+                              capacity: 2
+                            }],
+                            cityId: city.id
+                          };
+                          localStorage.setItem('selectedHotel', JSON.stringify(hotelData));
+                        }}
+                      >
+                        <Link href={`/booking/hotel/${calculateHotelId(city.id, index).hotelId}`}>
+                          Book Now
+                        </Link>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -936,10 +994,10 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
             <Button asChild size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
               <Link href="/book-tour">Plan Your Trip</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-900">
+            <Button asChild size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
               <Link href="/book-hotels">Book Hotels</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-900">
+            <Button asChild size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
               <Link href="/contact">Get Travel Guide</Link>
             </Button>
           </div>

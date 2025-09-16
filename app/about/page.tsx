@@ -4,6 +4,7 @@ import { Navigation } from "@/components/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   ChevronLeft,
   ChevronRight,
@@ -15,11 +16,18 @@ import {
   Mountain,
   Users,
   Award,
-  TrendingUp
+  TrendingUp,
+  ExternalLink,
+  Clock,
+  Navigation as NavigationIcon,
+  Heart,
+  X
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getPlaceDescription, hasPlacePage, getPlacePageRoute, PlaceDescription } from "@/lib/place-descriptions";
 
 // Data for different sections with sliding images
 const beautyImages = [
@@ -71,7 +79,7 @@ const allJharkhandCities = [
     district: "Dhanbad"
   },
   {
-    name: "Bokaro Steel City",
+    name: "Bokaro",
     description: "Modern steel city with planned infrastructure",
     population: "600k",
     image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
@@ -85,62 +93,6 @@ const allJharkhandCities = [
     image: "https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80",
     highlights: ["Religious Tourism", "Jyotirlinga", "Pilgrimage Center"],
     district: "Deoghar"
-  },
-  {
-    name: "Hazaribagh",
-    description: "Known for national park and natural beauty",
-    population: "154k",
-    image: "https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80",
-    highlights: ["National Park", "Wildlife", "Natural Beauty"],
-    district: "Hazaribagh"
-  },
-  {
-    name: "Giridih",
-    description: "Land of hills with Parasnath peak",
-    population: "168k",
-    image: "https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80",
-    highlights: ["Parasnath Hills", "Jain Pilgrimage", "Mining"],
-    district: "Giridih"
-  },
-  {
-    name: "Ramgarh",
-    description: "Summer capital during British era",
-    population: "78k",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-    highlights: ["Hill Station", "Historical", "Cool Climate"],
-    district: "Ramgarh"
-  },
-  {
-    name: "Chaibasa",
-    description: "Headquarters of West Singhbhum district",
-    population: "80k",
-    image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80",
-    highlights: ["Tribal Culture", "Administrative Center", "Mining"],
-    district: "West Singhbhum"
-  },
-  {
-    name: "Medininagar (Daltonganj)",
-    description: "Gateway to Betla National Park",
-    population: "178k",
-    image: "https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80",
-    highlights: ["Wildlife Tourism", "Betla National Park", "Tribal Heritage"],
-    district: "Palamu"
-  },
-  {
-    name: "Dumka",
-    description: "Sub-capital and cultural hub of Santhal Pargana",
-    population: "55k",
-    image: "https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80",
-    highlights: ["Sub-capital", "Santhal Culture", "Terracotta Temples"],
-    district: "Dumka"
-  },
-  {
-    name: "Sahibganj",
-    description: "River port town on the banks of Ganges",
-    population: "65k",
-    image: "https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80",
-    highlights: ["Ganges River", "Port Town", "Trade Center"],
-    district: "Sahibganj"
   }
 ];
 
@@ -338,6 +290,8 @@ const ImageCarousel = ({ images, currentIndex, onNext, onPrev, children }: any) 
 );
 
 export default function AboutJharkhandPage() {
+  const router = useRouter();
+  
   // Carousel states
   const [beautyIndex, setBeautyIndex] = useState(0);
   const [cityIndex, setCityIndex] = useState(0);
@@ -345,6 +299,16 @@ export default function AboutJharkhandPage() {
   const [cuisineIndex, setCuisineIndex] = useState(0);
   const [festivalIndex, setFestivalIndex] = useState(0);
   const [placeIndex, setPlaceIndex] = useState(0);
+  
+  // Popup modal states
+  const [selectedPlace, setSelectedPlace] = useState<PlaceDescription | null>(null);
+  const [isPlaceModalOpen, setIsPlaceModalOpen] = useState(false);
+  const [selectedCity, setSelectedCity] = useState<any>(null);
+  const [isCityModalOpen, setIsCityModalOpen] = useState(false);
+  const [selectedGlimpse, setSelectedGlimpse] = useState<any>(null);
+  const [isGlimpseModalOpen, setIsGlimpseModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [glimpseImageIndex, setGlimpseImageIndex] = useState(0);
 
   // Auto-slide effect
   useEffect(() => {
@@ -359,6 +323,96 @@ export default function AboutJharkhandPage() {
 
     return () => intervals.forEach(clearInterval);
   }, []);
+  
+  // Handle place click - redirect to page if exists, otherwise show popup
+  const handlePlaceClick = (placeName: string) => {
+    const pageRoute = getPlacePageRoute(placeName);
+    const placeDescription = getPlaceDescription(placeName);
+    
+    if (hasPlacePage(placeName) && pageRoute) {
+      router.push(pageRoute);
+    } else if (placeDescription) {
+      setSelectedPlace(placeDescription);
+      setCurrentImageIndex(0);
+      setIsPlaceModalOpen(true);
+    }
+  };
+  
+  // Handle city click - show popup with detailed info
+  const handleCityClick = (city: any) => {
+    // Normalize city name for comparison
+    const normalizedCityName = city.name.toLowerCase().trim();
+    
+    // Map city names to their routes
+    const cityRouteMap: { [key: string]: string } = {
+      'ranchi': '/cities/ranchi',
+      'jamshedpur': '/cities/jamshedpur', 
+      'dhanbad': '/cities/dhanbad',
+      'bokaro': '/cities/bokaro',
+      'bokaro steel city': '/cities/bokaro',
+      'deoghar': '/cities/deoghar'
+    };
+    
+    // Check if city has a dedicated page
+    const cityRoute = cityRouteMap[normalizedCityName];
+    
+    if (cityRoute) {
+      console.log(`Redirecting to: ${cityRoute}`);
+      router.push(cityRoute);
+    } else {
+      console.log(`Showing popup for: ${city.name}`);
+      setSelectedCity(city);
+      setIsCityModalOpen(true);
+    }
+  };
+  
+  // Handle glimpse click - show scrolling photos modal
+  const handleGlimpseClick = (glimpse: any) => {
+    setSelectedGlimpse(glimpse);
+    setGlimpseImageIndex(0);
+    setIsGlimpseModalOpen(true);
+  };
+  
+  // Handle cuisine click - redirect to cuisine page with anchor
+  const handleCuisineClick = (cuisine: any) => {
+    const cuisineName = cuisine.name.toLowerCase().replace(/\s+/g, '-');
+    router.push(`/cuisine-of-jharkhand#${cuisineName}`);
+  };
+  
+  // Handle festival click - redirect to explore-festivals page with anchor
+  const handleFestivalClick = (festival: any) => {
+    const festivalName = festival.name.toLowerCase().replace(/\s+/g, '-').replace('festival', '').trim();
+    router.push(`/explore-festivals#${festivalName}`);
+  };
+  
+  // Image navigation for modals
+  const nextImage = () => {
+    if (selectedPlace && selectedPlace.images.length > 1) {
+      setCurrentImageIndex((prev) => (prev + 1) % selectedPlace.images.length);
+    }
+  };
+  
+  const prevImage = () => {
+    if (selectedPlace && selectedPlace.images.length > 1) {
+      setCurrentImageIndex((prev) => (prev - 1 + selectedPlace.images.length) % selectedPlace.images.length);
+    }
+  };
+  
+  // Glimpse image navigation
+  const nextGlimpseImage = () => {
+    if (selectedGlimpse) {
+      // Create an array of related images for glimpses (we'll use the same image multiple times for demo)
+      const images = [selectedGlimpse.image, selectedGlimpse.image, selectedGlimpse.image];
+      setGlimpseImageIndex((prev) => (prev + 1) % images.length);
+    }
+  };
+  
+  const prevGlimpseImage = () => {
+    if (selectedGlimpse) {
+      const images = [selectedGlimpse.image, selectedGlimpse.image, selectedGlimpse.image];
+      setGlimpseImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-sky-50">
@@ -366,17 +420,30 @@ export default function AboutJharkhandPage() {
       
       {/* Hero Section */}
       <section className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/10 via-blue-600/5 to-purple-600/10" />
-        <div className="max-w-7xl mx-auto text-center relative z-10">
+        {/* Background Video */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        >
+          <source src="/videos/jharkhand.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/30 z-10" />
+        <div className="max-w-7xl mx-auto text-center relative z-20">
           <Badge className="mb-6 bg-emerald-100 text-emerald-700 border-emerald-200 px-6 py-2 text-sm font-medium">
             🌿 Discover Jharkhand
           </Badge>
           
-          <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight mb-8">
+          <h1 className="text-6xl md:text-8xl font-bold text-white leading-tight mb-8">
             About Jharkhand
           </h1>
           
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12">
+          <p className="text-xl text-white max-w-4xl mx-auto leading-relaxed mb-12">
             Discover the land of forests, where nature meets culture. Jharkhand, meaning "land of trees," 
             is blessed with pristine waterfalls, rich mineral resources, vibrant tribal heritage, and warm hospitality.
           </p>
@@ -473,9 +540,10 @@ export default function AboutJharkhandPage() {
               {allJharkhandCities.map((city, index) => (
                 <Card 
                   key={city.name} 
-                  className={`bg-white/90 backdrop-blur-sm border-0 shadow-lg transition-all duration-300 hover:shadow-xl ${
-                    index === cityIndex ? 'ring-2 ring-blue-500 shadow-xl scale-105' : ''
+                  className={`bg-white/90 backdrop-blur-sm border-0 shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer ${
+                    index === cityIndex ? 'ring-2 ring-blue-500 shadow-xl scale-105' : 'hover:scale-105'
                   }`}
+                  onClick={() => handleCityClick(city)}
                 >
                   <CardContent className="p-4">
                     <div className="flex items-center gap-3 mb-3">
@@ -577,9 +645,10 @@ export default function AboutJharkhandPage() {
               {glimpsesOfJharkhand.map((glimpse, index) => (
                 <Card 
                   key={glimpse.title}
-                  className={`bg-white/90 backdrop-blur-sm border-0 shadow-lg transition-all duration-300 hover:shadow-xl ${
-                    index === glimpseIndex ? 'ring-2 ring-green-500 shadow-xl scale-105' : ''
+                  className={`bg-white/90 backdrop-blur-sm border-0 shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer ${
+                    index === glimpseIndex ? 'ring-2 ring-green-500 shadow-xl scale-105' : 'hover:scale-105'
                   }`}
+                  onClick={() => handleGlimpseClick(glimpse)}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center gap-3 mb-4">
@@ -665,9 +734,10 @@ export default function AboutJharkhandPage() {
               {topCuisines.map((cuisine, index) => (
                 <Card 
                   key={cuisine.name}
-                  className={`bg-white/90 backdrop-blur-sm border-0 shadow-lg transition-all duration-300 ${
-                    index === cuisineIndex ? 'ring-2 ring-orange-500 shadow-xl scale-105' : 'hover:shadow-xl'
+                  className={`bg-white/90 backdrop-blur-sm border-0 shadow-lg transition-all duration-300 cursor-pointer ${
+                    index === cuisineIndex ? 'ring-2 ring-orange-500 shadow-xl scale-105' : 'hover:shadow-xl hover:scale-105'
                   }`}
+                  onClick={() => handleCuisineClick(cuisine)}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center gap-3 mb-4">
@@ -676,10 +746,14 @@ export default function AboutJharkhandPage() {
                         {cuisine.type}
                       </Badge>
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">{cuisine.name}</h3>
+                    <h3 className="text-lg font-semibold mb-2 group-hover:text-orange-600 transition-colors">{cuisine.name}</h3>
                     <p className="text-gray-600 text-sm mb-3">{cuisine.description}</p>
                     <div className="text-xs text-gray-500">
                       <strong>Taste:</strong> {cuisine.taste}
+                    </div>
+                    <div className="mt-2 flex items-center gap-1 text-xs text-orange-600">
+                      <span>View Recipe</span>
+                      <ExternalLink className="h-3 w-3" />
                     </div>
                   </CardContent>
                 </Card>
@@ -704,9 +778,10 @@ export default function AboutJharkhandPage() {
               {topFestivals.map((festival, index) => (
                 <Card 
                   key={festival.name}
-                  className={`bg-white/90 backdrop-blur-sm border-0 shadow-lg transition-all duration-300 ${
-                    index === festivalIndex ? 'ring-2 ring-amber-500 shadow-xl scale-105' : 'hover:shadow-xl'
+                  className={`bg-white/90 backdrop-blur-sm border-0 shadow-lg transition-all duration-300 cursor-pointer ${
+                    index === festivalIndex ? 'ring-2 ring-amber-500 shadow-xl scale-105' : 'hover:shadow-xl hover:scale-105'
                   }`}
+                  onClick={() => handleFestivalClick(festival)}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center gap-3 mb-4">
@@ -715,10 +790,14 @@ export default function AboutJharkhandPage() {
                         {festival.month}
                       </Badge>
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">{festival.name}</h3>
+                    <h3 className="text-lg font-semibold mb-2 group-hover:text-amber-600 transition-colors">{festival.name}</h3>
                     <p className="text-gray-600 text-sm mb-3">{festival.description}</p>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-500 mb-2">
                       <strong>Significance:</strong> {festival.significance}
+                    </div>
+                    <div className="flex items-center gap-1 text-xs text-amber-600">
+                      <span>Learn More</span>
+                      <ExternalLink className="h-3 w-3" />
                     </div>
                   </CardContent>
                 </Card>
@@ -790,9 +869,10 @@ export default function AboutJharkhandPage() {
               {topPlaces.map((place, index) => (
                 <Card 
                   key={place.name}
-                  className={`bg-white/90 backdrop-blur-sm border-0 shadow-lg transition-all duration-300 ${
-                    index === placeIndex ? 'ring-2 ring-green-500 shadow-xl scale-105' : 'hover:shadow-xl'
+                  className={`bg-white/90 backdrop-blur-sm border-0 shadow-lg transition-all duration-300 cursor-pointer ${
+                    index === placeIndex ? 'ring-2 ring-green-500 shadow-xl scale-105' : 'hover:shadow-xl hover:scale-105'
                   }`}
+                  onClick={() => handlePlaceClick(place.name)}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
@@ -804,8 +884,13 @@ export default function AboutJharkhandPage() {
                         <span className="text-sm font-medium">{place.rating}</span>
                       </div>
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">{place.name}</h3>
-                    <p className="text-gray-600 text-sm">{place.description}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold mb-2 group-hover:text-green-600 transition-colors">{place.name}</h3>
+                        <p className="text-gray-600 text-sm">{place.description}</p>
+                      </div>
+                      <ExternalLink className="h-5 w-5 text-gray-400 ml-2" />
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -827,12 +912,366 @@ export default function AboutJharkhandPage() {
             <Button asChild size="lg" className="bg-white text-emerald-600 hover:bg-gray-100">
               <Link href="/places">Start Exploring</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
+            <Button asChild size="lg" className="bg-green-400 text-white hover:bg-green-500">
               <Link href="/contact">Plan Your Trip</Link>
             </Button>
           </div>
         </div>
       </section>
+      
+      {/* Place Details Modal */}
+      <Dialog open={isPlaceModalOpen} onOpenChange={setIsPlaceModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedPlace && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center justify-between">
+                  <DialogTitle className="text-2xl font-bold">{selectedPlace.name}</DialogTitle>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800">{selectedPlace.category}</Badge>
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                      <span className="font-medium">{selectedPlace.rating}</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-gray-600 flex items-center gap-1">
+                  <MapPin className="h-4 w-4" />
+                  {selectedPlace.location}
+                </p>
+              </DialogHeader>
+              
+              {/* Image Gallery */}
+              <div className="relative h-64 rounded-lg overflow-hidden mb-6">
+                <Image
+                  src={selectedPlace.images[currentImageIndex]}
+                  alt={selectedPlace.name}
+                  fill
+                  className="object-cover"
+                />
+                {selectedPlace.images.length > 1 && (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white hover:bg-black/70"
+                      onClick={prevImage}
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white hover:bg-black/70"
+                      onClick={nextImage}
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </Button>
+                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                      {selectedPlace.images.map((_, index) => (
+                        <div
+                          key={index}
+                          className={`w-2 h-2 rounded-full ${
+                            index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+              
+              {/* Content */}
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">About</h3>
+                  <p className="text-gray-700 leading-relaxed">{selectedPlace.detailedDescription}</p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold mb-3 flex items-center gap-2">
+                      <Star className="h-4 w-4 text-yellow-500" />
+                      Highlights
+                    </h4>
+                    <ul className="space-y-1">
+                      {selectedPlace.highlights.map((highlight, index) => (
+                        <li key={index} className="text-sm text-gray-600 flex items-center gap-2">
+                          <div className="w-1 h-1 bg-green-500 rounded-full" />
+                          {highlight}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold mb-3 flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-blue-500" />
+                      Best Time to Visit
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">{selectedPlace.bestTimeToVisit}</p>
+                    
+                    <h4 className="font-semibold mb-3 flex items-center gap-2">
+                      <NavigationIcon className="h-4 w-4 text-green-500" />
+                      How to Reach
+                    </h4>
+                    <p className="text-sm text-gray-600">{selectedPlace.howToReach}</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold mb-3 flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-red-500" />
+                      Nearby Attractions
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedPlace.nearbyAttractions.map((attraction, index) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {attraction}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold mb-3 flex items-center gap-2">
+                      <Heart className="h-4 w-4 text-pink-500" />
+                      Activities
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedPlace.activities.map((activity, index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {activity}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-orange-500" />
+                    Travel Tips
+                  </h4>
+                  <ul className="space-y-2">
+                    {selectedPlace.tips.map((tip, index) => (
+                      <li key={index} className="text-sm text-gray-600 flex items-start gap-2">
+                        <div className="w-1 h-1 bg-orange-500 rounded-full mt-2" />
+                        {tip}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div className="flex gap-3 pt-4 border-t">
+                  <Button
+                    onClick={() => setIsPlaceModalOpen(false)}
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    Plan Visit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsPlaceModalOpen(false)}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+      
+      {/* City Details Modal */}
+      <Dialog open={isCityModalOpen} onOpenChange={setIsCityModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          {selectedCity && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-bold">{selectedCity.name}</DialogTitle>
+                <p className="text-gray-600 flex items-center gap-1">
+                  <MapPin className="h-4 w-4" />
+                  {selectedCity.district} District • Population: {selectedCity.population}
+                </p>
+              </DialogHeader>
+              
+              <div className="relative h-48 rounded-lg overflow-hidden mb-6">
+                <Image
+                  src={selectedCity.image}
+                  alt={selectedCity.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              
+              <div className="space-y-4">
+                <p className="text-gray-700 leading-relaxed">{selectedCity.description}</p>
+                
+                <div>
+                  <h4 className="font-semibold mb-2">Key Highlights</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedCity.highlights.map((highlight: string, index: number) => (
+                      <Badge key={index} variant="outline" className="text-xs">
+                        {highlight}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="flex gap-3 pt-4 border-t">
+                  <Button
+                    onClick={() => {
+                      setIsCityModalOpen(false);
+                      router.push('/places');
+                    }}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    Explore Places
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsCityModalOpen(false)}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+      
+      {/* Glimpse Details Modal */}
+      <Dialog open={isGlimpseModalOpen} onOpenChange={setIsGlimpseModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedGlimpse && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center justify-between">
+                  <DialogTitle className="text-2xl font-bold">{selectedGlimpse.title}</DialogTitle>
+                  <div className="flex items-center gap-2">
+                    <span className="text-3xl">{selectedGlimpse.icon}</span>
+                    <Badge className="bg-green-100 text-green-800">{selectedGlimpse.fact}</Badge>
+                  </div>
+                </div>
+              </DialogHeader>
+              
+              {/* Scrolling Image Gallery */}
+              <div className="relative h-80 rounded-lg overflow-hidden mb-6">
+                <div className="flex transition-transform duration-500 ease-in-out h-full">
+                  {/* Display multiple variations of the same image for demo */}
+                  {[selectedGlimpse.image, selectedGlimpse.image, selectedGlimpse.image].map((img, index) => (
+                    <div key={index} className="w-full h-full flex-shrink-0 relative">
+                      <Image
+                        src={img}
+                        alt={`${selectedGlimpse.title} - Image ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                      <div className="absolute bottom-4 left-4 text-white">
+                        <p className="text-sm opacity-80">Image {index + 1} of 3</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Navigation Buttons */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white hover:bg-black/70"
+                  onClick={prevGlimpseImage}
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white hover:bg-black/70"
+                  onClick={nextGlimpseImage}
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </Button>
+                
+                {/* Dots Indicator */}
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                  {[0, 1, 2].map((index) => (
+                    <div
+                      key={index}
+                      className={`w-2 h-2 rounded-full transition-all ${
+                        index === glimpseImageIndex ? 'bg-white' : 'bg-white/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+              
+              {/* Content */}
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">About</h3>
+                  <p className="text-gray-700 leading-relaxed">{selectedGlimpse.description}</p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold mb-3 flex items-center gap-2">
+                      <Star className="h-4 w-4 text-yellow-500" />
+                      Key Facts
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full" />
+                        <span className="text-sm text-gray-600">{selectedGlimpse.fact}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full" />
+                        <span className="text-sm text-gray-600">Rich cultural heritage</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full" />
+                        <span className="text-sm text-gray-600">Natural diversity</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold mb-3 flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-blue-500" />
+                      Significance
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      This aspect of Jharkhand represents the unique character and identity of the state, 
+                      showcasing its contribution to India's cultural and natural heritage.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-3 pt-4 border-t">
+                  <Button
+                    onClick={() => {
+                      setIsGlimpseModalOpen(false);
+                      router.push('/places');
+                    }}
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    Explore Related Places
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsGlimpseModalOpen(false)}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
