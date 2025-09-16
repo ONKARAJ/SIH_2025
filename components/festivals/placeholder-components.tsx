@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 
 export function RecipesSection() {
@@ -333,16 +334,373 @@ export function RecipesSection() {
 }
 
 export function ArtisanCrafts() {
+  const [selectedArtisan, setSelectedArtisan] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
+  const artisans = [
+    {
+      id: 1,
+      name: 'Ravi Mahato',
+      age: 45,
+      village: 'Jharia, Dhanbad',
+      craft: 'Dokra Metal Work',
+      category: 'metalwork',
+      experience: '25 years',
+      specialty: 'Bronze figurines and decorative items',
+      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80',
+      story: 'Ravi learned the ancient art of Dokra from his grandfather. Using the lost-wax casting technique passed down through generations, he creates intricate bronze sculptures that tell stories of tribal life.',
+      techniques: ['Lost-wax casting', 'Bronze alloying', 'Traditional molding', 'Finishing work'],
+      achievements: [
+        'National Handicrafts Award 2019',
+        'Featured in India Craft Exhibition',
+        'Trained 50+ apprentices'
+      ],
+      products: [
+        { name: 'Tribal Horse Figurine', price: '₹2,500', image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&q=80' },
+        { name: 'Dancing Girl Sculpture', price: '₹4,500', image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&q=80' },
+        { name: 'Decorative Lamp', price: '₹1,800', image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&q=80' }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Sulochana Devi',
+      age: 52,
+      village: 'Hazaribagh',
+      craft: 'Sohrai Wall Painting',
+      category: 'painting',
+      experience: '30 years',
+      specialty: 'Traditional wall art and canvas paintings',
+      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
+      story: 'Sulochana is a master of Sohrai art, the traditional wall painting done during harvest festivals. She has elevated this ancient art form to contemporary canvases while preserving its sacred meanings.',
+      techniques: ['Natural pigment preparation', 'Finger painting', 'Geometric patterns', 'Symbolic representation'],
+      achievements: [
+        'Shilp Guru Award 2020',
+        'Solo exhibitions in Delhi and Mumbai',
+        'UNESCO recognition for cultural preservation'
+      ],
+      products: [
+        { name: 'Harvest Festival Canvas', price: '₹8,000', image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&q=80' },
+        { name: 'Nature Spirits Painting', price: '₹12,000', image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&q=80' },
+        { name: 'Miniature Art Set', price: '₹3,500', image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&q=80' }
+      ]
+    },
+    {
+      id: 3,
+      name: 'Budhan Mahli',
+      age: 38,
+      village: 'Gumla',
+      craft: 'Bamboo Crafts',
+      category: 'bamboo',
+      experience: '20 years',
+      specialty: 'Functional and decorative bamboo items',
+      image: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
+      story: 'Budhan transforms humble bamboo into works of art. His sustainable approach to craft-making reflects the tribal wisdom of living in harmony with nature.',
+      techniques: ['Bamboo splitting', 'Weaving patterns', 'Natural preservation', 'Tool making'],
+      achievements: [
+        'State Handicrafts Excellence Award',
+        'Eco-friendly Product Innovation Award',
+        'Featured in National Geographic'
+      ],
+      products: [
+        { name: 'Traditional Baskets Set', price: '₹1,200', image: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=400&q=80' },
+        { name: 'Bamboo Wind Chimes', price: '₹800', image: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=400&q=80' },
+        { name: 'Decorative Room Divider', price: '₹5,500', image: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=400&q=80' }
+      ]
+    },
+    {
+      id: 4,
+      name: 'Kamala Singh',
+      age: 41,
+      village: 'Khunti',
+      craft: 'Handloom Weaving',
+      category: 'textile',
+      experience: '18 years',
+      specialty: 'Traditional fabrics and tribal motifs',
+      image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      story: 'Kamala preserves the ancient weaving traditions of Jharkhand tribes. Her handwoven fabrics carry the stories and symbols of her ancestors.',
+      techniques: ['Handloom weaving', 'Natural dyeing', 'Pattern creation', 'Traditional motifs'],
+      achievements: [
+        'Master Weaver Recognition 2021',
+        'Fashion Week showcase in Bangalore',
+        'Women Entrepreneur Award'
+      ],
+      products: [
+        { name: 'Tribal Pattern Saree', price: '₹4,200', image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&q=80' },
+        { name: 'Handwoven Dupatta', price: '₹1,800', image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&q=80' },
+        { name: 'Cotton Fabric by Meter', price: '₹450', image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&q=80' }
+      ]
+    },
+    {
+      id: 5,
+      name: 'Somra Oraon',
+      age: 55,
+      village: 'Simdega',
+      craft: 'Terracotta Pottery',
+      category: 'pottery',
+      experience: '35 years',
+      specialty: 'Decorative and functional pottery',
+      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80',
+      story: 'Somra shapes clay into beautiful pottery using techniques unchanged for centuries. His work bridges the gap between utility and artistry.',
+      techniques: ['Wheel throwing', 'Hand building', 'Natural glazing', 'Kiln firing'],
+      achievements: [
+        'Traditional Pottery Master Award',
+        'Cultural Heritage Preservation Honor',
+        'Museum collection acquisitions'
+      ],
+      products: [
+        { name: 'Decorative Water Pot', price: '₹900', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80' },
+        { name: 'Traditional Cooking Vessel', price: '₹650', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80' },
+        { name: 'Artistic Vase Collection', price: '₹2,200', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80' }
+      ]
+    },
+    {
+      id: 6,
+      name: 'Jaidev Murmu',
+      age: 47,
+      village: 'Dumka',
+      craft: 'Stone Carving',
+      category: 'stone',
+      experience: '28 years',
+      specialty: 'Religious sculptures and architectural elements',
+      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&q=80',
+      story: 'Jaidev transforms rough stone into intricate sculptures. His work adorns temples and homes, keeping alive the ancient tradition of stone carving.',
+      techniques: ['Chiseling', 'Relief carving', 'Polishing', 'Detailing work'],
+      achievements: [
+        'Master Sculptor Award 2018',
+        'Temple restoration projects',
+        'International stone carving festival participant'
+      ],
+      products: [
+        { name: 'Ganesha Sculpture', price: '₹6,500', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&q=80' },
+        { name: 'Decorative Panel', price: '₹8,900', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&q=80' },
+        { name: 'Garden Statue', price: '₹12,000', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&q=80' }
+      ]
+    }
+  ];
+
+  const categories = [
+    { id: 'all', name: 'All Crafts', icon: '🎨' },
+    { id: 'metalwork', name: 'Metal Work', icon: '⚒️' },
+    { id: 'painting', name: 'Painting', icon: '🎭' },
+    { id: 'bamboo', name: 'Bamboo Crafts', icon: '🎋' },
+    { id: 'textile', name: 'Textiles', icon: '🧵' },
+    { id: 'pottery', name: 'Pottery', icon: '🏺' },
+    { id: 'stone', name: 'Stone Work', icon: '🪨' }
+  ];
+
+  const filteredArtisans = selectedCategory === 'all' 
+    ? artisans 
+    : artisans.filter(artisan => artisan.category === selectedCategory);
+
   return (
-    <Card>
-      <CardContent className="p-8 text-center">
-        <h3 className="text-2xl font-bold mb-4">Artisan Crafts</h3>
-        <p className="text-muted-foreground mb-6">
-          Meet master craftspeople and learn about traditional art forms like Dokra metalwork, basket weaving, and textile arts.
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+          <span className="text-2xl">👨‍🎨</span>
+        </div>
+        <h3 className="text-3xl font-bold">Master Artisans of Jharkhand</h3>
+        <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          Meet the skilled craftspeople who preserve and practice the traditional arts of Jharkhand. 
+          Each artisan brings generations of knowledge and cultural heritage to their craft.
         </p>
-        <Button>Meet Artisans</Button>
-      </CardContent>
-    </Card>
+      </div>
+
+      {/* Category Filter */}
+      <div className="flex flex-wrap justify-center gap-3">
+        {categories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => setSelectedCategory(category.id)}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+              selectedCategory === category.id
+                ? 'bg-primary text-primary-foreground shadow-lg scale-105'
+                : 'bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <span>{category.icon}</span>
+            {category.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Artisans Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredArtisans.map((artisan) => (
+          <Card
+            key={artisan.id}
+            className="group cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
+            onClick={() => setSelectedArtisan(artisan)}
+          >
+            <div className="relative h-48 overflow-hidden">
+              <img
+                src={artisan.image}
+                alt={artisan.name}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              
+              {/* Craft Badge */}
+              <div className="absolute top-3 right-3">
+                <Badge className="bg-primary text-primary-foreground">
+                  {artisan.craft}
+                </Badge>
+              </div>
+              
+              {/* Experience Badge */}
+              <div className="absolute bottom-3 left-3">
+                <div className="bg-black/40 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
+                  <span className="text-white text-xs font-medium">{artisan.experience}</span>
+                </div>
+              </div>
+            </div>
+            
+            <CardContent className="p-6">
+              <div className="space-y-3">
+                <div>
+                  <h4 className="text-xl font-bold group-hover:text-primary transition-colors">
+                    {artisan.name}
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {artisan.village} • Age {artisan.age}
+                  </p>
+                </div>
+                
+                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                  {artisan.specialty}
+                </p>
+                
+                <div className="flex items-center justify-between pt-2">
+                  <div className="text-xs text-muted-foreground">
+                    <span className="font-medium">{artisan.achievements.length}</span> Awards
+                  </div>
+                  <div className="text-primary text-sm font-medium group-hover:translate-x-1 transition-transform">
+                    View Profile →
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Artisan Profile Modal */}
+      {selectedArtisan && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setSelectedArtisan(null)}>
+          <div className="relative max-h-[90vh] max-w-6xl w-full overflow-y-auto bg-white rounded-2xl" onClick={(e) => e.stopPropagation()}>
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedArtisan(null)}
+              className="absolute right-4 top-4 z-10 rounded-full bg-black/20 p-2 text-white backdrop-blur-sm transition-all hover:bg-black/40"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            
+            {/* Artisan Header */}
+            <div className="relative h-64">
+              <img
+                src={selectedArtisan.image}
+                alt={selectedArtisan.name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute bottom-6 left-6">
+                <h2 className="text-3xl font-bold text-white mb-2">{selectedArtisan.name}</h2>
+                <div className="flex items-center gap-4 text-white">
+                  <Badge className="bg-primary text-primary-foreground">
+                    {selectedArtisan.craft}
+                  </Badge>
+                  <span className="text-sm">{selectedArtisan.village}</span>
+                  <span className="text-sm">{selectedArtisan.experience}</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Artisan Content */}
+            <div className="p-6 space-y-6">
+              {/* Story */}
+              <div>
+                <h3 className="text-xl font-bold mb-3">Artisan's Story</h3>
+                <p className="text-muted-foreground leading-relaxed">{selectedArtisan.story}</p>
+              </div>
+              
+              {/* Techniques */}
+              <div>
+                <h3 className="text-xl font-bold mb-3">Techniques & Skills</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {selectedArtisan.techniques.map((technique, index) => (
+                    <Badge key={index} variant="outline" className="justify-center">
+                      {technique}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Achievements */}
+              <div>
+                <h3 className="text-xl font-bold mb-3">Achievements & Recognition</h3>
+                <div className="space-y-2">
+                  {selectedArtisan.achievements.map((achievement, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                      <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0" />
+                      <span className="text-sm">{achievement}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Products */}
+              <div>
+                <h3 className="text-xl font-bold mb-3">Featured Products</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {selectedArtisan.products.map((product, index) => (
+                    <Card key={index} className="overflow-hidden">
+                      <div className="relative h-32">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <CardContent className="p-4">
+                        <h4 className="font-semibold text-sm mb-1">{product.name}</h4>
+                        <p className="text-primary font-bold">{product.price}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Call to Action */}
+      <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20">
+        <CardContent className="p-8 text-center">
+          <h3 className="text-2xl font-bold mb-4">Support Traditional Artisans</h3>
+          <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            By purchasing authentic handcrafted items, you directly support these master artisans 
+            and help preserve Jharkhand's rich cultural heritage for future generations.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button className="group">
+              <span>🛒</span>
+              Visit Craft Center
+              <svg className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Button>
+            <Button variant="outline">
+              <span>📚</span>
+              Learn Craft Techniques
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
