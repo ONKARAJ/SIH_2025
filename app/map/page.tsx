@@ -26,6 +26,7 @@ export default function MapPage() {
     lat: number;
     lng: number;
     googleMaps: string;
+    streetViewUrl?: string;
   }
 
   const touristSpots: TouristSpot[] = [
@@ -41,6 +42,7 @@ export default function MapPage() {
       lat: 23.143358,
       lng: 85.466441,
       googleMaps: "https://maps.google.com/?cid=18293337366965801389&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/rgkojZ9RTdGr4L6j9",
     },
     {
       id: "jonha-falls",
@@ -53,6 +55,7 @@ export default function MapPage() {
       lat: 23.341667, // 23°20′30″ N
       lng: 85.608333, // 85°36′30″ E
       googleMaps: "https://maps.google.com/?cid=3228979914999518837&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/5h8obRq3AzFSrmtY8",
     },
     {
       id: "hirni-falls",
@@ -65,6 +68,7 @@ export default function MapPage() {
       lat: 22.866667, // 22°52′00″ N
       lng: 85.333333, // 85°20′00″ E
       googleMaps: "https://en.wikipedia.org/wiki/Hirni_Falls",
+      streetViewUrl: "https://maps.app.goo.gl/R688M7CUtPHsUrxDA",
     },
     {
       id: "lodh-falls",
@@ -76,6 +80,7 @@ export default function MapPage() {
       lat: 23.480556, // 23°28′50″ N
       lng: 84.019444, // 84°01′10″ E
       googleMaps: "https://en.wikipedia.org/wiki/Lodh_Falls",
+      streetViewUrl: "https://maps.app.goo.gl/taC1YKGwG7aJNykD7",
     },
     {
       id: "nakti-falls",
@@ -88,6 +93,7 @@ export default function MapPage() {
       lat: 24.969278,
       lng: 87.856278,
       googleMaps: "https://maps.google.com/?cid=10773346826082184222&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/JRomfCXsfZspQea77",
     },
 
     // Hill Stations - Using accessible roads and towns with Street View
@@ -102,6 +108,7 @@ export default function MapPage() {
       lat: 23.485434,
       lng: 84.264752,
       googleMaps: "https://maps.google.com/?cid=18293337366965801389&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/3NoXDhhiNQUdW5RR6",
     },
     {
       id: "parasnath-hill",
@@ -114,6 +121,7 @@ export default function MapPage() {
       lat: 23.963591,
       lng: 86.128387,
       googleMaps: "https://maps.google.com/?cid=8500982435767710197&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/Houuh82jVbUesDBJ7",
     },
     {
       id: "patratu-valley",
@@ -126,6 +134,7 @@ export default function MapPage() {
       lat: 23.67,
       lng: 85.28,
       googleMaps: "https://maps.google.com/?cid=3228979914999518837&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/vY2xQsj1Mduc2GpU9",
     },
 
     // Wildlife Parks - Using nearby towns and access roads with Street View
@@ -140,6 +149,7 @@ export default function MapPage() {
       lat: 23.87,
       lng: 84.19,
       googleMaps: "https://maps.google.com/?cid=12801775369233998389&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/mWWbeBh1UVwWHjnj7",
     },
     {
       id: "hazaribagh",
@@ -152,6 +162,7 @@ export default function MapPage() {
       lat: 24.016544,
       lng: 85.413133,
       googleMaps: "https://maps.google.com/?cid=3257619293647164656&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/TJh91Nw1kAd95WJE6",
     },
     {
       id: "dalma-wildlife",
@@ -163,6 +174,7 @@ export default function MapPage() {
       lat: 22.7875,
       lng: 86.158125,
       googleMaps: "https://maps.google.com/?cid=3313098005014698558&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/7GFYrq7RBX8RMsXg9",
     },
     {
       id: "udhuwa-lake",
@@ -175,6 +187,7 @@ export default function MapPage() {
       lat: 24.969278,
       lng: 87.856278,
       googleMaps: "https://maps.google.com/?cid=10773346826082184222&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/aWNU4BLybmP9kZZu7",
     },
 
     // Temples - Using main town locations with Street View access
@@ -189,6 +202,7 @@ export default function MapPage() {
       lat: 24.48,
       lng: 86.7,
       googleMaps: "https://maps.google.com/?cid=15820276597784760374&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/JsHY2o8CCpm7g7VdA",
     },
     {
       id: "rajrappa",
@@ -201,6 +215,7 @@ export default function MapPage() {
       lat: 23.631944,
       lng: 85.711111,
       googleMaps: "https://maps.google.com/?cid=7585814200331355966&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/rjRJDa64AE1mXDBU9",
     },
 
     // Cities - Using main urban areas with comprehensive Street View
@@ -215,6 +230,7 @@ export default function MapPage() {
       lat: 23.3441,
       lng: 85.3096,
       googleMaps: "https://maps.google.com/?cid=15855437735664415806&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/5yAB7vZswC1UE6Ub9",
     },
     {
       id: "rock-garden",
@@ -227,6 +243,7 @@ export default function MapPage() {
       lat: 23.40339,
       lng: 85.31290,
       googleMaps: "https://maps.google.com/?cid=5173189703587136238&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/cc4RcuT1enUD81Rs5",
     },
     {
       id: "tagore-hill",
@@ -239,6 +256,7 @@ export default function MapPage() {
       lat: 23.401313,
       lng: 85.337823,
       googleMaps: "https://maps.google.com/?cid=12977793023263926650&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/EDxhg1PVeDKCC18d8",
     },
 
     // Dams - Using nearby accessible towns with Street View
@@ -253,6 +271,7 @@ export default function MapPage() {
       lat: 23.850278,
       lng: 86.777778,
       googleMaps: "https://maps.google.com/?cid=7449231140702085856&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+      streetViewUrl: "https://maps.app.goo.gl/qPCWk7gRekC6JCj97",
     },
   ];
 

@@ -14,6 +14,7 @@ interface TouristSpot {
   lat: number;
   lng: number;
   googleMaps: string;
+  streetViewUrl?: string;
 }
 
 interface InteractiveJharkhandMapProps {
@@ -294,13 +295,20 @@ export function InteractiveJharkhandMap({ touristSpots, onLocationSelect, select
                 </a>
                 
                 <!-- Street View Button -->
-                <button onclick="window.parent.postMessage({type: 'streetView', spotId: '${spot.id}'}, '*')"
-                        style="display: flex; flex-direction: column; align-items: center; padding: 12px 8px; background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color: white; border: none; border-radius: 8px; cursor: pointer; transition: transform 0.2s; box-shadow: 0 2px 4px rgba(124,58,237,0.3);"
-                        onmouseover="this.style.transform='translateY(-2px)'"
-                        onmouseout="this.style.transform='translateY(0)'">
+                ${spot.streetViewUrl ? `
+                <a href="${spot.streetViewUrl}" 
+                   target="_blank" 
+                   style="display: flex; flex-direction: column; align-items: center; padding: 12px 8px; background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color: white; text-decoration: none; border-radius: 8px; cursor: pointer; transition: transform 0.2s; box-shadow: 0 2px 4px rgba(124,58,237,0.3);"
+                   onmouseover="this.style.transform='translateY(-2px)'"
+                   onmouseout="this.style.transform='translateY(0)'">
                   <span style="font-size: 16px; margin-bottom: 4px;">👁️</span>
                   <span style="font-size: 11px; font-weight: 600;">Street View</span>
-                </button>
+                </a>` : `
+                <button style="display: flex; flex-direction: column; align-items: center; padding: 12px 8px; background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%); color: white; border: none; border-radius: 8px; cursor: not-allowed; box-shadow: 0 2px 4px rgba(156,163,175,0.3);" 
+                        disabled title="Street View not available for this location">
+                  <span style="font-size: 16px; margin-bottom: 4px;">🚫</span>
+                  <span style="font-size: 11px; font-weight: 600;">No Street View</span>
+                </button>`}
                 
                 <!-- Explore More Button -->
                 <button onclick="window.parent.postMessage({type: 'selectSpot', spotId: '${spot.id}'}, '*')"
@@ -338,13 +346,6 @@ export function InteractiveJharkhandMap({ touristSpots, onLocationSelect, select
           const spot = touristSpots.find(s => s.id === event.data.spotId);
           if (spot) {
             setSelectedSpot(spot);
-          }
-        } else if (event.data.type === 'streetView') {
-          const spot = touristSpots.find(s => s.id === event.data.spotId);
-          if (spot) {
-            // Open Street View in a new tab
-            const streetViewUrl = `https://www.google.com/maps/@${spot.lat},${spot.lng},3a,75y,90t/data=!3m6!1e1!3m4!1s${Math.random().toString(36)}!2e0!7i16384!8i8192`;
-            window.open(streetViewUrl, '_blank');
           }
         }
       });
