@@ -185,17 +185,17 @@ export function SidebarNavigation() {
 
           {/* Main JHARKHAND Heading - Top Center */}
           <div className="absolute top-12 left-1/2 transform -translate-x-1/2 text-center z-20">
-            <h1 className="text-5xl font-black text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text tracking-wide drop-shadow-xl">
+            <h1 className="text-3xl md:text-5xl font-black text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text tracking-wide drop-shadow-xl">
               JHARKHAND
             </h1>
             <div className="w-24 h-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 mx-auto mt-3 rounded-full shadow-md"></div>
           </div>
 
-          {/* Content Container */}
-          <div className="h-full flex">
+        {/* Content Container */}
+        <div className="h-full flex flex-col md:flex-row">
 
           {/* Left Section: Image - 35% */}
-          <div className="w-[35%] h-full relative">
+          <div className="hidden md:block md:w-[35%] md:h-full relative">
             <img 
               src="/jharkhand-forest-landscape-with-tribal-culture-ele.jpg" 
               alt="Jharkhand Beauty" 
@@ -205,13 +205,13 @@ export function SidebarNavigation() {
             
             {/* Header Text */}
             <div className="absolute bottom-12 left-8 right-8">
-              <h1 className="text-6xl font-bold text-white mb-4 leading-tight tracking-wide">JHARKHAND</h1>
-              <p className="text-white/80 text-lg">Explore the Heart of India</p>
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight tracking-wide">JHARKHAND</h1>
+              <p className="text-white/80 text-sm md:text-lg">Explore the Heart of India</p>
             </div>
           </div>
 
           {/* Middle Section: Main Navigation - 30% */}
-          <div className="w-[30%] h-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden border-r border-slate-700">
+          <div className="w-full md:w-[30%] h-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden border-r border-slate-700">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
               <div className="absolute inset-0" style={{
@@ -221,13 +221,13 @@ export function SidebarNavigation() {
             </div>
             
             {/* Main Navigation */}
-            <div className="relative z-10 h-full flex flex-col justify-center px-8">
+            <div className="relative z-10 h-full flex flex-col justify-center px-6 md:px-8">
               <div className="space-y-8">
                 
                 {/* Discover */}
                 <button
                   onClick={() => toggleSection('discover')}
-                  className={`text-left text-3xl font-bold transition-all duration-300 hover:text-orange-400 block w-full py-4 tracking-wide border-l-4 pl-4 ${
+                  className={`text-left text-xl md:text-3xl font-bold transition-all duration-300 hover:text-orange-400 block w-full py-4 tracking-wide border-l-4 pl-4 ${
                     activeSection === 'discover' ? 'text-orange-400 border-orange-400' : 'text-white border-transparent hover:border-orange-400/50'
                   }`}
                 >
@@ -237,7 +237,7 @@ export function SidebarNavigation() {
                 {/* Experience */}
                 <button
                   onClick={() => toggleSection('experience')}
-                  className={`text-left text-3xl font-bold transition-all duration-300 hover:text-orange-400 block w-full py-4 tracking-wide border-l-4 pl-4 ${
+                  className={`text-left text-xl md:text-3xl font-bold transition-all duration-300 hover:text-orange-400 block w-full py-4 tracking-wide border-l-4 pl-4 ${
                     activeSection === 'experience' ? 'text-orange-400 border-orange-400' : 'text-white border-transparent hover:border-orange-400/50'
                   }`}
                 >
@@ -247,7 +247,7 @@ export function SidebarNavigation() {
                 {/* Plan */}
                 <button
                   onClick={() => toggleSection('plan')}
-                  className={`text-left text-3xl font-bold transition-all duration-300 hover:text-orange-400 block w-full py-4 tracking-wide border-l-4 pl-4 ${
+                  className={`text-left text-xl md:text-3xl font-bold transition-all duration-300 hover:text-orange-400 block w-full py-4 tracking-wide border-l-4 pl-4 ${
                     activeSection === 'plan' ? 'text-orange-400 border-orange-400' : 'text-white border-transparent hover:border-orange-400/50'
                   }`}
                 >
@@ -257,7 +257,7 @@ export function SidebarNavigation() {
                 {/* Help */}
                 <button
                   onClick={() => toggleSection('help')}
-                  className={`text-left text-3xl font-bold transition-all duration-300 hover:text-orange-400 block w-full py-4 tracking-wide border-l-4 pl-4 ${
+                  className={`text-left text-xl md:text-3xl font-bold transition-all duration-300 hover:text-orange-400 block w-full py-4 tracking-wide border-l-4 pl-4 ${
                     activeSection === 'help' ? 'text-orange-400 border-orange-400' : 'text-white border-transparent hover:border-orange-400/50'
                   }`}
                 >
@@ -269,7 +269,7 @@ export function SidebarNavigation() {
           </div>
 
           {/* Right Section: Sub Navigation - 35% */}
-          <div className="w-[35%] h-full bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800 relative overflow-hidden">
+          <div className="w-full md:w-[35%] h-full bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800 relative overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
               <div className="absolute inset-0" style={{
@@ -281,7 +281,7 @@ export function SidebarNavigation() {
             {/* Sub Navigation Content */}
             <div className="relative z-10 h-full overflow-y-auto">
               {activeSection ? (
-                <div className="p-8 animate-fadeIn">
+                <div className="p-6 md:p-8 animate-fadeIn">
                   {/* Section Header */}
                   <div className="mb-8 text-center border-b border-slate-600 pb-6">
                     <h2 className="text-4xl font-bold text-orange-400 tracking-wide">

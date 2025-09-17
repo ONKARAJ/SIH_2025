@@ -218,7 +218,7 @@ export default function Home() {
         {/* Interactive Hero Content with Enhanced Animations */}
         <div className="relative z-20 text-center text-white max-w-7xl mx-auto px-4">
           {/* Notice Board - Positioned to the side */}
-          <div className="fixed top-1/2 right-8 transform -translate-y-1/2 z-30 animate-in fade-in slide-in-from-right-4 duration-1000 delay-500">
+          <div className="hidden md:block fixed top-1/2 right-8 transform -translate-y-1/2 z-30 animate-in fade-in slide-in-from-right-4 duration-1000 delay-500">
             <button
               onClick={() => openNoticeModal(noticesData[0])}
               className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-2xl"
