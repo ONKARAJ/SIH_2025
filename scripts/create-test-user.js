@@ -4,9 +4,10 @@ const bcrypt = require('bcrypt')
 const prisma = new PrismaClient()
 
 async function createTestUser() {
+  let hashedPassword = null
   try {
     // Hash the password
-    const hashedPassword = await bcrypt.hash('testpassword123', 10)
+    hashedPassword = await bcrypt.hash('testpassword123', 10)
     
     // Create test user
     const user = await prisma.user.create({
@@ -29,6 +30,11 @@ async function createTestUser() {
     if (error.code === 'P2002') {
       console.log('Test user already exists!')
       
+      // Ensure password is hashed
+      if (!hashedPassword) {
+        hashedPassword = await bcrypt.hash('testpassword123', 10)
+      }
+
       // Update existing user
       const user = await prisma.user.update({
         where: { email: 'test@jharkhnadtourism.com' },
