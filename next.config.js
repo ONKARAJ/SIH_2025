@@ -324,10 +324,33 @@ const nextConfig = {
         hostname: 'hblimg.mmtcdn.com',
         port: '',
         pathname: '**',
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'as2.ftcdn.net',
+        port: '',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'media.istockphoto.com',
+        port: '',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com',
+        port: '',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.freepik.com',
+        port: '',
+        pathname: '**',
+      },
     ],
   },
-  
   // Experimental features for better performance
   experimental: {
     // Disable missing suspense with CSR bailout during build

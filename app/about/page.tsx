@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { SafeImage } from "@/components/ui/safe-image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getPlaceDescription, hasPlacePage, getPlacePageRoute, PlaceDescription } from "@/lib/place-descriptions";
@@ -32,22 +33,22 @@ import { getPlaceDescription, hasPlacePage, getPlacePageRoute, PlaceDescription 
 // Data for different sections with sliding images
 const beautyImages = [
   { 
-    url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+    url: "https://as2.ftcdn.net/jpg/03/15/36/75/1000_F_315367563_bluPwYbOdnuxd4SDA9xIqwwuqAid3tYV.jpg",
     title: "Pristine Waterfalls",
     description: "Hundru Falls cascading through lush green valleys"
   },
   {
-    url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80", 
+    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7XczDhvX6syFyTMuCpT096zxJGPGPTm6Iqw&s", 
     title: "Dense Forests",
     description: "Rich biodiversity in Jharkhand's forest reserves"
   },
   {
-    url: "https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80",
+    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3OeLTZp7hgkYCrIShZibpP4c32P2KLkMUKw&s",
     title: "Rolling Hills",
     description: "The scenic beauty of Netarhat hill station"
   },
   {
-    url: "https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80",
+    url: "https://media.istockphoto.com/id/674191480/photo/bengal-tiger-at-ranthambhore-national-park-in-rajasthan-india.jpg?s=612x612&w=0&k=20&c=adL1jJ3jToJPtewWjV0H-aUX109C9WkoQWALgUi8s-I=",
     title: "Wildlife Sanctuaries", 
     description: "Home to elephants, tigers, and diverse fauna"
   }
@@ -58,7 +59,7 @@ const allJharkhandCities = [
     name: "Ranchi",
     description: "The capital city known for its hills and waterfalls",
     population: "1.2 Million",
-    image: "https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80",
+    image: "http://www.filmapia.com/media/images/location/Ranchi_District-d41d8cd98f00b204e9800998ecf8427e.jpg",
     highlights: ["State Capital", "Educational Hub", "Hill Station"],
     district: "Ranchi"
   },
@@ -66,7 +67,7 @@ const allJharkhandCities = [
     name: "Jamshedpur", 
     description: "Steel city and industrial hub of eastern India",
     population: "1.3 Million",
-    image: "https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80",
+    image: "https://housing.com/news/wp-content/uploads/2023/05/Jubilee-Park-Jamshedpur-Fact-guide-f.jpg",
     highlights: ["Steel Production", "Planned City", "Industrial Hub"],
     district: "East Singhbhum"
   },
@@ -74,7 +75,7 @@ const allJharkhandCities = [
     name: "Dhanbad",
     description: "Coal capital of India with rich mineral resources", 
     population: "1.2 Million",
-    image: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80",
+    image: "https://image3.mouthshut.com/images/imagesp/925753330s.jpg",
     highlights: ["Coal Mining", "Energy Hub", "Educational Centers"],
     district: "Dhanbad"
   },
@@ -82,7 +83,7 @@ const allJharkhandCities = [
     name: "Bokaro",
     description: "Modern steel city with planned infrastructure",
     population: "600k",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+    image: "https://image3.mouthshut.com/images/imagesp/925753333s.jpg",
     highlights: ["Steel Plant", "Planned Development", "Industrial Growth"],
     district: "Bokaro"
   },
@@ -90,7 +91,7 @@ const allJharkhandCities = [
     name: "Deoghar",
     description: "Holy city famous for Baidyanath Temple",
     population: "204k",
-    image: "https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80",
+    image: "https://www.holidify.com/images/bgImages/DEOGHAR.jpg",
     highlights: ["Religious Tourism", "Jyotirlinga", "Pilgrimage Center"],
     district: "Deoghar"
   }
@@ -101,42 +102,42 @@ const glimpsesOfJharkhand = [
   {
     title: "The Land of Forests",
     description: "29% of Jharkhand is covered by forests, making it one of India's greenest states",
-    image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80",
+    image: "https://media.gettyimages.com/id/1317625168/video/4k-video-footage-of-beautiful-lush-green-mountains.jpg?s=640x640&k=20&c=CnsFjLm4vp2pA1T7kz8wFvdZj9-N9mEVAm1FZWI0efs=",
     fact: "Home to 5 National Parks",
     icon: "🌲"
   },
   {
     title: "Mineral Powerhouse",
     description: "Contains 40% of India's coal reserves and rich deposits of iron ore, copper, and mica",
-    image: "https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80",
+    image: "https://www.shutterstock.com/shutterstock/videos/1107559165/thumb/1.jpg?ip=x480",
     fact: "Leading producer of minerals",
     icon: "⛏️"
   },
   {
     title: "Tribal Heritage",
     description: "Home to 32 tribal communities preserving ancient traditions and cultural practices",
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
+    image: "https://images.pexels.com/photos/2016121/pexels-photo-2016121.jpeg?cs=srgb&dl=pexels-faris-munandar-1044415-2016121.jpg&fm=jpg",
     fact: "32 Tribal Communities",
     icon: "🎭"
   },
   {
     title: "Waterfall Paradise",
     description: "Over 100 spectacular waterfalls including India's highest single-drop waterfall",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+    image: "https://media.istockphoto.com/id/470608145/photo/erawan-waterfall.jpg?s=612x612&w=0&k=20&c=yiXeQzoHwKr-9fVk9Ab1UZ2PCt6KpMyFI7M0RBKcB0M=",
     fact: "100+ Waterfalls",
     icon: "💧"
   },
   {
     title: "Industrial Hub",
     description: "Major industrial centers contributing significantly to India's steel and coal production",
-    image: "https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1516937941344-00b4e0337589?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW5kdXN0cmlhbHxlbnwwfHwwfHx8MA%3D%3D",
     fact: "Steel & Coal Capital",
     icon: "🏭"
   },
   {
     title: "Spiritual Destination",
     description: "Sacred temples including Baidyanath Jyotirlinga and Parasnath Hills for Jains",
-    image: "https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaa1k0Qwbn_xUHRjwruGrrgg3V7OqQ-e9umQ&s",
     fact: "Sacred Pilgrimage Sites",
     icon: "🛕"
   }
@@ -146,28 +147,28 @@ const topCuisines = [
   {
     name: "Litti Chokha",
     description: "Traditional stuffed wheat balls with spiced mashed vegetables",
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&q=80",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwwbOJHhJ15KHU9qkDi5lXGoAI2lUm98iYZw&s",
     type: "Main Course",
     taste: "Spicy & Smoky"
   },
   {
     name: "Dhuska",
     description: "Deep-fried lentil and rice pancakes served with curry",
-    image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80", 
+    image: "https://img.freepik.com/premium-photo/jharkhand-s-famous-snack-dhuska-with-potato-curry-street-food-ranchi-state-jharkhand-india_14349-1273.jpg", 
     type: "Breakfast",
     taste: "Crispy & Savory"
   },
   {
     name: "Pittha",
     description: "Steamed rice flour dumplings with jaggery filling",
-    image: "https://images.unsplash.com/photo-1563379091339-03246963d973?w=800&q=80",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIscdU23jeEcIMlaETLEU5jg0E1w-ueJxKaA&s",
     type: "Dessert", 
     taste: "Sweet & Soft"
   },
   {
     name: "Handia",
     description: "Traditional fermented rice beer of tribal communities",
-    image: "https://images.unsplash.com/photo-1558642891-54be180ea339?w=800&q=80",
+    image: "https://i.pinimg.com/736x/d9/43/11/d94311c4dfcd5fe0ec936ebbb007d80d.jpg",
     type: "Beverage",
     taste: "Mild & Refreshing"
   }
@@ -184,21 +185,21 @@ const topFestivals = [
   {
     name: "Sohrai Festival", 
     description: "Harvest festival with beautiful tribal wall paintings",
-    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80",
+    image: "https://www.shutterstock.com/image-photo/ranchi-jharkhand-08-tuesday-2019-260nw-1488666659.jpg",
     month: "October-November",
     significance: "Cattle & Harvest"
   },
   {
     name: "Karma Festival",
     description: "Festival dedicated to the worship of Karma tree",
-    image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&q=80", 
+    image: "https://indroyc.com/wp-content/uploads/2012/09/karma-celebrations.jpg?w=640", 
     month: "August-September",
     significance: "Nature Worship"
   },
   {
     name: "Tusu Festival",
     description: "Folk festival marking the end of harvest season",
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
+    image: "https://i.pinimg.com/736x/d1/5e/0c/d15e0c73f97fe02eaafd28dfc88b4a0f.jpg",
     month: "December-January", 
     significance: "Folk Celebration"
   }
@@ -208,28 +209,28 @@ const topPlaces = [
   {
     name: "Betla National Park",
     description: "First national park of Jharkhand with tigers and elephants",
-    image: "https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80",
+    image: "https://i0.wp.com/wordzz.com/wp-content/uploads/2023/04/Betla-National-Park.jpeg?fit=1280%2C720&ssl=1",
     category: "Wildlife",
     rating: 4.5
   },
   {
     name: "Netarhat Hill Station",
     description: "Queen of Chotanagpur with spectacular sunrise views", 
-    image: "https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRv0UOErB7fE7D7rujz_zZ5YjYh888jHwB8BQ&s",
     category: "Hill Station",
     rating: 4.6
   },
   {
     name: "Baidyanath Dham",
     description: "One of the 12 Jyotirlingas, major pilgrimage site",
-    image: "https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80",
+    image: "https://www.shutterstock.com/image-photo/famous-lord-shiva-temple-deoghar-600nw-1328209346.jpg",
     category: "Religious",
     rating: 4.7
   },
   {
     name: "Hundru Falls",
     description: "98-meter spectacular waterfall near Ranchi",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+    image: "https://media.istockphoto.com/id/1268650403/photo/hundru-falls-jharkhand.jpg?s=612x612&w=0&k=20&c=Dt-RrXh_l9xPJ_BiSBA5RHk_xqtPVFN2YjYzdIsU0Ac=",
     category: "Waterfall", 
     rating: 4.5
   }
@@ -244,7 +245,7 @@ const ImageCarousel = ({ images, currentIndex, onNext, onPrev, children }: any) 
     >
       {images.map((item: any, index: number) => (
         <div key={index} className="w-full h-full flex-shrink-0 relative">
-          <Image
+          <SafeImage
             src={item.image || item.url}
             alt={item.title || item.name}
             fill
