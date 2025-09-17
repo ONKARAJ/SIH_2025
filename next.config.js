@@ -195,6 +195,8 @@ const nextConfig = {
   
   // Experimental features for better performance
   experimental: {
+    // Disable missing suspense with CSR bailout during build
+    missingSuspenseWithCSRBailout: false,
     turbo: {
       rules: {
         '*.svg': {

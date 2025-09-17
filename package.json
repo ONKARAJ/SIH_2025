@@ -11,7 +11,8 @@
     "migrate": "node scripts/migrate-db.js",
     "seed": "node scripts/seed-data.js",
     "db:push": "prisma db push",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "check-env": "node scripts/check-env.js"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.10",
