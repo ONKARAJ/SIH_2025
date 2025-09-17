@@ -223,7 +223,7 @@ export default function HillStationPage() {
   // Agent data for Contact Guide popup
   const agentData = {
     name: "Priya Sharma",
-    phone: "+91 9845672309",
+    phone: "333333333",
     description: "Professional mountain guide specializing in hill station treks and nature tours across Jharkhand's scenic highlands."
   };
 

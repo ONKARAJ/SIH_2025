@@ -10,10 +10,50 @@ import {
   Leaf,
   Users,
   Mountain,
+  Bell,
+  X,
+  ExternalLink,
+  AlertCircle,
+  Info,
+  Clock
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ReviewCard } from "@/components/review-card";
+
+// Notice board data
+const noticesData = [
+  {
+    id: 1,
+    type: 'important',
+    title: 'Special Monsoon Festival - Sohrai 2025',
+    description: 'Experience the vibrant Sohrai festival celebrating the harvest season with traditional tribal art, cultural performances, and authentic cuisine.',
+    date: '2025-01-15',
+    location: 'Hazaribagh District',
+    details: 'The Sohrai festival is one of the most significant tribal festivals in Jharkhand, celebrated with great enthusiasm across rural areas. This year\'s celebration will feature traditional wall paintings, folk dances, music performances, and a special exhibition of tribal handicrafts. Visitors can participate in art workshops, taste authentic Sohrai delicacies, and witness the beautiful Kohbar and Sohrai wall art created by local women artists. The festival promotes women empowerment and preserves ancient artistic traditions.',
+    status: 'active'
+  },
+  {
+    id: 2,
+    type: 'info',
+    title: 'New Adventure Trail Opens at Netarhat',
+    description: 'Explore the newly inaugurated eco-friendly trekking trail at Netarhat Hill Station with guided tours and camping facilities.',
+    date: '2024-12-20',
+    location: 'Netarhat, Latehar District',
+    details: 'The Netarhat Adventure Trail spans 15 kilometers through pristine forests, offering breathtaking views of sunrise and sunset points. The trail includes rest stations, eco-friendly camping sites, and guided tours by local tribal guides who share knowledge about local flora, fauna, and tribal traditions. Safety equipment and first aid facilities are available at all checkpoints. The trail is suitable for beginners to intermediate trekkers and promotes sustainable tourism practices.',
+    status: 'active'
+  },
+  {
+    id: 3,
+    type: 'alert',
+    title: 'Seasonal Closure: Hundru Falls Area',
+    description: 'Hundru Falls viewing area will be temporarily closed for safety maintenance and infrastructure upgrades from January 10-25, 2025.',
+    date: '2025-01-10',
+    location: 'Hundru Falls, Ranchi',
+    details: 'The popular Hundru Falls tourist area will undergo essential safety maintenance including pathway repairs, railing installations, and visitor facility upgrades. Alternative viewing points at Dassam Falls and Jonha Falls remain open for visitors. The closure ensures enhanced safety measures and improved visitor experience. Upon reopening, the area will feature new viewing decks, improved accessibility, and enhanced safety protocols. We apologize for any inconvenience and appreciate your understanding.',
+    status: 'active'
+  }
+];
 
 export default function Home() {
   // Default reviews that always show on homepage
@@ -105,6 +145,8 @@ export default function Home() {
   ];
   
   const [recentReviews, setRecentReviews] = useState(defaultReviews);
+  const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
+  const [selectedNotice, setSelectedNotice] = useState(null);
 
   // Always show default reviews on homepage - don't override with localStorage
   // This ensures consistent display for all visitors
@@ -120,6 +162,16 @@ export default function Home() {
           recentReviews.length
         ).toFixed(1)
       : "4.8";
+
+  const openNoticeModal = (notice: any) => {
+    setSelectedNotice(notice);
+    setIsNoticeModalOpen(true);
+  };
+
+  const closeNoticeModal = () => {
+    setIsNoticeModalOpen(false);
+    setSelectedNotice(null);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -165,13 +217,26 @@ export default function Home() {
 
         {/* Interactive Hero Content with Enhanced Animations */}
         <div className="relative z-20 text-center text-white max-w-7xl mx-auto px-4">
-          {/* Floating Badge with Glow Effect */}
-          <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-1000 delay-300">
-            <span className="inline-flex items-center bg-gradient-to-r from-orange-500/90 to-red-500/90 backdrop-blur-md text-white px-8 py-4 rounded-full text-sm font-semibold shadow-2xl border border-white/20 hover:scale-105 transition-all duration-300 cursor-pointer group">
-              <span className="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></span>
-              Explore India's Hidden Gem
-              <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">✨</span>
-            </span>
+          {/* Notice Board - Positioned to the side */}
+          <div className="fixed top-1/2 right-8 transform -translate-y-1/2 z-30 animate-in fade-in slide-in-from-right-4 duration-1000 delay-500">
+            <button
+              onClick={() => openNoticeModal(noticesData[0])}
+              className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-2xl"
+            >
+              <div className="flex flex-col items-center space-y-2">
+                <div className="relative">
+                  <Bell className="h-6 w-6 text-white group-hover:text-yellow-300 transition-colors duration-300" />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">{noticesData.length}</span>
+                  </div>
+                </div>
+                <span className="text-xs text-white/80 group-hover:text-white font-medium transition-colors duration-300">
+                  Notice
+                  <br />
+                  Board
+                </span>
+              </div>
+            </button>
           </div>
 
           {/* Main Heading with Text Effects */}
@@ -470,6 +535,99 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      
+      {/* Notice Modal */}
+      {isNoticeModalOpen && selectedNotice && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={closeNoticeModal}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[70vh] overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-primary to-secondary text-white p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                      selectedNotice.type === 'important' ? 'bg-orange-500' :
+                      selectedNotice.type === 'alert' ? 'bg-red-500' :
+                      'bg-blue-500'
+                    }`}>
+                      {selectedNotice.type === 'important' ? <AlertCircle className="h-5 w-5" /> :
+                       selectedNotice.type === 'alert' ? <AlertCircle className="h-5 w-5" /> :
+                       <Info className="h-5 w-5" />}
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold">{selectedNotice.title}</h2>
+                      <div className="flex items-center space-x-4 mt-1 text-sm text-white/80">
+                        <div className="flex items-center space-x-1">
+                          <Clock className="h-4 w-4" />
+                          <span>{new Date(selectedNotice.date).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <MapPin className="h-4 w-4" />
+                          <span>{selectedNotice.location}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={closeNoticeModal}
+                  className="p-2 hover:bg-white/20 rounded-full transition-colors duration-200"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+            
+            {/* Modal Content */}
+            <div className="p-6 overflow-y-auto max-h-[50vh]">
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Description</h3>
+                <p className="text-gray-600 leading-relaxed mb-4">{selectedNotice.description}</p>
+              </div>
+              
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Details</h3>
+                <p className="text-gray-600 leading-relaxed">{selectedNotice.details}</p>
+              </div>
+            </div>
+            
+            {/* Modal Footer */}
+            <div className="bg-gray-50 px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  selectedNotice.type === 'important' ? 'bg-orange-100 text-orange-700' :
+                  selectedNotice.type === 'alert' ? 'bg-red-100 text-red-700' :
+                  'bg-blue-100 text-blue-700'
+                }`}>
+                  {selectedNotice.type.toUpperCase()}
+                </span>
+                <span className="text-xs text-gray-500">Status: {selectedNotice.status}</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    const currentIndex = noticesData.findIndex(n => n.id === selectedNotice.id);
+                    const nextIndex = (currentIndex + 1) % noticesData.length;
+                    setSelectedNotice(noticesData[nextIndex]);
+                  }}
+                >
+                  Next Notice
+                </Button>
+                <Button onClick={closeNoticeModal}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

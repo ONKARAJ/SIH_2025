@@ -42,6 +42,7 @@ import {
 } from 'lucide-react'
 import { CityData, citiesData } from '@/lib/cities-data'
 import { InteractiveCityMap } from '@/components/interactive-city-map'
+import { CityProtectedReviewForm } from '@/components/city-protected-review-form'
 
 // Function to calculate hotel ID based on global position
 const calculateHotelId = (cityId: string, hotelIndex: number) => {
@@ -82,13 +83,24 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
     comment: '',
     images: [] as string[]
   })
+  const [allReviews, setAllReviews] = useState(city.reviews)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   const filteredHotels = selectedHotelCategory === 'all' 
     ? city.hotels 
     : city.hotels.filter(hotel => hotel.category === selectedHotelCategory)
 
-  const averageRating = city.reviews.length > 0 
-    ? city.reviews.reduce((sum, review) => sum + review.rating, 0) / city.reviews.length 
+  // Load reviews from localStorage on component mount
+  useEffect(() => {
+    const storageKey = `city-reviews-${city.id}`
+    const savedReviews = JSON.parse(localStorage.getItem(storageKey) || '[]')
+    // Combine default reviews with saved reviews
+    const combinedReviews = [...savedReviews, ...city.reviews]
+    setAllReviews(combinedReviews)
+  }, [city.id, city.reviews, refreshKey])
+
+  const averageRating = allReviews.length > 0 
+    ? allReviews.reduce((sum, review) => sum + review.rating, 0) / allReviews.length 
     : 0
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,6 +118,11 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
     console.log('Submitting review:', reviewData)
     setShowReviewForm(false)
     setReviewData({ name: '', rating: 5, comment: '', images: [] })
+  }
+
+  const handleReviewSubmitted = () => {
+    // Trigger a refresh of reviews
+    setRefreshKey(prev => prev + 1)
   }
 
   // Get video paths with multiple sources for better fallback
@@ -264,7 +281,7 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
                     <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
                       <Star className="h-4 w-4 text-amber-500 fill-current" />
                       <span className="text-sm font-medium text-gray-900">{averageRating.toFixed(1)}</span>
-                      <span className="text-gray-700 text-sm">({city.reviews.length} reviews)</span>
+                      <span className="text-gray-700 text-sm">({allReviews.length} reviews)</span>
                     </div>
                   </div>
                   
@@ -813,18 +830,26 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-            {city.reviews.slice(0, 2).map((review) => (
-              <div key={review.id} className="bg-gray-800 rounded-2xl p-6">
+          <div className="space-y-6 mb-12">
+            {/* Show all reviews in a single column for better readability */}
+            {allReviews.slice(0, 6).map((review, index) => (
+              <div key={`${review.id}-${index}`} className="bg-gray-800 rounded-2xl p-6">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-4">
                     <span className="text-white font-bold text-lg">
                       {review.name.charAt(0)}
                     </span>
                   </div>
-                  <div>
-                    <h4 className="text-white font-semibold">{review.name}</h4>
-                    <div className="flex items-center">
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-white font-semibold">{review.name}</h4>
+                      {index === 0 && allReviews.length > city.reviews.length && (
+                        <Badge className="bg-green-600 text-white text-xs">
+                          Latest Review
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center mt-1">
                       {[...Array(5)].map((_, i) => (
                         <Star 
                           key={i} 
@@ -838,19 +863,43 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">{review.comment}</p>
+                {review.images && review.images.length > 0 && (
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {review.images.slice(0, 4).map((image, imgIndex) => (
+                      <div key={imgIndex} className="aspect-square rounded-lg overflow-hidden">
+                        <img
+                          src={image}
+                          alt={`Review photo ${imgIndex + 1}`}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+                        />
+                      </div>
+                    ))}
+                    {review.images.length > 4 && (
+                      <div className="aspect-square rounded-lg bg-gray-700 flex items-center justify-center">
+                        <span className="text-gray-400 text-sm">+{review.images.length - 4} more</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
+            
+            {allReviews.length > 6 && (
+              <div className="text-center py-4">
+                <p className="text-gray-400">
+                  Showing 6 of {allReviews.length} reviews
+                </p>
+              </div>
+            )}
           </div>
           
-          {/* Add Review Button */}
-          <div className="text-center">
-            <Button 
-              onClick={() => setShowReviewForm(true)}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3"
-            >
-              <Star className="h-4 w-4 mr-2" />
-              Share Your Experience
-            </Button>
+          {/* Protected Review Form */}
+          <div className="mt-8">
+            <CityProtectedReviewForm 
+              cityId={city.id}
+              cityName={city.name}
+              onReviewSubmitted={handleReviewSubmitted}
+            />
           </div>
         </div>
       </section>

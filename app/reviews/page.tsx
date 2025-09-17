@@ -2,7 +2,7 @@
 
 import { Navigation } from "@/components/navigation";
 import { ReviewCard } from "@/components/review-card";
-import { ReviewForm } from "@/components/review-form";
+import { ProtectedReviewForm } from "@/components/protected-review-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -512,9 +512,9 @@ export default function ReviewsPage() {
                 </div>
               )}
 
-              {/* Review Form */}
+              {/* Protected Review Form */}
               <div className="mt-12">
-                <ReviewForm onSubmit={handleNewReview} />
+                <ProtectedReviewForm onSubmit={handleNewReview} />
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useSession, signOut } from "next-auth/react"
+import { useSession, signOut, getSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Navigation } from "@/components/navigation"
@@ -22,7 +22,10 @@ import {
   Save,
   X,
   Shield,
-  Clock
+  Clock,
+  Eye,
+  EyeOff,
+  Lock
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -35,6 +38,19 @@ export default function ProfilePage() {
     name: "",
     phone: "",
   })
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false)
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  })
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false
+  })
+  const [isPasswordLoading, setIsPasswordLoading] = useState(false)
+  const [phoneInputRef, setPhoneInputRef] = useState<HTMLInputElement | null>(null)
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -52,6 +68,13 @@ export default function ProfilePage() {
       })
     }
   }, [session])
+
+  // Auto-focus phone input when editing starts and there's no phone number
+  useEffect(() => {
+    if (isEditing && !formData.phone && phoneInputRef) {
+      setTimeout(() => phoneInputRef.focus(), 100)
+    }
+  }, [isEditing, formData.phone, phoneInputRef])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -74,8 +97,14 @@ export default function ProfilePage() {
       if (response.ok) {
         toast.success("Profile updated successfully!")
         setIsEditing(false)
+        
         // Refresh the session to get updated data
-        window.location.reload()
+        await getSession() // This will trigger a session refresh
+        
+        // Small delay to ensure session is updated, then refresh the page data
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
       } else {
         toast.error("Failed to update profile")
       }
@@ -95,6 +124,78 @@ export default function ProfilePage() {
       })
     }
     setIsEditing(false)
+  }
+
+  const handlePasswordInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
+  }
+
+  const handlePasswordVisibilityToggle = (field: string) => {
+    setShowPasswords(prev => ({
+      ...prev,
+      [field]: !prev[field as keyof typeof prev]
+    }))
+  }
+
+  const handleChangePassword = async () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast.error("New passwords don't match")
+      return
+    }
+
+    if (passwordData.newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters long")
+      return
+    }
+
+    setIsPasswordLoading(true)
+    try {
+      const response = await fetch("/api/user/change-password", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentPassword: passwordData.currentPassword,
+          newPassword: passwordData.newPassword
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        toast.success("Password changed successfully!")
+        setShowChangePasswordModal(false)
+        setPasswordData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: ""
+        })
+      } else {
+        toast.error(data.error || "Failed to change password")
+      }
+    } catch (error) {
+      toast.error("Something went wrong")
+    } finally {
+      setIsPasswordLoading(false)
+    }
+  }
+
+  const handleCancelPasswordChange = () => {
+    setShowChangePasswordModal(false)
+    setPasswordData({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: ""
+    })
+    setShowPasswords({
+      current: false,
+      new: false,
+      confirm: false
+    })
   }
 
   if (status === "loading") {
@@ -225,7 +326,29 @@ export default function ProfilePage() {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="phone">Phone Number</Label>
+                        {formData.phone && !isEditing && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-xs text-emerald-600 hover:text-emerald-700"
+                            onClick={() => setIsEditing(true)}
+                          >
+                            Change Number
+                          </Button>
+                        )}
+                        {!formData.phone && !isEditing && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-xs text-emerald-600 hover:text-emerald-700"
+                            onClick={() => setIsEditing(true)}
+                          >
+                            + Add Number
+                          </Button>
+                        )}
+                      </div>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                         <Input
@@ -234,11 +357,40 @@ export default function ProfilePage() {
                           type="tel"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          className="pl-10"
-                          readOnly={!isEditing}
-                          placeholder="Enter your phone number"
+                          ref={(el) => setPhoneInputRef(el)}
+                          className={`pl-10 ${
+                            !formData.phone && !isEditing 
+                              ? 'cursor-pointer hover:bg-gray-50 border-dashed border-2 border-gray-300' 
+                              : ''
+                          }`}
+                          readOnly={formData.phone ? !isEditing : false}
+                          placeholder={formData.phone ? "Phone number verified" : "Click here or the + Add Number button to add your phone number"}
+                          onClick={() => {
+                            if (!formData.phone && !isEditing) {
+                              setIsEditing(true)
+                            }
+                          }}
                         />
+                        {formData.phone && !isEditing && (
+                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                            <Badge className="bg-green-100 text-green-700 text-xs">
+                              ✓ Added
+                            </Badge>
+                          </div>
+                        )}
                       </div>
+                      {!formData.phone && !isEditing && (
+                        <div className="flex items-center gap-2 text-xs text-amber-600">
+                          <Clock className="w-3 h-3" />
+                          <span>Click the field above or the "+ Add Number" button to add your phone number for account security</span>
+                        </div>
+                      )}
+                      {formData.phone && !isEditing && (
+                        <p className="text-xs text-gray-500">Phone number is used for account recovery and security</p>
+                      )}
+                      {isEditing && !formData.phone && (
+                        <p className="text-xs text-blue-600">Enter your phone number and click Save to update your profile</p>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
@@ -320,7 +472,7 @@ export default function ProfilePage() {
                   <Button 
                     variant="outline" 
                     className="w-full justify-start"
-                    onClick={() => router.push("/change-password")}
+                    onClick={() => setShowChangePasswordModal(true)}
                   >
                     <Shield className="w-4 h-4 mr-2" />
                     Change Password
@@ -380,6 +532,152 @@ export default function ProfilePage() {
           </div>
         </div>
       </section>
+
+      {/* Change Password Modal */}
+      {showChangePasswordModal && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          onClick={handleCancelPasswordChange}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-6 duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-emerald-600 to-blue-600 text-white p-6 rounded-t-2xl">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                      <Lock className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold">Change Password</h2>
+                      <p className="text-sm text-white/80 mt-1">
+                        Update your account password for better security
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={handleCancelPasswordChange}
+                  className="p-2 hover:bg-white/20 rounded-full transition-colors duration-200"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+            
+            {/* Modal Content */}
+            <div className="p-6">
+              <div className="space-y-4">
+                {/* Current Password */}
+                <div className="space-y-2">
+                  <Label htmlFor="currentPassword">Current Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      id="currentPassword"
+                      name="currentPassword"
+                      type={showPasswords.current ? "text" : "password"}
+                      value={passwordData.currentPassword}
+                      onChange={handlePasswordInputChange}
+                      className="pl-10 pr-10"
+                      placeholder="Enter your current password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handlePasswordVisibilityToggle("current")}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showPasswords.current ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* New Password */}
+                <div className="space-y-2">
+                  <Label htmlFor="newPassword">New Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      id="newPassword"
+                      name="newPassword"
+                      type={showPasswords.new ? "text" : "password"}
+                      value={passwordData.newPassword}
+                      onChange={handlePasswordInputChange}
+                      className="pl-10 pr-10"
+                      placeholder="Enter your new password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handlePasswordVisibilityToggle("new")}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showPasswords.new ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-500">Password must be at least 6 characters long</p>
+                </div>
+
+                {/* Confirm New Password */}
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showPasswords.confirm ? "text" : "password"}
+                      value={passwordData.confirmPassword}
+                      onChange={handlePasswordInputChange}
+                      className="pl-10 pr-10"
+                      placeholder="Confirm your new password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handlePasswordVisibilityToggle("confirm")}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showPasswords.confirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  {passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword && (
+                    <p className="text-xs text-red-500">Passwords don't match</p>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            {/* Modal Footer */}
+            <div className="bg-gray-50 px-6 py-4 flex items-center justify-between rounded-b-2xl">
+              <div className="flex items-center space-x-2 text-xs text-gray-500">
+                <Shield className="h-3 w-3" />
+                <span>Your password will be encrypted and stored securely</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Button
+                  variant="outline"
+                  onClick={handleCancelPasswordChange}
+                  disabled={isPasswordLoading}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleChangePassword}
+                  disabled={isPasswordLoading || !passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword}
+                  className="bg-emerald-600 hover:bg-emerald-700"
+                >
+                  {isPasswordLoading ? "Changing..." : "Change Password"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

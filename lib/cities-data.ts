@@ -245,6 +245,20 @@ export const citiesData: CityData[] = [
         rating: 5,
         comment: 'Amazing city with beautiful waterfalls and hills. The weather is perfect!',
         date: '2024-01-15'
+      },
+      {
+        id: '2',
+        name: 'Rajesh Kumar',
+        rating: 4,
+        comment: 'Great capital city with good connectivity. Loved the Hundru Falls and Tagore Hill. The tribal culture is fascinating.',
+        date: '2024-02-28'
+      },
+      {
+        id: '3',
+        name: 'Meera Singh',
+        rating: 5,
+        comment: 'Perfect blend of nature and urban development. The lakes and waterfalls are breathtaking. Must visit for nature lovers!',
+        date: '2024-03-10'
       }
     ]
   },
@@ -397,6 +411,20 @@ export const citiesData: CityData[] = [
         rating: 4,
         comment: 'Very clean and well-organized city. Great for business and leisure.',
         date: '2024-01-20'
+      },
+      {
+        id: '2',
+        name: 'Sunita Rani',
+        rating: 5,
+        comment: 'Impressed by the city planning and cleanliness. Jubilee Park is beautiful and Tata Steel plant tour was educational.',
+        date: '2024-02-14'
+      },
+      {
+        id: '3',
+        name: 'Vikram Gupta',
+        rating: 4,
+        comment: 'Great industrial city with modern infrastructure. Dalma Wildlife Sanctuary nearby is a bonus for nature enthusiasts.',
+        date: '2024-03-05'
       }
     ]
   }
@@ -481,7 +509,22 @@ export const citiesData: CityData[] = [
     specialties: ['Steel Plant', 'Planned City', 'Lakes'],
     bestTimeToVisit: 'October to February',
     climate: 'Tropical with hot summers, mild winters',
-    reviews: [ { id: '1', name: 'Visitor', rating: 4, comment: 'Clean and organized city.', date: '2024-03-10' } ]
+    reviews: [
+      {
+        id: '1',
+        name: 'Anita Devi',
+        rating: 4,
+        comment: 'Clean and well-organized steel city. The planned layout is impressive and Garga Dam is beautiful.',
+        date: '2024-03-10'
+      },
+      {
+        id: '2',
+        name: 'Rohit Sharma',
+        rating: 4,
+        comment: 'Great planned city with good facilities. Parasnath Hills nearby make it perfect for weekend trips.',
+        date: '2024-03-20'
+      }
+    ]
   },
   {
     id: 'dhanbad',
@@ -562,7 +605,22 @@ export const citiesData: CityData[] = [
     specialties: ['Coal Mining', 'Education'],
     bestTimeToVisit: 'October to February',
     climate: 'Tropical with hot summers, mild winters',
-    reviews: [ { id: '1', name: 'Traveler', rating: 4, comment: 'Good base to explore lakes and dams.', date: '2024-03-05' } ]
+    reviews: [
+      {
+        id: '1',
+        name: 'Manoj Kumar',
+        rating: 4,
+        comment: 'Good base to explore lakes and dams. Maithon Dam is spectacular and the educational institutions are impressive.',
+        date: '2024-03-05'
+      },
+      {
+        id: '2',
+        name: 'Kavita Singh',
+        rating: 4,
+        comment: 'The coal capital has more to offer than expected. Bhatinda Falls and Topchanchi Lake are hidden gems.',
+        date: '2024-03-18'
+      }
+    ]
   },
   {
     id: 'deoghar',
@@ -643,7 +701,29 @@ export const citiesData: CityData[] = [
     specialties: ['Pilgrimage', 'Spirituality'],
     bestTimeToVisit: 'October to March',
     climate: 'Tropical with pleasant winters',
-    reviews: [ { id: '1', name: 'Devotee', rating: 5, comment: 'Peaceful and divine.', date: '2024-02-25' } ]
+    reviews: [
+      {
+        id: '1',
+        name: 'Ramesh Gupta',
+        rating: 5,
+        comment: 'Peaceful and divine experience at Baidyanath Dham. The spiritual energy is incredible.',
+        date: '2024-02-25'
+      },
+      {
+        id: '2',
+        name: 'Sita Sharma',
+        rating: 5,
+        comment: 'One of the most sacred Jyotirlingas. The temple complex is well-maintained and the atmosphere is very spiritual.',
+        date: '2024-03-15'
+      },
+      {
+        id: '3',
+        name: 'Deepak Verma',
+        rating: 4,
+        comment: 'Great pilgrimage destination. Trikuta Hills and Nandan Pahar offer nice views beyond the main temple.',
+        date: '2024-03-22'
+      }
+    ]
   }
 ]
 

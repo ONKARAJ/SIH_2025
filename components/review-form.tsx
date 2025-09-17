@@ -11,10 +11,12 @@ import { Star, Camera, X, Upload, Image as ImageIcon, Video, Play } from "lucide
 
 interface ReviewFormProps {
   onSubmit: (review: { name: string; rating: number; feedback: string; photos?: string[]; videos?: string[] }) => void
+  defaultName?: string
+  disabled?: boolean
 }
 
-export function ReviewForm({ onSubmit }: ReviewFormProps) {
-  const [name, setName] = useState("")
+export function ReviewForm({ onSubmit, defaultName = "", disabled = false }: ReviewFormProps) {
+  const [name, setName] = useState(defaultName)
   const [rating, setRating] = useState(0)
   const [feedback, setFeedback] = useState("")
   const [hoveredRating, setHoveredRating] = useState(0)
@@ -145,9 +147,10 @@ export function ReviewForm({ onSubmit }: ReviewFormProps) {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
+              placeholder={defaultName ? "Name from profile" : "Enter your name"}
               required
-              className="w-full"
+              disabled={!!defaultName || disabled}
+              className={`w-full ${defaultName ? 'bg-muted' : ''}`}
             />
           </div>
 

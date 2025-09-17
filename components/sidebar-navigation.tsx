@@ -303,7 +303,7 @@ export function SidebarNavigation() {
                             <Link href="/places" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
                               Glimpses of Jharkhand
                             </Link>
-                            <Link href="/cultural-heritage" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
+                            <Link href="http://localhost:3001/cultural-heritage" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
                               Cultural Heritage
                             </Link>
                             <Link href="/artisan-crafts" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
@@ -453,14 +453,11 @@ export function SidebarNavigation() {
                           <Link href="/festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Tribal Heritage
                           </Link>
-                          <Link href="/festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
-                            → Art & Crafts
-                          </Link>
-                          <Link href="/festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
+                          <Link href="https://sih-2025-fql6.vercel.app/festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Folk Music
                           </Link>
-                          <Link href="/festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
-                            → Traditional Dance
+                          <Link href="https://sih-2025-fql6.vercel.app/cuisine-of-jharkhand" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
+                            → Cuisine
                           </Link>
                         </div>
                       </div>
@@ -471,16 +468,16 @@ export function SidebarNavigation() {
                           Festivals & Events
                         </h3>
                         <div className="space-y-4 pl-5">
-                          <Link href="/festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
+                          <Link href="https://sih-2025-fql6.vercel.app/explore-festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → All Festivals
                           </Link>
-                          <Link href="/festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
+                          <Link href="https://sih-2025-fql6.vercel.app/explore-festivals#sarhul" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Sarhul Festival
                           </Link>
-                          <Link href="/festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
+                          <Link href="https://sih-2025-fql6.vercel.app/explore-festivals#sohrai" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Sohrai Festival
                           </Link>
-                          <Link href="/festivals" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
+                          <Link href="https://sih-2025-fql6.vercel.app/explore-festivals#karma" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Karma Festival
                           </Link>
                         </div>
@@ -506,7 +503,7 @@ export function SidebarNavigation() {
                           <Link href="/contact" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Travel Guide
                           </Link>
-                          <Link href="/reviews" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
+                          <Link href="http://localhost:3001/book-tour" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Itineraries
                           </Link>
                         </div>
@@ -553,9 +550,6 @@ export function SidebarNavigation() {
                           <Link href="/contact" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Travel Tips
                           </Link>
-                          <Link href="/reviews" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
-                            → Emergency Contacts
-                          </Link>
                         </div>
                       </div>
                       
@@ -567,12 +561,6 @@ export function SidebarNavigation() {
                         <div className="space-y-4 pl-5">
                           <Link href="/reviews" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Reviews & Ratings
-                          </Link>
-                          <Link href="/contact" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
-                            → Download Brochures
-                          </Link>
-                          <Link href="/map" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
-                            → Weather Updates
                           </Link>
                           <Link href="/contact" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Language Guide

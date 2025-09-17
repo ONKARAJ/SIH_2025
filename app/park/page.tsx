@@ -133,6 +133,14 @@ const GoogleMap = ({ place }: { place: any }) => {
 export default function ParkPage() {
   const [selectedPlace, setSelectedPlace] = useState(parkPlaces[0]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isContactGuidePopupOpen, setIsContactGuidePopupOpen] = useState(false);
+  
+  // Agent data for Contact Guide popup
+  const agentData = {
+    name: "Suresh Kumar",
+    phone: "888888888",
+    description: "Park ranger and recreation guide with extensive knowledge of Jharkhand's urban parks and recreational facilities."
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -307,13 +315,12 @@ export default function ParkPage() {
                   </div>
 
                   <div className="flex gap-3 mt-6">
-                    <Button className="flex-1 bg-green-600 hover:bg-green-700">
+                    <Button 
+                      onClick={() => setIsContactGuidePopupOpen(true)}
+                      className="flex-1 bg-green-600 hover:bg-green-700"
+                    >
                       <Phone className="h-4 w-4 mr-2" />
-                      Contact
-                    </Button>
-                    <Button variant="outline" className="flex-1">
-                      <Camera className="h-4 w-4 mr-2" />
-                      Gallery
+                      Contact Guide
                     </Button>
                   </div>
                 </CardContent>
@@ -349,6 +356,84 @@ export default function ParkPage() {
           </div>
         </div>
       </section>
+      
+      {/* Contact Guide Popup */}
+      {isContactGuidePopupOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+            {/* Close Button */}
+            <button
+              onClick={() => setIsContactGuidePopupOpen(false)}
+              className="absolute right-4 top-4 z-10 rounded-full bg-gray-100 hover:bg-gray-200 p-2 transition-all duration-200"
+            >
+              <svg className="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            
+            {/* Header */}
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-8 text-white">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                  <Phone className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">Contact Your Guide</h3>
+                  <p className="text-green-100 text-sm">Park guide for {selectedPlace.name}</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="p-6">
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-white">
+                    {agentData.name.split(' ').map(n => n[0]).join('')}
+                  </span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-1">{agentData.name}</h4>
+                <p className="text-gray-600 text-sm mb-4">{agentData.description}</p>
+                
+                <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                  <div className="flex items-center justify-center gap-3">
+                    <Phone className="h-5 w-5 text-green-600" />
+                    <span className="text-lg font-semibold text-gray-900 font-mono">{agentData.phone}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                <Button 
+                  onClick={() => window.open(`tel:${agentData.phone}`, '_self')}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg font-semibold"
+                >
+                  <Phone className="h-5 w-5 mr-2" />
+                  Call Now
+                </Button>
+                
+                <Button 
+                  onClick={() => window.open(`https://wa.me/${agentData.phone.replace(/[^0-9]/g, '')}?text=Hi, I'm interested in visiting ${selectedPlace.name}. Can you provide information about park facilities?`, '_blank')}
+                  variant="outline"
+                  className="w-full border-green-500 text-green-600 hover:bg-green-50 py-3 text-lg font-semibold"
+                >
+                  <span className="mr-2">📱</span>
+                  WhatsApp
+                </Button>
+                
+                <Button 
+                  onClick={() => setIsContactGuidePopupOpen(false)}
+                  variant="outline"
+                  className="w-full py-2"
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

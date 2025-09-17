@@ -34,14 +34,25 @@ export async function PUT(request: NextRequest) {
       )
     }
 
+    // Prepare update data
+    const updateData: any = {
+      updatedAt: new Date(),
+    }
+    
+    // Only update name if provided
+    if (validatedData.name !== undefined) {
+      updateData.name = validatedData.name
+    }
+    
+    // Update phone if provided (including empty string to clear it)
+    if (validatedData.phone !== undefined) {
+      updateData.phone = validatedData.phone || null
+    }
+
     // Update user in database
     const updatedUser = await db.user.update({
       where: { email: session.user.email },
-      data: {
-        ...(validatedData.name && { name: validatedData.name }),
-        ...(validatedData.phone && { phone: validatedData.phone }),
-        updatedAt: new Date(),
-      },
+      data: updateData,
       select: {
         id: true,
         name: true,

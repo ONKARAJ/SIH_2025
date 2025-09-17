@@ -111,6 +111,34 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string
         session.user.avatar = token.avatar as string
         session.user.provider = token.provider as string
+        
+        // Fetch fresh user data from database if available
+        if (isDatabaseConfigured && session.user.email) {
+          try {
+            const freshUser = await db.user.findUnique({
+              where: { email: session.user.email },
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                phone: true,
+                avatar: true,
+                createdAt: true,
+                updatedAt: true
+              }
+            })
+            
+            if (freshUser) {
+              session.user.name = freshUser.name
+              session.user.phone = freshUser.phone
+              session.user.avatar = freshUser.avatar
+              session.user.createdAt = freshUser.createdAt
+              session.user.updatedAt = freshUser.updatedAt
+            }
+          } catch (error) {
+            console.error("Error fetching fresh user data:", error)
+          }
+        }
       }
       return session
     },

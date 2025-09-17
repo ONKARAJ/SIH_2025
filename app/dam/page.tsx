@@ -240,7 +240,7 @@ export default function DamPage() {
   // Agent data for Contact Guide popup
   const agentData = {
     name: "Rajesh Kumar",
-    phone: "+91 9876543210",
+    phone: "222222222",
     description: "Experienced local guide with 8+ years expertise in Jharkhand dam tourism and water sports activities."
   };
 

@@ -277,7 +277,7 @@ const GoogleMap = ({ place }: { place: any }) => {
 // Agent data for contact guide functionality
 const agentData = {
   name: "Rajesh Kumar Singh",
-  phone: "+91 94314 85627",
+  phone: "111111111",
   description: "Experienced local guide specializing in Jharkhand waterfalls and nature tours"
 };
 
