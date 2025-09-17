@@ -40,6 +40,8 @@ export function InteractiveJharkhandMap({ touristSpots, onLocationSelect, select
   const [selectedSpot, setSelectedSpot] = useState<TouristSpot | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [markers, setMarkers] = useState<any[]>([]);
+  // Prevent duplicate initialization in React Strict Mode (dev)
+  const hasInitializedRef = useRef(false);
 
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -65,34 +67,52 @@ export function InteractiveJharkhandMap({ touristSpots, onLocationSelect, select
       return;
     }
 
-    if (window.google) {
+    const onLoaded = () => {
+      setIsLoaded(true);
       initializeMap();
+    };
+
+    // If already available, initialize immediately
+    if (typeof window !== 'undefined' && (window as any).google && (window as any).google.maps) {
+      onLoaded();
       return;
     }
 
+    // Try to reuse an existing script tag if present
+    const existing = document.querySelector(
+      'script[src^="https://maps.googleapis.com/maps/api/js"]'
+    ) as HTMLScriptElement | null;
+
+    if (existing) {
+      existing.addEventListener('load', onLoaded, { once: true });
+
+      // Cleanup: only remove our listener, never remove the global script
+      return () => {
+        existing.removeEventListener('load', onLoaded);
+      };
+    }
+
+    // Create script if not present
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=geometry`;
     script.async = true;
     script.defer = true;
-    
-    script.onload = () => {
-      setIsLoaded(true);
-      initializeMap();
-    };
-    
-    script.onerror = () => {
-      setHasError(true);
-      setIsLoading(false);
-    };
+
+    script.addEventListener('load', onLoaded, { once: true });
+    script.addEventListener(
+      'error',
+      () => {
+        setHasError(true);
+        setIsLoading(false);
+      },
+      { once: true }
+    );
 
     document.head.appendChild(script);
 
+    // Cleanup: remove listeners but keep the script in DOM to avoid dev-only issues
     return () => {
-      // Cleanup script if component unmounts
-      const existingScript = document.querySelector(`script[src*="maps.googleapis.com"]`);
-      if (existingScript && existingScript.parentNode) {
-        existingScript.parentNode.removeChild(existingScript);
-      }
+      script.removeEventListener('load', onLoaded);
     };
   }, []);
 
@@ -122,6 +142,11 @@ export function InteractiveJharkhandMap({ touristSpots, onLocationSelect, select
 
   const initializeMap = () => {
     if (!mapRef.current || !window.google) return;
+    // Guard against multiple initializations in dev (Strict Mode / HMR)
+    if (hasInitializedRef.current) {
+      return;
+    }
+    hasInitializedRef.current = true;
 
     try {
       // Create map with Jharkhand-specific settings but allow zoom out
