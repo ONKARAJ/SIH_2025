@@ -448,13 +448,12 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
 
   // Load Google Maps API
   useEffect(() => {
-    // Get API key with fallback for testing
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g';
+    // Get API key from env
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
     
-    // Debug logging for deployment
+    // Debug logging for deployment (key presence only)
     console.log('Google Maps API Key available:', !!apiKey);
     console.log('Environment:', process.env.NODE_ENV);
-    console.log('API Key source:', process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ? 'Environment Variable' : 'Fallback');
     
     if (!apiKey) {
       console.error('Google Maps API key is missing!');
@@ -466,11 +465,11 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
     
     if (!window.google) {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initMap`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry`;
       script.async = true;
       script.defer = true;
       
-      (window as any).initMap = () => {
+      script.onload = () => {
         try {
           console.log('Google Maps API loaded successfully');
           setMapError(null);
@@ -494,7 +493,21 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
         setIsMapLoading(false);
       };
       
-      document.head.appendChild(script);
+      // Avoid duplicate script tags
+      const existing = document.querySelector('script[src^="https://maps.googleapis.com/maps/api/js"]') as HTMLScriptElement | null;
+      if (!existing) {
+        document.head.appendChild(script);
+      } else {
+        if (window.google) {
+          setIsMapLoading(false);
+          initializeMap();
+        } else {
+          existing.addEventListener('load', () => {
+            setIsMapLoading(false);
+            initializeMap();
+          });
+        }
+      }
     } else {
       console.log('Google Maps API already loaded');
       setIsMapLoading(false);

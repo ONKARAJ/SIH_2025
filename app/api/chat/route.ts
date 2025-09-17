@@ -126,25 +126,24 @@ export async function POST(request: NextRequest) {
       }
     ];
 
-    // Use intelligent responses as primary (API key format issue)
+    // Generate response, prefer AI API if configured
     let aiResponse: string;
     let source: string;
 
     try {
-      // Primary: Use intelligent pattern-based responses
-      aiResponse = getIntelligentResponse(message);
-      source = 'intelligent_response';
-      
-      // Backup: Try AI API if available and intelligent response is generic
-      if (isAIAvailable() && aiResponse.includes('I understand you\'re asking about')) {
+      if (isAIAvailable()) {
         try {
           const aiResponseText = await tryDeepSeekAPI(messages);
           aiResponse = aiResponseText;
           source = 'ai_api';
         } catch (apiError) {
-          console.log('AI API fallback failed, using intelligent response');
-          // Keep the intelligent response
+          console.log('AI API call failed, falling back to intelligent response');
+          aiResponse = getIntelligentResponse(message);
+          source = 'intelligent_response';
         }
+      } else {
+        aiResponse = getIntelligentResponse(message);
+        source = 'intelligent_response';
       }
     } catch (error) {
       console.error('All response methods failed:', error);
@@ -230,17 +229,17 @@ async function handleDistanceQuery(distanceQuery: { origin: string; destination:
   return null;
 }
 
-// Helper function for DeepSeek API
+// Helper function to call DeepSeek API (OpenAI-compatible)
 async function tryDeepSeekAPI(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.DEEPSEEK_API_KEY;
-  // Note: The provided key appears to be for a different service, using OpenAI-compatible endpoint
-  const baseUrl = 'https://api.openai.com';
+  const baseUrl = process.env.DEEPSEEK_API_BASE_URL || 'https://api.deepseek.com';
+  const model = process.env.DEEPSEEK_MODEL || 'deepseek-chat';
 
   if (!apiKey) {
     throw new Error('AI API key not configured');
   }
 
-  console.log('Attempting AI API call...');
+  console.log('Attempting AI API call (DeepSeek)...');
 
   try {
     // Add timeout to the fetch request
@@ -254,8 +253,8 @@ async function tryDeepSeekAPI(messages: ChatMessage[]): Promise<string> {
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: messages,
+        model,
+        messages,
         max_tokens: 300,
         temperature: 0.7,
         stream: false,
@@ -267,7 +266,7 @@ async function tryDeepSeekAPI(messages: ChatMessage[]): Promise<string> {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('AI API Error Response:', errorText);
+      console.error('DeepSeek API Error Response:', errorText);
       
       if (response.status === 401) {
         throw new Error('AI API: Invalid API key');
@@ -281,7 +280,7 @@ async function tryDeepSeekAPI(messages: ChatMessage[]): Promise<string> {
     }
 
     const data: AIResponse = await response.json();
-    console.log('AI API response received successfully');
+    console.log('DeepSeek API response received successfully');
     
     const aiResponse = data.choices[0]?.message?.content;
 

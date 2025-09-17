@@ -193,11 +193,11 @@ export function JharkhandInteractiveMap({ touristSpots, onLocationSelect }: Jhar
 
     if (!window.google) {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initJharkhandMap`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry`;
       script.async = true;
       script.defer = true;
       
-      window.initJharkhandMap = () => {
+      script.onload = () => {
         try {
           console.log('Google Maps API loaded for Jharkhand map');
           initializeMap();
@@ -214,7 +214,17 @@ export function JharkhandInteractiveMap({ touristSpots, onLocationSelect }: Jhar
         setIsLoading(false);
       };
       
-      document.head.appendChild(script);
+      // Avoid duplicate script tags
+      const existing = document.querySelector('script[src^="https://maps.googleapis.com/maps/api/js"]') as HTMLScriptElement | null;
+      if (!existing) {
+        document.head.appendChild(script);
+      } else {
+        if (window.google) {
+          initializeMap();
+        } else {
+          existing.addEventListener('load', () => initializeMap());
+        }
+      }
     } else {
       console.log('Google Maps API already loaded, initializing map...');
       initializeMap();
