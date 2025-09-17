@@ -556,8 +556,8 @@ export default function ExploreFestivalsPage() {
             <Button asChild size="lg" className="bg-white text-orange-600 hover:bg-gray-100">
               <Link href="/book-tour">Plan Your Cultural Journey</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
-              <Link href="/festivals">View Festival Calendar</Link>
+            <Button asChild variant="outline" size="lg" className="border-white text-red-800 hover:bg-white/10">
+              <Link href="/festival-calendar">View Festival Calendar</Link>
             </Button>
           </div>
         </div>

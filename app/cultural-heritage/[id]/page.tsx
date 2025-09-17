@@ -480,8 +480,8 @@ export default function CulturalHeritageDetailPage() {
             <Button asChild size="lg" className="bg-white text-primary hover:bg-gray-100">
               <Link href="/book-tour">Book Cultural Tour</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
-              <Link href="/festivals">Explore Festivals</Link>
+            <Button asChild variant="outline" size="lg" className="border-white text-green-300 hover:bg-white/10">
+              <Link href="/explore-festivals">Explore Festivals</Link>
             </Button>
           </div>
         </div>

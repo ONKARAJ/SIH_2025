@@ -11,7 +11,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { 
   Search, 
-  Train, 
+  Bus, 
   Clock, 
   MapPin, 
   Users, 
@@ -19,19 +19,22 @@ import {
   ArrowRight,
   Star,
   Wifi,
-  Coffee,
+  Snowflake,
   Zap,
-  Car,
+  Coffee,
   Filter,
-  SortAsc
+  SortAsc,
+  Bed,
+  AirVent
 } from "lucide-react";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 
-interface TrainData {
+interface BusData {
   id: string;
-  trainNumber: string;
-  trainName: string;
+  busNumber: string;
+  busName: string;
+  operator: string;
   departure: string;
   arrival: string;
   departureTime: string;
@@ -39,62 +42,65 @@ interface TrainData {
   duration: string;
   distance: number;
   frequency: number[];
-  trainType: string;
-  classes: string[];
-  basePrice: number;
-  priceMultiplier: { [key: string]: number };
+  busType: 'Volvo AC' | 'Semi-Sleeper AC' | 'Sleeper AC' | 'Non-AC Seater' | 'AC Seater' | 'Luxury';
   totalSeats: number;
   availableSeats: number;
+  basePrice: number;
   route: string[];
   amenities: string[];
   isActive: boolean;
   isFeatured: boolean;
+  boardingPoints: { location: string; time: string }[];
+  droppingPoints: { location: string; time: string }[];
 }
 
-const trainClasses = [
-  { value: 'SL', label: 'Sleeper (SL)', description: 'Non-AC sleeper with side berths' },
-  { value: '3A', label: '3rd AC (3A)', description: 'AC 3-tier with bedding' },
-  { value: '2A', label: '2nd AC (2A)', description: 'AC 2-tier with bedding' },
-  { value: '1A', label: '1st AC (1A)', description: 'Premium AC with meals' },
-  { value: 'CC', label: 'Chair Car (CC)', description: 'AC seating only' },
-  { value: 'EC', label: 'Executive Chair Car (EC)', description: 'Premium AC seating' }
+const busTypes = [
+  { value: 'All', label: 'All Bus Types' },
+  { value: 'Luxury', label: 'Luxury' },
+  { value: 'Volvo AC', label: 'Volvo AC' },
+  { value: 'Sleeper AC', label: 'Sleeper AC' },
+  { value: 'Semi-Sleeper AC', label: 'Semi-Sleeper AC' },
+  { value: 'AC Seater', label: 'AC Seater' },
+  { value: 'Non-AC Seater', label: 'Non-AC Seater' }
 ];
 
 const popularDestinations = [
-  'Ranchi', 'Jamshedpur', 'Dhanbad', 'Bokaro Steel City', 'Deoghar', 'Dumka', 'Hazaribagh', 'Chaibasa', 'Giridih', 'Lohardaga', 'Medininagar', 'Daltonganj'
+  'Ranchi', 'Jamshedpur', 'Dhanbad', 'Bokaro Steel City', 'Deoghar', 'Dumka', 'Hazaribagh', 'Chaibasa', 'Giridih'
 ];
 
 const popularSources = [
-  'New Delhi', 'Mumbai', 'Kolkata', 'Chennai', 'Bangalore', 'Howrah', 'Patna', 'Lucknow', 'Bhubaneswar', 'Puri', 'Cuttack', 'Berhampur', 'Rourkela', 'Sambalpur'
+  'Kolkata', 'Patna', 'Bhubaneswar', 'Puri', 'Gaya', 'Asansol', 'Durgapur', 'Cuttack', 'Berhampur', 'Rourkela', 'Siliguri'
 ];
 
 const getAmenityIcon = (amenity: string) => {
   if (amenity.toLowerCase().includes('wifi')) return <Wifi className="w-4 h-4" />;
-  if (amenity.toLowerCase().includes('pantry') || amenity.toLowerCase().includes('catering')) return <Coffee className="w-4 h-4" />;
+  if (amenity.toLowerCase().includes('ac') || amenity.toLowerCase().includes('luxury')) return <Snowflake className="w-4 h-4" />;
   if (amenity.toLowerCase().includes('charging')) return <Zap className="w-4 h-4" />;
-  if (amenity.toLowerCase().includes('ac')) return <Car className="w-4 h-4" />;
+  if (amenity.toLowerCase().includes('meals') || amenity.toLowerCase().includes('snacks')) return <Coffee className="w-4 h-4" />;
+  if (amenity.toLowerCase().includes('sleeper') || amenity.toLowerCase().includes('berth')) return <Bed className="w-4 h-4" />;
+  if (amenity.toLowerCase().includes('entertainment')) return <AirVent className="w-4 h-4" />;
   return <Star className="w-4 h-4" />;
 };
 
-export default function BookTrainsPage() {
+export default function BookBusesPage() {
   const router = useRouter();
-  const [trains, setTrains] = useState<TrainData[]>([]);
+  const [buses, setBuses] = useState<BusData[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
   const [travelDate, setTravelDate] = useState<Date>();
   const [passengers, setPassengers] = useState("1");
-  const [trainClass, setTrainClass] = useState("");
+  const [busType, setBusType] = useState("All");
   const [sortBy, setSortBy] = useState("price");
   const [showFilters, setShowFilters] = useState(false);
   
-  // Load featured trains on component mount
+  // Load featured buses on component mount
   useEffect(() => {
-    fetchTrains({ featured: 'true' });
+    fetchBuses({ featured: 'true' });
   }, []);
 
-  const fetchTrains = async (params: any = {}) => {
+  const fetchBuses = async (params: any = {}) => {
     setLoading(true);
     try {
       const queryParams = new URLSearchParams();
@@ -103,32 +109,33 @@ export default function BookTrainsPage() {
       if (params.source) queryParams.append('source', params.source);
       if (params.destination) queryParams.append('destination', params.destination);
       if (params.featured) queryParams.append('featured', params.featured);
+      if (params.busType && params.busType !== 'All') queryParams.append('busType', params.busType);
 
-      const response = await fetch(`/api/trains?${queryParams.toString()}`);
+      const response = await fetch(`/api/buses?${queryParams.toString()}`);
       const data = await response.json();
       
       if (data.success) {
-        let sortedTrains = data.data;
+        let sortedBuses = data.data;
         
         // Apply sorting
         if (sortBy === 'price') {
-          sortedTrains = sortedTrains.sort((a: TrainData, b: TrainData) => a.basePrice - b.basePrice);
+          sortedBuses = sortedBuses.sort((a: BusData, b: BusData) => a.basePrice - b.basePrice);
         } else if (sortBy === 'duration') {
-          sortedTrains = sortedTrains.sort((a: TrainData, b: TrainData) => {
+          sortedBuses = sortedBuses.sort((a: BusData, b: BusData) => {
             const aDuration = parseInt(a.duration.split('h')[0]);
             const bDuration = parseInt(b.duration.split('h')[0]);
             return aDuration - bDuration;
           });
         } else if (sortBy === 'departure') {
-          sortedTrains = sortedTrains.sort((a: TrainData, b: TrainData) => 
+          sortedBuses = sortedBuses.sort((a: BusData, b: BusData) => 
             a.departureTime.localeCompare(b.departureTime)
           );
         }
         
-        setTrains(sortedTrains);
+        setBuses(sortedBuses);
       }
     } catch (error) {
-      console.error('Error fetching trains:', error);
+      console.error('Error fetching buses:', error);
     } finally {
       setLoading(false);
     }
@@ -144,27 +151,24 @@ export default function BookTrainsPage() {
       if (destination) params.destination = destination;
     }
     
-    fetchTrains(params);
+    if (busType && busType !== 'All') params.busType = busType;
+    
+    fetchBuses(params);
   };
 
-  const handleBookTrain = (train: TrainData) => {
-    // Store train and booking details in localStorage
+  const handleBookBus = (bus: BusData) => {
+    // Store bus and booking details in localStorage
     const bookingData = {
-      train,
+      bus,
       travelDate,
       passengers: parseInt(passengers),
-      trainClass: trainClass || 'SL',
-      source: train.departure,
-      destination: train.arrival
+      busType: bus.busType,
+      source: bus.departure,
+      destination: bus.arrival
     };
     
-    localStorage.setItem('trainBookingData', JSON.stringify(bookingData));
-    router.push(`/booking/train/${train.id}`);
-  };
-
-  const calculatePrice = (train: TrainData, selectedClass: string) => {
-    const classMultiplier = train.priceMultiplier[selectedClass] || 1;
-    return Math.round(train.basePrice * classMultiplier);
+    localStorage.setItem('busBookingData', JSON.stringify(bookingData));
+    router.push(`/booking/bus/${bus.id}`);
   };
 
   const getDayNames = (frequency: number[]) => {
@@ -172,32 +176,44 @@ export default function BookTrainsPage() {
     return frequency.map(day => days[day === 7 ? 0 : day]).join(', ');
   };
 
+  const getBusTypeColor = (type: string) => {
+    switch (type) {
+      case 'Luxury': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'Volvo AC': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'Sleeper AC': return 'bg-green-100 text-green-800 border-green-200';
+      case 'Semi-Sleeper AC': return 'bg-teal-100 text-teal-800 border-teal-200';
+      case 'AC Seater': return 'bg-indigo-100 text-indigo-800 border-indigo-200';
+      case 'Non-AC Seater': return 'bg-gray-100 text-gray-800 border-gray-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
 
       {/* Header Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-50 to-emerald-50">
+      <section className="py-20 bg-gradient-to-r from-orange-50 to-red-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
+          <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              <Train className="inline-block w-12 h-12 mr-4 text-blue-600" />
-              Book Train Tickets to Jharkhand
+              <Bus className="inline-block w-12 h-12 mr-4 text-orange-600" />
+              Book Bus Tickets
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Discover 115+ trains connecting major cities across India to Jharkhand's beautiful destinations. 
-              Including trains from Odisha, intra-Jharkhand routes, and major Indian cities.
+              Travel comfortably across Bihar, Odisha, West Bengal, and Jharkhand with our premium bus services. 
+              Choose from AC Volvo, Sleeper, and Luxury buses for your perfect journey.
             </p>
             
             {/* Quick Search Suggestions */}
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <span className="text-sm text-gray-500">Popular routes:</span>
               {[
+                'Kolkata → Ranchi',
+                'Patna → Jamshedpur', 
+                'Bhubaneswar → Dhanbad',
                 'Puri → Ranchi',
-                'Bhubaneswar → Jamshedpur', 
-                'Delhi → Dhanbad',
-                'Mumbai → Bokaro',
-                'Ranchi → Deoghar'
+                'Ranchi → Jamshedpur'
               ].map((route) => {
                 const [src, dest] = route.split(' → ');
                 return (
@@ -208,7 +224,7 @@ export default function BookTrainsPage() {
                       setDestination(dest);
                       setTimeout(() => handleSearch(), 100);
                     }}
-                    className="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1 rounded-full transition-colors"
+                    className="text-xs bg-orange-50 hover:bg-orange-100 text-orange-700 px-3 py-1 rounded-full transition-colors"
                   >
                     {route}
                   </button>
@@ -226,12 +242,17 @@ export default function BookTrainsPage() {
                 <div className="relative">
                   <Input
                     type="text"
-                    placeholder="Enter source station (e.g., New Delhi, Mumbai, Puri...)"
+                    placeholder="Enter source station"
                     value={source}
                     onChange={(e) => setSource(e.target.value)}
                     className="pr-8"
                     list="source-suggestions"
                   />
+                  <datalist id="source-suggestions">
+                    {popularSources.map((city) => (
+                      <option key={city} value={city} />
+                    ))}
+                  </datalist>
                   {source && (
                     <button
                       onClick={() => setSource('')}
@@ -241,11 +262,6 @@ export default function BookTrainsPage() {
                       ×
                     </button>
                   )}
-                  <datalist id="source-suggestions">
-                    {popularSources.map((city) => (
-                      <option key={city} value={city} />
-                    ))}
-                  </datalist>
                 </div>
                 {source && (
                   <div className="mt-1 text-xs text-gray-500">
@@ -262,12 +278,17 @@ export default function BookTrainsPage() {
                 <div className="relative">
                   <Input
                     type="text"
-                    placeholder="Enter destination (e.g., Ranchi, Jamshedpur, Dhanbad...)"
+                    placeholder="Enter destination"
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
                     className="pr-8"
                     list="destination-suggestions"
                   />
+                  <datalist id="destination-suggestions">
+                    {popularDestinations.map((city) => (
+                      <option key={city} value={city} />
+                    ))}
+                  </datalist>
                   {destination && (
                     <button
                       onClick={() => setDestination('')}
@@ -277,11 +298,6 @@ export default function BookTrainsPage() {
                       ×
                     </button>
                   )}
-                  <datalist id="destination-suggestions">
-                    {popularDestinations.map((city) => (
-                      <option key={city} value={city} />
-                    ))}
-                  </datalist>
                 </div>
                 {destination && (
                   <div className="mt-1 text-xs text-gray-500">
@@ -338,7 +354,7 @@ export default function BookTrainsPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
                   type="text"
-                  placeholder="Search by train name, number, or station..."
+                  placeholder="Search by bus name, operator, or route..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 py-3 text-lg"
@@ -347,20 +363,17 @@ export default function BookTrainsPage() {
               </div>
             </div>
 
-            {/* Class and Search */}
+            {/* Bus Type and Search */}
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
-                <Select value={trainClass} onValueChange={setTrainClass}>
+                <Select value={busType} onValueChange={setBusType}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select class (optional)" />
+                    <SelectValue placeholder="Select bus type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {trainClasses.map((cls) => (
-                      <SelectItem key={cls.value} value={cls.value}>
-                        <div>
-                          <div className="font-medium">{cls.label}</div>
-                          <div className="text-xs text-gray-500">{cls.description}</div>
-                        </div>
+                    {busTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -369,10 +382,10 @@ export default function BookTrainsPage() {
               <Button 
                 onClick={handleSearch} 
                 size="lg" 
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+                className="bg-orange-600 hover:bg-orange-700 text-white px-8"
                 disabled={loading}
               >
-                {loading ? "Searching..." : "Search Trains"}
+                {loading ? "Searching..." : "Search Buses"}
               </Button>
             </div>
           </div>
@@ -386,12 +399,12 @@ export default function BookTrainsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                {trains.length > 0 ? `${trains.length} Trains Found` : 'Featured Trains to Jharkhand'}
+                {buses.length > 0 ? `${buses.length} Buses Found` : 'Featured Buses'}
               </h2>
               <p className="text-gray-600">
                 {source && destination 
                   ? `${source} to ${destination}` 
-                  : 'Popular routes from major cities'
+                  : 'Popular routes across Bihar, Odisha, West Bengal & Jharkhand'
                 }
               </p>
             </div>
@@ -424,36 +437,36 @@ export default function BookTrainsPage() {
             </div>
           </div>
 
-          {/* Train Results */}
+          {/* Bus Results */}
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
             </div>
           ) : (
             <div className="space-y-6">
-              {trains.map((train) => (
-                <Card key={train.id} className="hover:shadow-lg transition-shadow">
+              {buses.map((bus) => (
+                <Card key={bus.id} className="hover:shadow-lg transition-shadow">
                   <CardContent className="p-6">
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                      {/* Train Info */}
+                      {/* Bus Info */}
                       <div className="lg:col-span-2">
                         <div className="flex items-center gap-3 mb-3">
-                          <div className="p-2 bg-blue-100 rounded-lg">
-                            <Train className="w-6 h-6 text-blue-600" />
+                          <div className="p-2 bg-orange-100 rounded-lg">
+                            <Bus className="w-6 h-6 text-orange-600" />
                           </div>
                           <div>
                             <h3 className="font-bold text-lg text-gray-900">
-                              {train.trainName}
+                              {bus.busName}
                             </h3>
-                            <p className="text-gray-600">#{train.trainNumber}</p>
+                            <p className="text-gray-600">{bus.operator}</p>
                           </div>
-                          {train.isFeatured && (
+                          {bus.isFeatured && (
                             <Badge className="bg-yellow-100 text-yellow-800">
                               Featured
                             </Badge>
                           )}
-                          <Badge variant="outline" className="text-blue-600 border-blue-200">
-                            {train.trainType}
+                          <Badge variant="outline" className={`${getBusTypeColor(bus.busType)}`}>
+                            {bus.busType}
                           </Badge>
                         </div>
 
@@ -461,9 +474,9 @@ export default function BookTrainsPage() {
                         <div className="flex items-center gap-4 mb-4">
                           <div className="text-center">
                             <p className="text-2xl font-bold text-gray-900">
-                              {train.departureTime}
+                              {bus.departureTime}
                             </p>
-                            <p className="text-sm text-gray-600">{train.departure}</p>
+                            <p className="text-sm text-gray-600">{bus.departure}</p>
                           </div>
                           
                           <div className="flex-1 text-center">
@@ -472,15 +485,15 @@ export default function BookTrainsPage() {
                               <ArrowRight className="w-5 h-5 mx-2 text-gray-400" />
                               <div className="h-px bg-gray-300 flex-1"></div>
                             </div>
-                            <p className="text-sm text-gray-600">{train.duration}</p>
-                            <p className="text-xs text-gray-500">{train.distance} km</p>
+                            <p className="text-sm text-gray-600">{bus.duration}</p>
+                            <p className="text-xs text-gray-500">{bus.distance} km</p>
                           </div>
                           
                           <div className="text-center">
                             <p className="text-2xl font-bold text-gray-900">
-                              {train.arrivalTime}
+                              {bus.arrivalTime}
                             </p>
-                            <p className="text-sm text-gray-600">{train.arrival}</p>
+                            <p className="text-sm text-gray-600">{bus.arrival}</p>
                           </div>
                         </div>
 
@@ -488,43 +501,47 @@ export default function BookTrainsPage() {
                         <div className="mb-4">
                           <p className="text-sm text-gray-600">
                             <Clock className="inline w-4 h-4 mr-1" />
-                            Runs: {getDayNames(train.frequency)}
+                            Runs: {getDayNames(bus.frequency)}
                           </p>
                         </div>
 
                         {/* Amenities */}
                         <div className="flex flex-wrap gap-2">
-                          {train.amenities.slice(0, 4).map((amenity, index) => (
+                          {bus.amenities.slice(0, 4).map((amenity, index) => (
                             <div key={index} className="flex items-center gap-1 text-xs bg-gray-100 px-2 py-1 rounded">
                               {getAmenityIcon(amenity)}
                               <span>{amenity}</span>
                             </div>
                           ))}
-                          {train.amenities.length > 4 && (
+                          {bus.amenities.length > 4 && (
                             <div className="text-xs text-gray-500 px-2 py-1">
-                              +{train.amenities.length - 4} more
+                              +{bus.amenities.length - 4} more
                             </div>
                           )}
                         </div>
                       </div>
 
-                      {/* Classes and Pricing */}
+                      {/* Boarding/Dropping Points */}
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-3">Available Classes</h4>
-                        <div className="space-y-2">
-                          {train.classes.map((cls) => (
-                            <div key={cls} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                              <span className="text-sm font-medium">{cls}</span>
-                              <span className="font-bold text-green-600">
-                                ₹{calculatePrice(train, cls)}
-                              </span>
-                            </div>
-                          ))}
+                        <h4 className="font-semibold text-gray-900 mb-3">Boarding & Dropping</h4>
+                        <div className="space-y-2 text-sm">
+                          <div>
+                            <p className="font-medium text-green-600">Boarding Points</p>
+                            {bus.boardingPoints.slice(0, 2).map((point, index) => (
+                              <p key={index} className="text-gray-600">{point.location} • {point.time}</p>
+                            ))}
+                          </div>
+                          <div>
+                            <p className="font-medium text-red-600">Dropping Points</p>
+                            {bus.droppingPoints.slice(0, 2).map((point, index) => (
+                              <p key={index} className="text-gray-600">{point.location} • {point.time}</p>
+                            ))}
+                          </div>
                         </div>
                         <div className="mt-3">
                           <p className="text-sm text-gray-600">
                             <Users className="inline w-4 h-4 mr-1" />
-                            {train.availableSeats} seats available
+                            {bus.availableSeats} seats available
                           </p>
                         </div>
                       </div>
@@ -534,13 +551,13 @@ export default function BookTrainsPage() {
                         <div className="text-right mb-4">
                           <p className="text-sm text-gray-600">Starting from</p>
                           <p className="text-2xl font-bold text-green-600">
-                            ₹{train.basePrice}
+                            ₹{bus.basePrice}
                           </p>
                         </div>
                         
                         <Button
-                          onClick={() => handleBookTrain(train)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white w-full"
+                          onClick={() => handleBookBus(bus)}
+                          className="bg-orange-600 hover:bg-orange-700 text-white w-full"
                           size="lg"
                         >
                           Book Now
@@ -551,25 +568,25 @@ export default function BookTrainsPage() {
                 </Card>
               ))}
 
-              {trains.length === 0 && !loading && (
+              {buses.length === 0 && !loading && (
                 <div className="text-center py-12">
-                  <Train className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                  <Bus className="w-16 h-16 mx-auto text-gray-400 mb-4" />
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    No trains found
+                    No buses found
                   </h3>
                   <p className="text-gray-600 mb-6">
-                    Try adjusting your search criteria or browse our featured trains.
+                    Try adjusting your search criteria or browse our featured buses.
                   </p>
                   <Button
                     onClick={() => {
                       setSearchTerm("");
                       setSource("");
                       setDestination("");
-                      fetchTrains({ featured: 'true' });
+                      fetchBuses({ featured: 'true' });
                     }}
                     variant="outline"
                   >
-                    View Featured Trains
+                    View Featured Buses
                   </Button>
                 </div>
               )}

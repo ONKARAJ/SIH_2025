@@ -106,23 +106,28 @@ const PlaceCard = ({ place, index }: { place: Place; index: number }) => {
       'Religious Site': '/religious-site',
       'Valley': '/valley',
       'Wildlife Sanctuary': '/wildlife-sanctuary',
-      'Temple': '/temples-monuments',
-      'Monument': '/temples-monuments'
+      'Temple': '/temples-monuments',  // Legacy mapping
+      'Monument': '/temples-monuments',  // Legacy mapping
+      'Temples & Monuments': '/temples-monuments'  // Actual category from data
     };
-    return categoryMap[category] || '/places';
+    
+    const url = categoryMap[category];
+    if (!url) {
+      console.warn(`No page mapping found for category: "${category}". Falling back to /places`);
+      return '/places';
+    }
+    return url;
   };
 
-  // Handle card click to navigate to attraction page
+  // Handle card click to navigate to individual place page
   const handleCardClick = () => {
-    const attractionUrl = getAttractionPageUrl(place.category);
-    router.push(attractionUrl);
+    router.push(`/places/${place.id}`);
   };
 
   // Handle explore details click
   const handleExploreDetails = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const attractionUrl = getAttractionPageUrl(place.category);
-    router.push(attractionUrl);
+    router.push(`/places/${place.id}`);
   };
 
   // Handle book now click
@@ -859,24 +864,13 @@ export default function ModernPlacesPage() {
                   Start planning your perfect getaway to these incredible destinations. 
                   Book flights, hotels, and experiences all in one place.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="flex justify-center">
                   <Button 
                     size="lg"
                     className="bg-white text-gray-800 hover:bg-gray-100 rounded-full px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   >
                     ↑ Back to Top
-                  </Button>
-                  <Button 
-                    size="lg"
-                    variant="outline"
-                    className="border-2 border-white text-white hover:bg-white hover:text-gray-800 rounded-full px-8 py-4 transition-all duration-200 font-semibold"
-                    onClick={() => {
-                      clearFilters();
-                      window.scrollTo({ top: 400, behavior: 'smooth' });
-                    }}
-                  >
-                    🌍 Discover More
                   </Button>
                 </div>
               </CardContent>

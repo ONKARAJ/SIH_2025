@@ -21,9 +21,15 @@ export async function GET(request: NextRequest) {
         train.arrival.toLowerCase().includes(destination.toLowerCase())
       );
     } else if (source) {
-      trains = getTrainsBySource(source);
+      trains = trains.filter(train => 
+        train.departure.toLowerCase().includes(source.toLowerCase()) ||
+        train.route.some(station => station.toLowerCase().includes(source.toLowerCase()))
+      );
     } else if (destination) {
-      trains = getTrainsByDestination(destination);
+      trains = trains.filter(train => 
+        train.arrival.toLowerCase().includes(destination.toLowerCase()) ||
+        train.route.some(station => station.toLowerCase().includes(destination.toLowerCase()))
+      );
     } else if (featured === 'true') {
       trains = getFeaturedTrains();
     }

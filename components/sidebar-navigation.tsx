@@ -527,8 +527,8 @@ export function SidebarNavigation() {
                           <Link href="/book-trains" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Train Tickets
                           </Link>
-                          <Link href="/book-tour" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
-                            → Car Rentals
+                          <Link href="/book-buses" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
+                            → Bus Tickets
                           </Link>
                         </div>
                       </div>

@@ -3,13 +3,22 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
+import { Menu, X, User, LogOut } from "lucide-react"
 import { usePathname } from "next/navigation"
+import { useSession, signOut } from "next-auth/react"
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
 import GlobalSearch from "@/components/search/global-search"
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
+  const { data: session, status } = useSession()
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -61,9 +70,62 @@ export function Navigation() {
             <div className="w-64">
               <GlobalSearch placeholder="Search destinations, festivals..." className="w-full" />
             </div>
-            <Button asChild className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-200">
-              <Link href="/book-tour" className="whitespace-nowrap">Book Tour</Link>
-            </Button>
+            
+            {status === "loading" ? (
+              <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+            ) : session ? (
+              <div className="flex items-center space-x-3">
+                <Button asChild className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-200">
+                  <Link href="/book-tour" className="whitespace-nowrap">Book Tour</Link>
+                </Button>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="rounded-full p-2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                        {session.user?.name?.[0]?.toUpperCase() || 'U'}
+                      </div>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="px-3 py-2">
+                      <p className="text-sm font-medium">{session.user?.name}</p>
+                      <p className="text-xs text-muted-foreground">{session.user?.email}</p>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile" className="cursor-pointer">
+                        <User className="mr-2 h-4 w-4" />
+                        My Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile/bookings" className="cursor-pointer">
+                        <span className="mr-2">📅</span>
+                        My Bookings
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={() => signOut({ callbackUrl: "/" })}
+                      className="cursor-pointer text-red-600 focus:text-red-600"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button variant="ghost" asChild>
+                  <Link href="/auth/signin">Sign In</Link>
+                </Button>
+                <Button asChild className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-200">
+                  <Link href="/auth/signup" className="whitespace-nowrap">Sign Up</Link>
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}

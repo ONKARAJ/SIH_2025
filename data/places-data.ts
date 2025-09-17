@@ -6,7 +6,12 @@ export const allPlaces = [
     shortDescription: 'A spectacular 98-meter waterfall cascading down rocky cliffs, surrounded by dense forests. Perfect for nature photography and peaceful meditation amidst pristine wilderness. The thundering sound of water creates a mesmerizing atmosphere.',
     category: 'Waterfall',
     image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
-    images: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80', 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80'],
+    images: [
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80'
+    ],
     location: 'Ranchi, Jharkhand',
     rating: 4.5,
     bestTimeToVisit: 'October to March',
@@ -23,7 +28,12 @@ export const allPlaces = [
     shortDescription: 'Known as the "Niagara of Jharkhand", this 44-meter waterfall creates a mesmerizing curtain of water. Popular for picnics and adventure activities like rock climbing and trekking.',
     category: 'Waterfall',
     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
-    images: ['https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80'],
+    images: [
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80'
+    ],
     location: 'Ranchi, Jharkhand',
     rating: 4.3,
     bestTimeToVisit: 'July to February',
@@ -40,6 +50,12 @@ export const allPlaces = [
     shortDescription: 'Also known as Gautamdhara, this 43-meter waterfall is associated with Lord Buddha. The scenic beauty and religious significance make it a popular destination for both pilgrims and nature lovers.',
     category: 'Waterfall',
     image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80'
+    ],
     location: 'Ranchi, Jharkhand',
     rating: 4.2,
     bestTimeToVisit: 'July to March',
@@ -56,6 +72,12 @@ export const allPlaces = [
     shortDescription: 'A hidden gem nestled in dense forests, offering a serene escape from city life. The 37-meter waterfall creates natural pools perfect for swimming and relaxation during summer months.',
     category: 'Waterfall',
     image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80'
+    ],
     location: 'Ranchi, Jharkhand',
     rating: 4.0,
     bestTimeToVisit: 'June to November',
@@ -74,6 +96,12 @@ export const allPlaces = [
     shortDescription: 'Known as the "Queen of Chotanagpur", this hill station offers breathtaking sunrise and sunset views. Cool climate, pine forests, and rolling hills make it a perfect summer retreat.',
     category: 'Hill Station',
     image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80'
+    ],
     location: 'Latehar, Jharkhand',
     rating: 4.6,
     bestTimeToVisit: 'October to March',
@@ -90,6 +118,12 @@ export const allPlaces = [
     shortDescription: 'The highest peak in Jharkhand at 1,365 meters, sacred to Jains with 20 Tirthankara temples. Offers panoramic views and spiritual significance combined with natural beauty.',
     category: 'Hill Station',
     image: 'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80'
+    ],
     location: 'Giridih, Jharkhand',
     rating: 4.4,
     bestTimeToVisit: 'October to March',
@@ -106,6 +140,12 @@ export const allPlaces = [
     shortDescription: 'A wildlife sanctuary and hill station near Jamshedpur, home to elephants, leopards, and diverse flora. Perfect for wildlife photography and nature walks through pristine forests.',
     category: 'Wildlife Sanctuary',
     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80'
+    ],
     location: 'Jamshedpur, Jharkhand',
     rating: 4.1,
     bestTimeToVisit: 'November to February',
@@ -124,6 +164,12 @@ export const allPlaces = [
     shortDescription: 'One of the 12 Jyotirlingas, this ancient temple dedicated to Lord Shiva attracts millions of devotees annually. The temple complex showcases beautiful architecture and spiritual atmosphere.',
     category: 'Temples & Monuments',
     image: 'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80',
+      'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+      'https://images.unsplash.com/photo-1604490750143-f7133bbac2b7?w=800&q=80',
+      'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80'
+    ],
     location: 'Deoghar, Jharkhand',
     rating: 4.7,
     bestTimeToVisit: 'October to March',
@@ -140,6 +186,12 @@ export const allPlaces = [
     shortDescription: 'Ancient temple dedicated to Goddess Chinnamasta, located at the confluence of Damodar and Bhairavi rivers. Known for its unique tantric traditions and peaceful riverside location.',
     category: 'Temples & Monuments',
     image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+      'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80',
+      'https://images.unsplash.com/photo-1604490750143-f7133bbac2b7?w=800&q=80',
+      'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80'
+    ],
     location: 'Ramgarh, Jharkhand',
     rating: 4.3,
     bestTimeToVisit: 'September to March',
@@ -156,6 +208,12 @@ export const allPlaces = [
     shortDescription: 'Replica of the famous Puri Jagannath Temple, featuring traditional Kalinga architecture. Annual Rath Yatra celebration attracts thousands of devotees and showcases rich cultural heritage.',
     category: 'Temples & Monuments',
     image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+      'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80',
+      'https://images.unsplash.com/photo-1604490750143-f7133bbac2b7?w=800&q=80',
+      'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80'
+    ],
     location: 'Ranchi, Jharkhand',
     rating: 4.2,
     bestTimeToVisit: 'Year-round',
@@ -174,6 +232,12 @@ export const allPlaces = [
     shortDescription: 'Artistic garden featuring sculptures and structures made from natural rocks and stones. Perfect for family outings with beautiful landscaping, musical fountains, and peaceful walking paths.',
     category: 'Park',
     image: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80'
+    ],
     location: 'Ranchi, Jharkhand',
     rating: 4.0,
     bestTimeToVisit: 'October to March',
@@ -190,6 +254,12 @@ export const allPlaces = [
     shortDescription: 'Sprawling urban park with a beautiful lake, rose garden, and recreational facilities. Features boating, children\'s play areas, and the iconic Tata Steel Zoological Park nearby.',
     category: 'Park',
     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80'
+    ],
     location: 'Jamshedpur, Jharkhand',
     rating: 4.1,
     bestTimeToVisit: 'November to February',
@@ -208,6 +278,12 @@ export const allPlaces = [
     shortDescription: 'Scenic reservoir surrounded by hills and forests, perfect for picnics and water sports. The peaceful environment and beautiful sunset views make it a popular weekend destination.',
     category: 'Lake',
     image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80'
+    ],
     location: 'Ranchi, Jharkhand',
     rating: 4.0,
     bestTimeToVisit: 'October to March',
@@ -224,6 +300,12 @@ export const allPlaces = [
     shortDescription: 'Artificial lake created by Dimna Dam, offering boating, fishing, and scenic beauty. Surrounded by Dalma Hills, it provides a perfect setting for water sports and relaxation.',
     category: 'Lake',
     image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80'
+    ],
     location: 'Jamshedpur, Jharkhand',
     rating: 4.2,
     bestTimeToVisit: 'November to February',
@@ -242,6 +324,12 @@ export const allPlaces = [
     shortDescription: 'First national park of Jharkhand, home to tigers, elephants, leopards, and diverse wildlife. Offers jungle safaris, ancient fort ruins, and pristine forest ecosystem.',
     category: 'National Park',
     image: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80'
+    ],
     location: 'Palamu, Jharkhand',
     rating: 4.5,
     bestTimeToVisit: 'November to April',
@@ -258,6 +346,12 @@ export const allPlaces = [
     shortDescription: 'Dense forest sanctuary known for its tiger population and scenic beauty. Offers excellent opportunities for wildlife photography and nature exploration in pristine wilderness.',
     category: 'National Park',
     image: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80'
+    ],
     location: 'Hazaribagh, Jharkhand',
     rating: 4.3,
     bestTimeToVisit: 'October to March',
@@ -276,6 +370,12 @@ export const allPlaces = [
     shortDescription: 'Ancient fort complex with old and new sections showcasing medieval architecture. Built by Chero rulers, offers insights into regional history and stunning architectural details.',
     category: 'Historic Site',
     image: 'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80',
+      'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+      'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80',
+      'https://images.unsplash.com/photo-1604490750143-f7133bbac2b7?w=800&q=80'
+    ],
     location: 'Palamu, Jharkhand',
     rating: 4.1,
     bestTimeToVisit: 'October to March',
@@ -292,6 +392,12 @@ export const allPlaces = [
     shortDescription: 'Group of 72 ancient terracotta temples showcasing exquisite craftsmanship. Dating back to 17th-18th centuries, these temples represent unique architectural heritage of Bengal-Jharkhand region.',
     category: 'Temples & Monuments',
     image: 'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80',
+      'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+      'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80',
+      'https://images.unsplash.com/photo-1604490750143-f7133bbac2b7?w=800&q=80'
+    ],
     location: 'Dumka, Jharkhand',
     rating: 4.4,
     bestTimeToVisit: 'October to March',
@@ -310,6 +416,12 @@ export const allPlaces = [
     shortDescription: 'Jharkhand\'s highest waterfall at 143 meters, creating a spectacular cascade through multiple tiers. Surrounded by dense forests, perfect for photography and nature exploration.',
     category: 'Waterfall',
     image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80'
+    ],
     location: 'Latehar, Jharkhand',
     rating: 4.6,
     bestTimeToVisit: 'July to February',
@@ -326,6 +438,12 @@ export const allPlaces = [
     shortDescription: 'Picturesque waterfall near Giridih, perfect for picnics and photography. The scenic beauty and accessible location make it a popular destination for families and nature lovers.',
     category: 'Waterfall',
     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80'
+    ],
     location: 'Giridih, Jharkhand',
     rating: 4.2,
     bestTimeToVisit: 'July to March',
@@ -342,6 +460,12 @@ export const allPlaces = [
     shortDescription: 'Major dam on Damodar River creating a large reservoir, perfect for boating and water sports. The engineering marvel offers scenic views and recreational activities.',
     category: 'Dam',
     image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80'
+    ],
     location: 'Dhanbad, Jharkhand',
     rating: 4.0,
     bestTimeToVisit: 'November to February',
@@ -358,6 +482,12 @@ export const allPlaces = [
     shortDescription: 'Beautiful dam creating a scenic reservoir perfect for fishing and boating. The peaceful environment and surrounding hills make it an ideal spot for relaxation and photography.',
     category: 'Dam',
     image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80'
+    ],
     location: 'Dhanbad, Jharkhand',
     rating: 3.8,
     bestTimeToVisit: 'October to March',
@@ -374,6 +504,12 @@ export const allPlaces = [
     shortDescription: 'Scenic dam and reservoir offering water sports, fishing, and beautiful sunset views. The surrounding landscape provides excellent opportunities for photography and relaxation.',
     category: 'Dam',
     image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80'
+    ],
     location: 'Koderma, Jharkhand',
     rating: 4.1,
     bestTimeToVisit: 'October to March',
@@ -394,6 +530,12 @@ export const allPlaces = [
     shortDescription: 'Perfect destination for adventure sports including water skiing, jet skiing, and parasailing. The large reservoir and facilities make it ideal for water sports enthusiasts.',
     category: 'Adventure Sports',
     image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80'
+    ],
     location: 'Ranchi, Jharkhand',
     rating: 4.1,
     bestTimeToVisit: 'November to February',
@@ -412,6 +554,12 @@ export const allPlaces = [
     shortDescription: 'Hilltop temple dedicated to Lord Shiva, offering panoramic views of Ranchi city. The temple requires a climb of 468 steps and provides spiritual experience with scenic beauty.',
     category: 'Temples & Monuments',
     image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+      'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80',
+      'https://images.unsplash.com/photo-1604490750143-f7133bbac2b7?w=800&q=80',
+      'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80'
+    ],
     location: 'Ranchi, Jharkhand',
     rating: 4.3,
     bestTimeToVisit: 'October to March',
@@ -428,6 +576,12 @@ export const allPlaces = [
     shortDescription: 'Historic hill where Rabindranath Tagore once stayed, featuring gardens, observatory, and cultural significance. Offers peaceful environment and panoramic views of the city.',
     category: 'Historic Site',
     image: 'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80'
+    ],
     location: 'Ranchi, Jharkhand',
     rating: 4.2,
     bestTimeToVisit: 'October to March',
@@ -446,7 +600,12 @@ export const allPlaces = [
     shortDescription: 'A pristine waterfall hidden in the dense forests near Ranchi, offering crystal-clear natural pools and a peaceful retreat. The 25-meter cascade creates a refreshing mist perfect for hot summer days.',
     category: 'Waterfall',
     image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
-    images: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80', 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80'],
+    images: [
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80'
+    ],
     location: 'Ranchi, Jharkhand',
     rating: 4.1,
     bestTimeToVisit: 'June to October',

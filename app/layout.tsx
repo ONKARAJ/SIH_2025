@@ -4,6 +4,8 @@ import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import { ChatbotWrapper } from "@/components/chatbot-wrapper";
 import { SidebarNavigation } from "@/components/sidebar-navigation";
+import { SessionProvider } from "@/components/auth/session-provider";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,9 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        {children}
-        <SidebarNavigation />
-        <ChatbotWrapper />
+        <SessionProvider>
+          {children}
+          <SidebarNavigation />
+          <ChatbotWrapper />
+        </SessionProvider>
+        <Toaster position="top-center" richColors />
         <Analytics />
       </body>
     </html>

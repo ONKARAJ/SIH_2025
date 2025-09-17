@@ -187,7 +187,7 @@ export default function CitiesPage() {
             and discover the best of Jharkhand's urban treasures.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-green-800">
+            <Button asChild size="lg" variant="outline" className="border-white text-green-400 hover:bg-white hover:text-green-800">
               <Link href="/book-tour">Book City Tour</Link>
             </Button>
             <Button asChild size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black">
