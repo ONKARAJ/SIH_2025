@@ -79,12 +79,12 @@ export const citiesData: CityData[] = [
       lng: 85.3096
     },
     images: {
-      hero: 'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=1200&q=80',
+      hero: 'https://peopleplaces.in/wp-content/uploads/2022/11/patratu-valley.jpg',
       gallery: [
-        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
-        'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
-        'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=800&q=80',
-        'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80'
+        'http://www.filmapia.com/media/images/location/Ranchi_District-d41d8cd98f00b204e9800998ecf8427e.jpg',
+        'https://www.touristpanda.com/wp-content/uploads/2022/11/Jagannath-Mandir.jpg',
+        'https://peopleplaces.in/wp-content/uploads/2022/11/patratu-valley.jpg',
+        'https://cdn.pixabay.com/photo/2020/12/27/10/11/tourist-paradise-5863546_960_720.jpg'
       ]
     },
     highlights: ['State Capital', 'Educational Hub', 'Hill Station', 'Waterfalls', 'Tribal Culture'],
@@ -276,12 +276,12 @@ export const citiesData: CityData[] = [
       lng: 86.2029
     },
     images: {
-      hero: 'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=1200&q=80',
+      hero: 'https://www.cygnetthotels.com/blog/wp-content/uploads/2025/02/cozzet-jamshedpur-blog-img1.jpg',
       gallery: [
-        'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80',
-        'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
-        'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
-        'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=800&q=80'
+        'https://housing.com/news/wp-content/uploads/2023/05/Jubilee-Park-Jamshedpur-Fact-guide-f.jpg',
+        'https://www.cygnetthotels.com/blog/wp-content/uploads/2025/02/cozzet-jamshedpur-blog-img1.jpg',
+        'https://www.adotrip.com/public/images/city/master_images/5e3bc096baa2a-Jamshedpur_Attractions.jpg',
+        'https://travelothon.com/wp-content/uploads/2022/11/jubilee-park.jpg'
       ]
     },
     highlights: ['Steel Production', 'Planned City', 'Industrial Hub', 'Clean & Green', 'Modern Infrastructure'],
@@ -440,10 +440,10 @@ export const citiesData: CityData[] = [
     altitude: '210 m',
     coordinates: { lat: 23.6693, lng: 86.1511 },
     images: {
-      hero: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=1200&q=80',
+      hero: 'https://image3.mouthshut.com/images/imagesp/925753333s.jpg',
       gallery: [
-        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
-        'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80'
+        'https://assets.telegraphindia.com/telegraph/2020/Oct/1602179675_aerial-view-of-bsl-steel-plant.jpg',
+        'https://media.tripinvites.com/places/bokaro/bokaro-steel-plant/bokaro-steel-plant-featured.jpg'
       ]
     },
     highlights: ['Planned City', 'Steel Plant', 'Lakes', 'Green Spaces'],
@@ -537,10 +537,10 @@ export const citiesData: CityData[] = [
     altitude: '227 m',
     coordinates: { lat: 23.7957, lng: 86.4304 },
     images: {
-      hero: 'https://images.unsplash.com/photo-1464822759444-d4c2d3eefeb4?w=1200&q=80',
+      hero: 'https://image3.mouthshut.com/images/imagesp/925753330s.jpg',
       gallery: [
-        'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80',
-        'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80'
+        'https://peopleplaces.in/wp-content/uploads/2022/11/Bhatinda-Falls.jpg',
+        'https://assets.telegraphindia.com/telegraph/2022/Dec/1671571460_new-project-2022-12-21t025410-133.jpg'
       ]
     },
     highlights: ['Coal Mining', 'Educational Centers', 'Lakes'],
@@ -633,10 +633,10 @@ export const citiesData: CityData[] = [
     altitude: '254 m',
     coordinates: { lat: 24.4870, lng: 86.7100 },
     images: {
-      hero: 'https://images.unsplash.com/photo-1582632443527-6747dfed4a37?w=1200&q=80',
+      hero: 'https://www.holidify.com/images/bgImages/DEOGHAR.jpg',
       gallery: [
-        'https://images.unsplash.com/photo-1570194065650-d99fb4bedf5a?w=800&q=80',
-        'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80'
+        'https://www.oyorooms.com/travel-guide/wp-content/uploads/2019/09/Deoghar-Naulakha-Temple.jpg',
+        'https://hblimg.mmtcdn.com/content/hubble/img/ttd_images_march/mmt/activities/m_Deoghar_naulakha_temple_2_p_768_640.jpg'
       ]
     },
     highlights: ['Pilgrimage', 'Spiritual Heritage', 'Hills'],

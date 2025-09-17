@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
+import { SafeImage } from '@/components/ui/safe-image'
 import {
   MapPin,
   Star,
@@ -239,12 +240,11 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
           </video>
           
           {/* Fallback Image (hidden by default, shown if video fails) */}
-          <Image
+          <SafeImage
             src={city.images.hero}
             alt={city.name}
             fill
             className="object-cover"
-            priority
             sizes="100vw"
             style={{ display: 'none' }}
           />
@@ -446,7 +446,7 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
             {/* Ultra-Modern Image Gallery */}
             <div className="lg:col-span-3 space-y-6">
               <div className="relative h-96 rounded-3xl overflow-hidden group">
-                <Image
+                <SafeImage
                   src={city.images.gallery[selectedImage]}
                   alt={`${city.name} view ${selectedImage + 1}`}
                   fill
@@ -488,7 +488,7 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
                         : 'opacity-60 hover:opacity-100 hover:scale-105'
                     }`}
                   >
-                    <Image
+                    <SafeImage
                       src={image}
                       alt={`${city.name} thumbnail ${index + 1}`}
                       fill
@@ -560,7 +560,7 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
                 }}
               >
                 <div className="relative h-48">
-                  <Image
+                  <SafeImage
                     src={attraction.image}
                     alt={attraction.name}
                     fill
@@ -643,7 +643,7 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
             {filteredHotels.map((hotel, index) => (
               <div key={index} className="bg-gray-800 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300">
                 <div className="relative h-64">
-                  <Image
+                  <SafeImage
                     src={hotel.image}
                     alt={hotel.name}
                     fill
