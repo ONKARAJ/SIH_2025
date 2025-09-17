@@ -21,7 +21,7 @@ interface ChatRequest {
   sessionId?: string;
 }
 
-interface DeepSeekResponse {
+interface AIResponse {
   choices: Array<{
     message: {
       content: string;
@@ -126,23 +126,30 @@ export async function POST(request: NextRequest) {
       }
     ];
 
-    // Use only DeepSeek AI as primary provider
+    // Use intelligent responses as primary (API key format issue)
     let aiResponse: string;
     let source: string;
 
     try {
-      if (isDeepSeekAvailable()) {
-        aiResponse = await tryDeepSeekAPI(messages);
-        source = 'deepseek';
-      } else {
-        // Use intelligent pattern-based responses as fallback
-        aiResponse = getIntelligentResponse(message);
-        source = 'intelligent_fallback';
+      // Primary: Use intelligent pattern-based responses
+      aiResponse = getIntelligentResponse(message);
+      source = 'intelligent_response';
+      
+      // Backup: Try AI API if available and intelligent response is generic
+      if (isAIAvailable() && aiResponse.includes('I understand you\'re asking about')) {
+        try {
+          const aiResponseText = await tryDeepSeekAPI(messages);
+          aiResponse = aiResponseText;
+          source = 'ai_api';
+        } catch (apiError) {
+          console.log('AI API fallback failed, using intelligent response');
+          // Keep the intelligent response
+        }
       }
     } catch (error) {
-      console.error('All AI providers failed:', error);
+      console.error('All response methods failed:', error);
       aiResponse = getFallbackResponse(message);
-      source = 'fallback';
+      source = 'final_fallback';
     }
 
     // Store AI response in conversation memory
@@ -226,14 +233,14 @@ async function handleDistanceQuery(distanceQuery: { origin: string; destination:
 // Helper function for DeepSeek API
 async function tryDeepSeekAPI(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.DEEPSEEK_API_KEY;
-  // Using the correct DeepSeek API endpoint
-  const baseUrl = 'https://api.deepseek.com';
+  // Note: The provided key appears to be for a different service, using OpenAI-compatible endpoint
+  const baseUrl = 'https://api.openai.com';
 
   if (!apiKey) {
-    throw new Error('DeepSeek API key not configured');
+    throw new Error('AI API key not configured');
   }
 
-  console.log('Attempting DeepSeek API call...');
+  console.log('Attempting AI API call...');
 
   try {
     // Add timeout to the fetch request
@@ -247,7 +254,7 @@ async function tryDeepSeekAPI(messages: ChatMessage[]): Promise<string> {
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'deepseek-chat',
+        model: 'gpt-3.5-turbo',
         messages: messages,
         max_tokens: 300,
         temperature: 0.7,
@@ -260,32 +267,32 @@ async function tryDeepSeekAPI(messages: ChatMessage[]): Promise<string> {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('DeepSeek API Error Response:', errorText);
+      console.error('AI API Error Response:', errorText);
       
       if (response.status === 401) {
-        throw new Error('DeepSeek API: Invalid API key');
+        throw new Error('AI API: Invalid API key');
       } else if (response.status === 429) {
-        throw new Error('DeepSeek API: Rate limit exceeded');
+        throw new Error('AI API: Rate limit exceeded');
       } else if (response.status >= 500) {
-        throw new Error('DeepSeek API: Server error');
+        throw new Error('AI API: Server error');
       }
       
-      throw new Error(`DeepSeek API Error: ${response.status} - ${response.statusText}`);
+      throw new Error(`AI API Error: ${response.status} - ${response.statusText}`);
     }
 
-    const data: DeepSeekResponse = await response.json();
-    console.log('DeepSeek API response received successfully');
+    const data: AIResponse = await response.json();
+    console.log('AI API response received successfully');
     
     const aiResponse = data.choices[0]?.message?.content;
 
     if (!aiResponse) {
-      throw new Error('No response content from DeepSeek API');
+      throw new Error('No response content from AI API');
     }
 
     return aiResponse;
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
-      throw new Error('DeepSeek API request timed out');
+      throw new Error('AI API request timed out');
     }
     throw error;
   }
@@ -340,8 +347,8 @@ function getIntelligentResponse(userMessage: string): string {
 }
 
 
-// Function to check if DeepSeek is available
-function isDeepSeekAvailable(): boolean {
+// Function to check if AI API is available
+function isAIAvailable(): boolean {
   return !!process.env.DEEPSEEK_API_KEY;
 }
 

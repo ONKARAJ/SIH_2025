@@ -196,6 +196,14 @@ const GoogleMap = ({ place }: { place: any }) => {
 export default function HistoricSitePage() {
   const [selectedPlace, setSelectedPlace] = useState(historicPlaces[0]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isContactGuidePopupOpen, setIsContactGuidePopupOpen] = useState(false);
+  
+  // Agent data for Contact Guide popup
+  const agentData = {
+    name: "Dr. Vikash Kumar",
+    phone: "+91 9123456789",
+    description: "Certified heritage guide with PhD in Archaeological Studies, specializing in Jharkhand's historic sites and cultural monuments."
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {

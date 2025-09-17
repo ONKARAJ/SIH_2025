@@ -8,7 +8,7 @@ import FestivalTimeline from '@/components/festivals/festival-timeline';
 import FestivalGrid from '@/components/festivals/festival-grid';
 import CulturalElements from '@/components/festivals/cultural-elements';
 import FolkloreSection from '@/components/festivals/folklore-section';
-import { RecipesSection, ArtisanCrafts, TravelTips, MultimediaGallery as MultimediaGalleryComponent } from '@/components/festivals/placeholder-components';
+import { RecipesSection, ArtisanCrafts, MultimediaGallery as MultimediaGalleryComponent } from '@/components/festivals/placeholder-components';
 import { InteractiveCulturalMap } from '@/components/festivals/interactive-cultural-map';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import GamificationDashboard from '@/components/festivals/gamification-dashboard';
@@ -233,20 +233,6 @@ export default function FestivalsPage() {
         </div>
       </section>
 
-      {/* Travel Tips */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Cultural Travel Tips</h2>
-            <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-              Essential information for experiencing festivals and cultural events respectfully
-            </p>
-          </div>
-          <Suspense fallback={<LoadingSpinner />}>
-            <TravelTips />
-          </Suspense>
-        </div>
-      </section>
 
       {/* Gamification Dashboard */}
       <section id="gamification" className="py-16 bg-gradient-to-br from-primary/5 to-secondary/5">

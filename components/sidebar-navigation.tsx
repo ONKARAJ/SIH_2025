@@ -300,7 +300,7 @@ export function SidebarNavigation() {
                             About Jharkhand
                           </h3>
                           <div className="grid grid-cols-2 gap-3">
-                            <Link href="/about" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
+                            <Link href="/places" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">
                               Glimpses of Jharkhand
                             </Link>
                             <Link href="/cultural-heritage" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:scale-105 transition-all duration-200 text-sm py-2 px-3 bg-slate-700/50 rounded text-center">

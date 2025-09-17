@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -677,29 +677,6 @@ export function ArtisanCrafts() {
         </div>
       )}
 
-      {/* Call to Action */}
-      <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20">
-        <CardContent className="p-8 text-center">
-          <h3 className="text-2xl font-bold mb-4">Support Traditional Artisans</h3>
-          <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            By purchasing authentic handcrafted items, you directly support these master artisans 
-            and help preserve Jharkhand's rich cultural heritage for future generations.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="group">
-              <span>🛒</span>
-              Visit Craft Center
-              <svg className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Button>
-            <Button variant="outline">
-              <span>📚</span>
-              Learn Craft Techniques
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
@@ -783,6 +760,10 @@ export function MultimediaGallery() {
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [documentaryUrl, setDocumentaryUrl] = useState('');
+  const [videoLoading, setVideoLoading] = useState(true);
+  const [videoError, setVideoError] = useState(false);
 
   const openModal = (item) => {
     setSelectedItem(item);
@@ -793,6 +774,40 @@ export function MultimediaGallery() {
     setIsModalOpen(false);
     setSelectedItem(null);
   };
+
+  const openVideoModal = (videoUrl: string) => {
+    setDocumentaryUrl(videoUrl);
+    setIsVideoModalOpen(true);
+    setVideoLoading(true);
+    setVideoError(false);
+  };
+
+  const closeVideoModal = () => {
+    setIsVideoModalOpen(false);
+    setDocumentaryUrl('');
+    setVideoLoading(true);
+    setVideoError(false);
+  };
+
+  // Handle ESC key to close video modal
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isVideoModalOpen) {
+        closeVideoModal();
+      }
+    };
+
+    if (isVideoModalOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isVideoModalOpen]);
 
   return (
     <div className="space-y-8">
@@ -869,7 +884,10 @@ export function MultimediaGallery() {
                 Experience the most sacred festival of Jharkhand's tribal communities, where nature worship, 
                 community bonding, and ancient traditions come together in a celebration of life and renewal.
               </p>
-              <Button className="group">
+              <Button 
+                className="group" 
+                onClick={() => openVideoModal('/videos/sarhul-documentary.mp4')}
+              >
                 Watch Documentary
                 <svg className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -927,6 +945,96 @@ export function MultimediaGallery() {
               </div>
               <h3 className="mb-3 text-2xl font-bold">{selectedItem.title}</h3>
               <p className="text-muted-foreground">{selectedItem.description}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Video Modal for Documentary */}
+      {isVideoModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" onClick={closeVideoModal}>
+          <div className="relative max-h-[90vh] max-w-6xl w-full" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={closeVideoModal}
+              className="absolute -right-4 -top-4 z-10 rounded-full bg-white/20 p-3 text-white backdrop-blur-sm transition-all hover:bg-white/30 hover:scale-110"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            
+            <div className="relative rounded-2xl overflow-hidden bg-black shadow-2xl min-h-[400px] flex items-center justify-center">
+              {videoLoading && !videoError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
+                  <div className="text-center text-white">
+                    <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+                    <p>Loading documentary...</p>
+                  </div>
+                </div>
+              )}
+              
+              {videoError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
+                  <div className="text-center text-white p-8">
+                    <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">Video Not Available</h3>
+                    <p className="text-gray-300 mb-4">
+                      The documentary video file could not be found.<br />
+                      Please add <code className="bg-gray-800 px-2 py-1 rounded">sarhul-documentary.mp4</code> to the videos folder.
+                    </p>
+                    <button 
+                      onClick={closeVideoModal}
+                      className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              <video
+                src={documentaryUrl}
+                controls
+                autoPlay
+                className="w-full h-auto max-h-[80vh] object-contain"
+                controlsList="nodownload"
+                onLoadStart={() => {
+                  setVideoLoading(true);
+                  setVideoError(false);
+                }}
+                onCanPlay={() => {
+                  setVideoLoading(false);
+                }}
+                onError={(e) => {
+                  console.error('Video failed to load:', documentaryUrl);
+                  setVideoLoading(false);
+                  setVideoError(true);
+                }}
+              >
+                <source src={documentaryUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              
+              {/* Video Info Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                <h3 className="text-2xl font-bold text-white mb-2">
+                  The Sacred Groves of Sarhul - Documentary
+                </h3>
+                <p className="text-gray-200 text-sm">
+                  Discover the spiritual significance and cultural importance of Sarhul festival in Jharkhand's tribal communities.
+                </p>
+              </div>
+            </div>
+            
+            {/* Additional Info */}
+            <div className="mt-4 text-center">
+              <p className="text-white/80 text-sm">
+                Press ESC or click outside to close • Duration: Documentary length varies
+              </p>
             </div>
           </div>
         </div>
