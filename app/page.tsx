@@ -221,16 +221,16 @@ export default function Home() {
           <div className="hidden md:block fixed top-1/2 right-8 transform -translate-y-1/2 z-30 animate-in fade-in slide-in-from-right-4 duration-1000 delay-500">
             <button
               onClick={() => openNoticeModal(noticesData[0])}
-              className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-2xl"
+              className="group bg-gradient-to-br from-orange-600 to-red-600 backdrop-blur-md border-2 border-orange-400 shadow-orange-500/50 rounded-2xl p-4 hover:from-orange-700 hover:to-red-700 hover:scale-110 hover:shadow-orange-500/70 transition-all duration-300 shadow-2xl"
             >
               <div className="flex flex-col items-center space-y-2">
                 <div className="relative">
-                  <Bell className="h-6 w-6 text-white group-hover:text-yellow-300 transition-colors duration-300" />
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-white font-bold">{noticesData.length}</span>
+                  <Bell className="h-6 w-6 text-white group-hover:text-yellow-200 transition-colors duration-300 drop-shadow-md" />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full flex items-center justify-center animate-pulse">
+                    <span className="text-xs text-black font-bold">{noticesData.length}</span>
                   </div>
                 </div>
-                <span className="text-xs text-white/80 group-hover:text-white font-medium transition-colors duration-300">
+                <span className="text-xs text-white group-hover:text-yellow-200 font-semibold transition-colors duration-300 drop-shadow-md">
                   Notice
                   <br />
                   Board
