@@ -17,6 +17,12 @@ const nextConfig = {
       };
     }
 
+    // Enable top-level await support
+    config.experiments = {
+      ...config.experiments,
+      topLevelAwait: true,
+    };
+
     // Optimize bundle splitting
     config.optimization = {
       ...config.optimization,

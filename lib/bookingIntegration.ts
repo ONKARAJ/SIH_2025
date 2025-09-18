@@ -1,5 +1,5 @@
 // Booking system integration for transport price comparisons
-import { db } from '@/lib/db';
+// Note: Database is lazy-loaded to avoid build-time issues
 
 interface TransportOption {
   type: 'train' | 'bus' | 'flight';
@@ -22,6 +22,20 @@ interface BookingRecommendation {
 }
 
 export class BookingService {
+  // Lazy load database to avoid build-time issues
+  private async getDb() {
+    try {
+      const { db } = await import('@/lib/db');
+      if (!db || typeof db.train?.findMany !== 'function') {
+        throw new Error('Database not available');
+      }
+      return db;
+    } catch (error) {
+      console.error('Failed to initialize database:', error);
+      throw new Error('Database service unavailable');
+    }
+  }
+
   // Get transport options between two locations
   async getTransportOptions(origin: string, destination: string, date?: Date): Promise<BookingRecommendation | null> {
     try {
@@ -74,6 +88,7 @@ export class BookingService {
   // Get train options from database
   private async getTrainOptions(origin: string, destination: string, date: Date): Promise<TransportOption[]> {
     try {
+      const db = await this.getDb();
       const trains = await db.train.findMany({
         where: {
           isActive: true,
@@ -133,6 +148,7 @@ export class BookingService {
   // Get flight options from database
   private async getFlightOptions(origin: string, destination: string, date: Date): Promise<TransportOption[]> {
     try {
+      const db = await this.getDb();
       const flights = await db.flight.findMany({
         where: {
           isActive: true,

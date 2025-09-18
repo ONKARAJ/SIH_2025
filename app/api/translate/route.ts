@@ -56,11 +56,12 @@ export async function POST(request: NextRequest) {
 
     // Check if Google Translate API key is available
     const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
+    
     if (!apiKey) {
       // Fallback response when API key is not configured
       return NextResponse.json(
         { 
-          error: 'Translation service temporarily unavailable. Please configure Google Translate API key.' 
+          error: 'Translation service temporarily unavailable. Please configure Google Translate API key.'
         },
         { status: 503 }
       );
