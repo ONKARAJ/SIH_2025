@@ -92,6 +92,10 @@ export const useSpeechRecognition = ({
   const restartTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isManualStop = useRef(false);
   const hasStarted = useRef(false);
+  const restartAttempts = useRef(0);
+  const maxRestartAttempts = 5;
+  const isRestarting = useRef(false);
+  const heartbeatInterval = useRef<NodeJS.Timeout | null>(null);
 
   // Check for Speech Recognition support
   useEffect(() => {
@@ -116,10 +120,14 @@ export const useSpeechRecognition = ({
     // Enhanced audio configuration for smoother recording
     recognition.maxAlternatives = 1;
     
-    // Set service hints for better performance (if supported)
-    if ('serviceURI' in recognition) {
-      // Use faster, local processing when available
-    }
+    // Additional settings for better stability
+    // Note: grammars property is deprecated and causes errors in modern browsers
+    // if ('grammars' in recognition) {
+    //   recognition.grammars = speechGrammarList;
+    // }
+    
+    // Modern speech recognition doesn't need service hints
+    // The browser automatically optimizes performance
 
     recognition.addEventListener('result', (event: SpeechRecognitionEvent) => {
       const now = Date.now();
@@ -158,35 +166,89 @@ export const useSpeechRecognition = ({
         setTranscript(fullTranscript);
 
         if (onResult) {
-          onResult(fullTranscript, !!interimTranscript);
+          onResult(fullTranscript, interimTranscript.length === 0);
         }
       });
     });
 
     recognition.addEventListener('start', () => {
-      console.log('Speech recognition started');
+      console.log('Speech recognition started successfully');
       hasStarted.current = true;
+      isRestarting.current = false;
+      restartAttempts.current = 0; // Reset restart attempts on successful start
       setIsListening(true);
       setError(null);
+      
+      // Start heartbeat to keep recognition active
+      if (continuous && heartbeatInterval.current === null) {
+        heartbeatInterval.current = setInterval(() => {
+          if (recognitionRef.current && isListening && hasStarted.current && !isManualStop.current) {
+            console.log('Heartbeat: Speech recognition still active');
+            // The heartbeat just logs - the Web Speech API doesn't need manual keepalive
+            // but this helps us monitor if it's still running
+          }
+        }, 10000); // Check every 10 seconds
+      }
     });
 
     recognition.addEventListener('end', () => {
-      console.log('Speech recognition ended. Manual stop:', isManualStop.current);
-      setIsListening(false);
+      console.log('Speech recognition ended. Manual stop:', isManualStop.current, 'Restart attempts:', restartAttempts.current);
       
-      // Auto-restart if it wasn't manually stopped and continuous mode is enabled
-      if (!isManualStop.current && continuous && hasStarted.current) {
-        console.log('Auto-restarting speech recognition...');
+      // Don't set isListening to false immediately if we're going to restart
+      const shouldRestart = !isManualStop.current && continuous && hasStarted.current && 
+                            restartAttempts.current < maxRestartAttempts && !isRestarting.current;
+      
+      if (!shouldRestart) {
+        setIsListening(false);
+        // Clear heartbeat when stopping
+        if (heartbeatInterval.current) {
+          clearInterval(heartbeatInterval.current);
+          heartbeatInterval.current = null;
+        }
+      }
+      
+      // Auto-restart if conditions are met
+      if (shouldRestart) {
+        console.log('Auto-restarting speech recognition... Attempt:', restartAttempts.current + 1);
+        isRestarting.current = true;
+        
         restartTimeoutRef.current = setTimeout(() => {
-          if (recognitionRef.current && !isManualStop.current) {
+          if (recognitionRef.current && !isManualStop.current && hasStarted.current) {
             try {
+              restartAttempts.current++;
               recognitionRef.current.start();
+              console.log('Successfully restarted speech recognition');
             } catch (error) {
               console.warn('Failed to auto-restart recognition:', error);
-              setError('Speech recognition stopped. Click the microphone to restart.');
+              isRestarting.current = false;
+              setIsListening(false);
+              
+              if (restartAttempts.current >= maxRestartAttempts) {
+                setError('Speech recognition stopped after multiple attempts. Please click the microphone to restart.');
+                restartAttempts.current = 0;
+              } else {
+                // Try again with longer delay
+                setTimeout(() => {
+                  if (!isManualStop.current && recognitionRef.current) {
+                    try {
+                      recognitionRef.current.start();
+                    } catch (retryError) {
+                      console.warn('Retry failed:', retryError);
+                      setError('Speech recognition stopped. Click the microphone to restart.');
+                    }
+                  }
+                }, 500);
+              }
             }
+          } else {
+            isRestarting.current = false;
+            setIsListening(false);
           }
-        }, 100);
+        }, 250); // Increased delay for more reliable restart
+      } else if (restartAttempts.current >= maxRestartAttempts) {
+        console.log('Max restart attempts reached, stopping auto-restart');
+        restartAttempts.current = 0;
+        setError('Speech recognition stopped after multiple attempts. Please click the microphone to restart.');
       }
     });
 
@@ -284,8 +346,8 @@ export const useSpeechRecognition = ({
       return;
     }
 
-    if (isListening) {
-      console.warn('Speech recognition already running');
+    if (isListening || isRestarting.current) {
+      console.warn('Speech recognition already running or restarting');
       return;
     }
 
@@ -295,22 +357,32 @@ export const useSpeechRecognition = ({
       restartTimeoutRef.current = null;
     }
 
-    // Reset flags
+    // Reset all flags
     isManualStop.current = false;
     hasStarted.current = false;
+    isRestarting.current = false;
+    restartAttempts.current = 0;
 
-    // Stop any existing recognition first
+    // Stop any existing recognition first and wait for it to fully stop
     if (recognitionRef.current) {
       try {
+        isManualStop.current = true; // Mark as manual to prevent auto-restart
         recognitionRef.current.stop();
         recognitionRef.current.abort();
+        recognitionRef.current = null; // Clear the reference
       } catch (e) {
         console.warn('Error stopping previous recognition:', e);
       }
     }
 
-    // Small delay to ensure previous recognition is fully stopped
+    // Longer delay to ensure previous recognition is fully stopped
     setTimeout(() => {
+      // Double-check that we should still start (user might have cancelled)
+      if (isManualStop.current) {
+        console.log('Start cancelled - manual stop detected');
+        return;
+      }
+      
       try {
         const recognition = initializeSpeechRecognition();
         if (!recognition) {
@@ -328,14 +400,11 @@ export const useSpeechRecognition = ({
         } catch (startError) {
           console.error('Error starting recognition:', startError);
           if (startError.name === 'InvalidStateError') {
-            // Recognition is already started, try to stop and restart
-            setTimeout(() => {
-              try {
-                recognition.start();
-              } catch (retryError) {
-                setError('Failed to start speech recognition. Please try again.');
-              }
-            }, 100);
+            console.log('InvalidStateError - recognition may already be running');
+            // Don't try to restart immediately, just set error
+            setError('Speech recognition is already running. Please wait and try again.');
+          } else if (startError.name === 'NotAllowedError') {
+            setError('Microphone permission denied. Please allow microphone access.');
           } else {
             setError('Failed to start speech recognition. Please check microphone permissions.');
           }
@@ -344,20 +413,35 @@ export const useSpeechRecognition = ({
         setError('Failed to start speech recognition');
         console.error('Speech recognition error:', err);
         setIsListening(false);
+        isRestarting.current = false;
       }
-    }, 50);
+    }, 200); // Increased delay for more reliable cleanup
   }, [isSupported, isListening, initializeSpeechRecognition]);
 
   const stopListening = useCallback(() => {
     console.log('Manually stopping speech recognition');
+    
+    // Set all stop flags immediately
     isManualStop.current = true;
     hasStarted.current = false;
+    isRestarting.current = false;
+    restartAttempts.current = 0;
     
     // Clear any restart timeout
     if (restartTimeoutRef.current) {
       clearTimeout(restartTimeoutRef.current);
       restartTimeoutRef.current = null;
     }
+    
+    // Clear heartbeat
+    if (heartbeatInterval.current) {
+      clearInterval(heartbeatInterval.current);
+      heartbeatInterval.current = null;
+    }
+    
+    // Update UI state immediately
+    setIsListening(false);
+    setError(null);
     
     if (recognitionRef.current) {
       try {
@@ -367,7 +451,6 @@ export const useSpeechRecognition = ({
       } catch (error) {
         console.warn('Error stopping speech recognition:', error);
       }
-      setIsListening(false);
     }
   }, []);
 
@@ -397,10 +480,17 @@ export const useSpeechRecognition = ({
       console.log('Cleaning up speech recognition');
       isManualStop.current = true;
       hasStarted.current = false;
+      isRestarting.current = false;
+      restartAttempts.current = 0;
       
       if (restartTimeoutRef.current) {
         clearTimeout(restartTimeoutRef.current);
         restartTimeoutRef.current = null;
+      }
+      
+      if (heartbeatInterval.current) {
+        clearInterval(heartbeatInterval.current);
+        heartbeatInterval.current = null;
       }
       
       if (recognitionRef.current) {

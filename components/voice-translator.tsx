@@ -334,9 +334,18 @@ const VoiceTranslator: React.FC<VoiceTranslatorProps> = ({
         <div className="p-4 bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
-              <span className="text-xs font-medium text-orange-400 uppercase tracking-wider">
-                {isListening ? 'Listening...' : 'Speech Recognition Complete'}
+          <span className="text-xs font-medium text-orange-400 uppercase tracking-wider">
+            {isListening ? (
+              <span className="flex items-center space-x-2">
+                <span>Listening</span>
+                <div className="flex space-x-1">
+                  <div className="w-1 h-1 bg-orange-400 rounded-full animate-pulse"></div>
+                  <div className="w-1 h-1 bg-orange-400 rounded-full animate-pulse delay-75"></div>
+                  <div className="w-1 h-1 bg-orange-400 rounded-full animate-pulse delay-150"></div>
+                </div>
               </span>
+            ) : 'Speech Recognition Complete'}
+          </span>
               {transcript && (
                 <button
                   onClick={() => handleCopy(transcript, 'original')}

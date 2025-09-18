@@ -22,6 +22,7 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
   const [selectedLanguage, setSelectedLanguage] = useState<'en-US' | 'hi-IN'>(initialLanguage);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   const [voiceError, setVoiceError] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const {
     transcript,
@@ -88,15 +89,26 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
   }, [error, isListening]);
 
   const handleMicClick = () => {
+    if (isProcessing) {
+      console.log('Click ignored - already processing');
+      return;
+    }
+    
+    setIsProcessing(true);
+    
     if (isListening) {
       console.log('Stopping speech recognition via button click');
       stopListening();
       setVoiceError(null);
+      // Reset processing state after a short delay
+      setTimeout(() => setIsProcessing(false), 500);
     } else {
       console.log('Starting speech recognition via button click');
       resetTranscript();
       setVoiceError(null);
       startListening();
+      // Reset processing state after a longer delay to allow for initialization
+      setTimeout(() => setIsProcessing(false), 1000);
     }
   };
 
@@ -198,7 +210,7 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
         {/* Microphone Button */}
         <button
           onClick={handleMicClick}
-          disabled={disabled}
+          disabled={disabled || isProcessing}
           className={`flex-1 flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed ${
             isListening
               ? 'bg-red-500/20 hover:bg-red-500/30 border-2 border-red-500/40 shadow-lg shadow-red-500/20'
