@@ -77,7 +77,7 @@ export default function PithaPage() {
             {/* Image */}
             <div className="relative h-96 rounded-2xl overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80"
+                src="https://masalachilli.com/wp-content/uploads/2018/07/dal-pitha-10.jpg"
                 alt="Pitha - Traditional Rice Dumplings"
                 fill
                 className="object-cover"

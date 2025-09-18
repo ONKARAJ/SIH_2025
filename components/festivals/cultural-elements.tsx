@@ -15,7 +15,7 @@ const culturalElements = [
     id: "dokra-metal-craft",
     title: "Dokra Metal Craft",
     briefDescription: "Ancient lost-wax casting technique creating exquisite bronze sculptures and decorative items that showcase thousands of years of metallurgical expertise.",
-    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80",
+    image: "https://www.sowpeace.in/cdn/shop/articles/what-is-dokra-art-and-why-it-is-so-precious-742786.jpg?v=1736197967",
     category: "Metal Craft",
     highlights: ["Lost-Wax Casting", "Bronze Figurines", "Tribal Motifs"],
     type: "craft"
@@ -24,7 +24,7 @@ const culturalElements = [
     id: "jhumar-dance",
     title: "Jhumar Dance",
     briefDescription: "Energetic group dance performed during festivals and celebrations, characterized by rhythmic movements that celebrate community unity and cultural identity.",
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
+    image: "https://www.gosahin.com/go/p/j/1576435575_jhumair-dance.jpg",
     category: "Performance Arts",
     highlights: ["Circle Formation", "Rhythmic Steps", "Festival Performances"],
     type: "music"
@@ -33,7 +33,7 @@ const culturalElements = [
     id: "bamboo-cane-craft",
     title: "Bamboo & Cane Craft",
     briefDescription: "Sustainable handicrafts made from locally sourced bamboo and cane, creating functional and decorative items using traditional weaving techniques.",
-    image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80",
+    image: "https://youngintach.org/public/frontend_assets/images/JHARKHAND-25july24-big1.jpg",
     category: "Handicrafts",
     highlights: ["Eco-friendly Materials", "Traditional Weaving", "Functional Items"],
     type: "craft"
@@ -42,7 +42,7 @@ const culturalElements = [
     id: "tribal-folk-music",
     title: "Tribal Folk Music",
     briefDescription: "Melodious traditional songs and instrumental music that preserve oral history, cultural values, and spiritual beliefs of tribal communities.",
-    image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&q=80",
+    image: "https://www.namasteindiatrip.org/wp-content/uploads/2022/12/Paika-Dance.jpg",
     category: "Music",
     highlights: ["Traditional Instruments", "Tribal Languages", "Oral Traditions"],
     type: "music"
@@ -51,7 +51,7 @@ const culturalElements = [
     id: "traditional-tribal-cuisine",
     title: "Traditional Tribal Cuisine",
     briefDescription: "Authentic culinary traditions featuring organic ingredients, traditional cooking methods, and recipes passed down through generations of tribal communities.",
-    image: "https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80",
+    image: "https://static.toiimg.com/photo/79000181.cms",
     category: "Cuisine",
     highlights: ["Organic Ingredients", "Traditional Recipes", "Forest Produce"],
     type: "cuisine"

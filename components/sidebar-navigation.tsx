@@ -562,7 +562,7 @@ export function SidebarNavigation() {
                           <Link href="/reviews" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Reviews & Ratings
                           </Link>
-                          <Link href="/contact" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
+                          <Link href="/language-guide" onClick={() => setIsSidebarOpen(false)} className="block text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-200 text-lg py-2">
                             → Language Guide
                           </Link>
                         </div>

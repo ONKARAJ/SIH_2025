@@ -44,6 +44,7 @@ import {
 import { CityData, citiesData } from '@/lib/cities-data'
 import { InteractiveCityMap } from '@/components/interactive-city-map'
 import { CityProtectedReviewForm } from '@/components/city-protected-review-form'
+import { EmergencyContacts } from '@/components/places/emergency-contacts'
 
 // Function to calculate hotel ID based on global position
 const calculateHotelId = (cityId: string, hotelIndex: number) => {
@@ -210,6 +211,9 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       <Navigation />
+      
+      {/* Emergency Contacts - Fixed positioning */}
+      <EmergencyContacts placeName={city.name} />
       
       {/* Modern Hero Section */}
       <section className="relative min-h-screen overflow-hidden">
@@ -972,8 +976,7 @@ export function CityPageTemplate({ city }: CityPageTemplateProps) {
                     onClick={() => {
                       window.open(`https://maps.apple.com/?daddr=${city.coordinates.lat},${city.coordinates.lng}`, '_blank')
                     }}
-                    variant="outline" 
-                    className="w-full border-gray-600 text-gray-300 hover:bg-gray-700"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                   >
                     <Globe className="h-4 w-4 mr-2" />
                     Open in Apple Maps

@@ -77,7 +77,7 @@ export default function MahuaLadduPage() {
             {/* Image */}
             <div className="relative h-96 rounded-2xl overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800&q=80"
+                src="https://ooofarms.com/cdn/shop/products/MahuaLaddoo1_520985f9-174d-4d58-aff1-a844d4510b23.jpg?v=1724238662&width=1500"
                 alt="Mahua Laddu - Traditional Forest Flower Sweet"
                 fill
                 className="object-cover"

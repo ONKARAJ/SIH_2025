@@ -77,7 +77,7 @@ export default function DhuskaPage() {
             {/* Image */}
             <div className="relative h-96 rounded-2xl overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800&q=80"
+                src="https://thejoharjharkhand.com/wp-content/uploads/2024/12/Dhuska.webp"
                 alt="Dhuska - Traditional Rice and Lentil Pancakes"
                 fill
                 className="object-cover"

@@ -24,9 +24,13 @@ export default function FestivalGrid({ filters, className = '', limit }: Festiva
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Core tribal festivals to display in Explore Festivals section
+  const coreFestivals = ['sarhul', 'sohrai', 'tusu', 'karma', 'bandna', 'jitiya'];
+
   // Filter festivals based on provided filters
   useEffect(() => {
-    let filtered = [...festivalData];
+    // Start with only core festivals for Explore Festivals section
+    let filtered = festivalData.filter(festival => coreFestivals.includes(festival.id));
 
     if (filters) {
       // Search filter

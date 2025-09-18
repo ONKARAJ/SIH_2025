@@ -762,6 +762,22 @@ video {
   background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.6), transparent);
 }
 
+/* fadeIn animation for Language Guide and other components */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out;
+}
+
 /* Enhanced section buttons for vertical layout */
 .sidebar-section-button {
   width: 100%;

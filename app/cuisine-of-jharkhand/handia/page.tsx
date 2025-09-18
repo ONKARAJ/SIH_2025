@@ -78,7 +78,7 @@ export default function HandiaPage() {
             {/* Image */}
             <div className="relative h-96 rounded-2xl overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&q=80"
+                src="https://lh4.googleusercontent.com/proxy/-vfnYUrHJgKOz8Dtv8vY3y_KQXe4aeyFQPhvUITJ4KVWjdDep5YRGJaz7oiYAXiVYsvLCaGS988T4aaPxXyH6VC6hZf-rEB-D7jptyQ"
                 alt="Handia - Traditional Rice Beer"
                 fill
                 className="object-cover"

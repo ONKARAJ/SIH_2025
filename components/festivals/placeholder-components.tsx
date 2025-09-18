@@ -28,7 +28,7 @@ export function RecipesSection() {
       difficulty: 'Medium',
       cookTime: '3-5 days',
       servings: '4-6',
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&q=80',
+      image: 'https://lh4.googleusercontent.com/proxy/-vfnYUrHJgKOz8Dtv8vY3y_KQXe4aeyFQPhvUITJ4KVWjdDep5YRGJaz7oiYAXiVYsvLCaGS988T4aaPxXyH6VC6hZf-rEB-D7jptyQ',
       description: 'Traditional fermented rice beer sacred to tribal communities, prepared during festivals and celebrations.',
       ingredients: [
         '2 cups cooked rice',
@@ -52,7 +52,7 @@ export function RecipesSection() {
       difficulty: 'Easy',
       cookTime: '45 mins',
       servings: '6-8',
-      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80',
+      image: 'https://masalachilli.com/wp-content/uploads/2018/07/dal-pitha-10.jpg',
       description: 'Steamed rice dumplings with jaggery filling, a beloved festival sweet that brings families together.',
       ingredients: [
         '2 cups rice flour',
@@ -76,7 +76,7 @@ export function RecipesSection() {
       difficulty: 'Medium',
       cookTime: '30 mins',
       servings: '4-5',
-      image: 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800&q=80',
+      image: 'https://thejoharjharkhand.com/wp-content/uploads/2024/12/Dhuska.webp',
       description: 'Crispy deep-fried pancakes made from rice and lentils, perfect with spicy chutneys and curries.',
       ingredients: [
         '1 cup rice (soaked)',
@@ -100,7 +100,7 @@ export function RecipesSection() {
       difficulty: 'Easy',
       cookTime: '25 mins',
       servings: '3-4',
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&q=80',
+      image: 'https://i.ytimg.com/vi/lunQeSDwCUI/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBM-dGXET3l_OeWLX9Bl74Oj3Ksww',
       description: 'Wild mushroom curry made with forest mushrooms, showcasing the connection between tribal cuisine and nature.',
       ingredients: [
         '200g wild mushrooms',
@@ -124,7 +124,7 @@ export function RecipesSection() {
       difficulty: 'Medium',
       cookTime: '40 mins',
       servings: '4-6',
-      image: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
+      image: 'https://c8.alamy.com/comp/FDBFX1/stir-fried-pork-belly-with-red-curry-paste-and-bamboo-shoots-FDBFX1.jpg',
       description: 'Tender bamboo shoots cooked with minimal spices, highlighting the natural flavors of this forest vegetable.',
       ingredients: [
         'Fresh bamboo shoots',
@@ -148,7 +148,7 @@ export function RecipesSection() {
       difficulty: 'Easy',
       cookTime: '20 mins',
       servings: '8-10',
-      image: 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800&q=80',
+      image: 'https://ooofarms.com/cdn/shop/products/MahuaLaddoo1_520985f9-174d-4d58-aff1-a844d4510b23.jpg?v=1724238662&width=1500',
       description: 'Sweet balls made from mahua flowers, a seasonal delicacy that celebrates the flowering of mahua trees.',
       ingredients: [
         'Dried mahua flowers',
@@ -347,7 +347,7 @@ export function ArtisanCrafts() {
       category: 'metalwork',
       experience: '25 years',
       specialty: 'Bronze figurines and decorative items',
-      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80',
+      image: 'https://i0.wp.com/www.ranchiblog.in/wp-content/uploads/2016/07/albert.jpg?resize=316%2C377',
       story: 'Ravi learned the ancient art of Dokra from his grandfather. Using the lost-wax casting technique passed down through generations, he creates intricate bronze sculptures that tell stories of tribal life.',
       techniques: ['Lost-wax casting', 'Bronze alloying', 'Traditional molding', 'Finishing work'],
       achievements: [
@@ -370,7 +370,7 @@ export function ArtisanCrafts() {
       category: 'painting',
       experience: '30 years',
       specialty: 'Traditional wall art and canvas paintings',
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
+      image: 'https://images.bhaskarassets.com/web2images/521/2023/07/27/dbcl_169037561364c115bd99ce5_vibhakumarimayor.jpg',
       story: 'Sulochana is a master of Sohrai art, the traditional wall painting done during harvest festivals. She has elevated this ancient art form to contemporary canvases while preserving its sacred meanings.',
       techniques: ['Natural pigment preparation', 'Finger painting', 'Geometric patterns', 'Symbolic representation'],
       achievements: [
@@ -393,7 +393,7 @@ export function ArtisanCrafts() {
       category: 'bamboo',
       experience: '20 years',
       specialty: 'Functional and decorative bamboo items',
-      image: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
+      image: 'https://www.livehindustan.com/lh-img/uploadimage/library/2024/05/17/16_9/16_9_6/01145816DHA_16GRD81_1715889630_1715889630.JPG',
       story: 'Budhan transforms humble bamboo into works of art. His sustainable approach to craft-making reflects the tribal wisdom of living in harmony with nature.',
       techniques: ['Bamboo splitting', 'Weaving patterns', 'Natural preservation', 'Tool making'],
       achievements: [
@@ -416,7 +416,7 @@ export function ArtisanCrafts() {
       category: 'textile',
       experience: '18 years',
       specialty: 'Traditional fabrics and tribal motifs',
-      image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/4/4f/Kamaladevi_Chattopadhyay.png',
       story: 'Kamala preserves the ancient weaving traditions of Jharkhand tribes. Her handwoven fabrics carry the stories and symbols of her ancestors.',
       techniques: ['Handloom weaving', 'Natural dyeing', 'Pattern creation', 'Traditional motifs'],
       achievements: [
@@ -439,7 +439,7 @@ export function ArtisanCrafts() {
       category: 'pottery',
       experience: '35 years',
       specialty: 'Decorative and functional pottery',
-      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80',
+      image: 'https://s3.youthkiawaaz.com/wp-content/uploads/2021/06/09135941/Sunaram-Soren-FB.jpg',
       story: 'Somra shapes clay into beautiful pottery using techniques unchanged for centuries. His work bridges the gap between utility and artistry.',
       techniques: ['Wheel throwing', 'Hand building', 'Natural glazing', 'Kiln firing'],
       achievements: [
@@ -462,7 +462,7 @@ export function ArtisanCrafts() {
       category: 'stone',
       experience: '28 years',
       specialty: 'Religious sculptures and architectural elements',
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&q=80',
+      image: 'https://sabrangindia.in//sites/default/files/inline-images/3_2.jpeg',
       story: 'Jaidev transforms rough stone into intricate sculptures. His work adorns temples and homes, keeping alive the ancient tradition of stone carving.',
       techniques: ['Chiseling', 'Relief carving', 'Polishing', 'Detailing work'],
       achievements: [
@@ -711,7 +711,7 @@ export function MultimediaGallery() {
     {
       id: 1,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
+      src: 'https://c8.alamy.com/comp/2F95KR1/sarhul-festival-celebrated-amidst-covid-19-pandemic-by-tribes-in-jharkhand-india-on-april-15-2021-sarhul-festival-is-one-of-the-most-popular-festivals-celebrated-across-the-jharkhand-region-sarhul-festival-marks-the-beginning-of-new-year-it-is-celebrated-by-the-oraon-the-munda-and-the-ho-tribes-of-the-jharkhand-region-this-tribal-festival-celebrated-annually-is-also-known-as-ba-parab-photo-by-rohit-shawpacific-presssipa-usa-2F95KR1.jpg',
       title: 'Sarhul Festival',
       description: 'Tribal communities celebrating the spring festival with traditional dances',
       category: 'Festivals'
@@ -719,7 +719,7 @@ export function MultimediaGallery() {
     {
       id: 2,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80',
+      src: 'https://www.ibef.org/experienceindia/images/bastar-dhokra/bastar-dhokra-2.png',
       title: 'Dokra Metal Craft',
       description: 'Ancient lost-wax casting technique creating beautiful bronze sculptures',
       category: 'Crafts'
@@ -727,7 +727,7 @@ export function MultimediaGallery() {
     {
       id: 3,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1504609813442-a8924e83f76e?w=800&q=80',
+      src: 'https://www.gosahin.com/go/p/j/t/1576435575_jhumair-dance.jpg',
       title: 'Jhumar Dance',
       description: 'Traditional folk dance performed during harvest celebrations',
       category: 'Dance'
@@ -735,7 +735,7 @@ export function MultimediaGallery() {
     {
       id: 4,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+      src: 'https://www.shutterstock.com/shutterstock/videos/3896339709/thumb/1.jpg?ip=x480',
       title: 'Traditional Music',
       description: 'Tribal musicians playing indigenous instruments',
       category: 'Music'
@@ -743,7 +743,7 @@ export function MultimediaGallery() {
     {
       id: 5,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&q=80',
+      src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMaEAHTj7l9Im_tzrs4FOztfXgVCGm1-k6JQ&s',
       title: 'Tribal Cuisine',
       description: 'Traditional organic cooking methods and local ingredients',
       category: 'Cuisine'
@@ -751,7 +751,7 @@ export function MultimediaGallery() {
     {
       id: 6,
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
+      src: 'https://youngintach.org/public/frontend_assets/images/JHARKHAND-25july24-big1.jpg',
       title: 'Bamboo Crafts',
       description: 'Sustainable handicrafts made from locally sourced bamboo',
       category: 'Crafts'

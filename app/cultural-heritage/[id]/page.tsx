@@ -17,7 +17,7 @@ const culturalElements = {
     category: 'Metal Craft',
     briefDescription: 'Ancient lost-wax casting technique creating exquisite bronze sculptures and decorative items that showcase thousands of years of metallurgical expertise.',
     fullDescription: 'Dokra is an ancient metal casting art form that has been practiced in Jharkhand for over 4,000 years. This non-ferrous metal casting technique uses the lost-wax method to create stunning bronze figurines, jewelry, utensils, and decorative items. The art form gets its name from the Dhokra Damar tribes, the traditional metal smiths of West Bengal and Jharkhand.',
-    image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80',
+    image: 'https://housenama.com/cdn/shop/articles/the-art-of-dhokra-handmadeinindia-housenama.jpg?v=1720862777',
     highlights: ['Lost-Wax Casting', 'Bronze Figurines', 'Tribal Motifs', 'Handcrafted Jewelry', 'Traditional Tools'],
     detailedContent: {
       history: 'Dokra metal casting is believed to have originated over 4,000 years ago and is one of the earliest known methods of non-ferrous metal casting. Archaeological evidence suggests that this technique was practiced in the Indus Valley Civilization. The craft gets its name from the Dhokra Damar tribes who are the traditional metal smiths. In Jharkhand, this art form has been preserved by tribal communities who have passed down the techniques through generations.',
@@ -47,9 +47,9 @@ const culturalElements = {
       culturalSignificance: 'Dokra metal craft represents the sophisticated metallurgical knowledge of tribal communities and their artistic sensibilities. It embodies the harmony between functionality and aesthetics that characterizes tribal art forms.',
       modernRelevance: 'The craft has gained UNESCO recognition and provides sustainable employment to tribal artisans. It represents eco-friendly manufacturing practices and preserves ancient knowledge systems.',
       galleries: [
-        'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80',
-        'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
-        'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&q=80'
+        'https://www.ibef.org/experienceindia/images/bastar-dhokra/bastar-dhokra-2.png',
+        'https://housenama.com/cdn/shop/articles/the-art-of-dhokra-handmadeinindia-housenama.jpg?v=1720862777',
+        'https://www.ibef.org/experienceindia/images/bastar-dhokra/bastar-dhokra-2.png'
       ]
     }
   },
@@ -59,7 +59,7 @@ const culturalElements = {
     category: 'Performance Arts',
     briefDescription: 'The rhythmic heart of Jharkhand beats through its traditional Jhumar dance, a vibrant celebration of tribal culture.',
     fullDescription: 'Jhumar is one of the most celebrated folk dances of Jharkhand, traditionally performed by tribal communities during festivals, harvests, and special occasions. This energetic dance form brings people together in circular formations, creating a mesmerizing display of synchronized movements.',
-    image: 'https://images.unsplash.com/photo-1504609813442-a8924e83f76e?w=800&q=80',
+    image: 'https://jharkhandculture.com/sites/default/files/inline-images/domjach.jpg',
     highlights: ['Circular Formation', 'Community Participation', 'Traditional Music', 'Festival Celebrations', 'Cultural Unity'],
     detailedContent: {
       history: 'Jhumar is one of the most celebrated folk dances of Jharkhand, traditionally performed by tribal communities during festivals, harvests, and special occasions. The dance has its roots in ancient tribal traditions and is believed to have been practiced for over 500 years. It originated as a community dance that brought people together to celebrate the bounties of nature and strengthen social bonds.',
@@ -89,9 +89,9 @@ const culturalElements = {
       culturalSignificance: 'Jhumar represents the communal spirit of tribal societies and their deep connection to nature and seasons. It serves as a medium for storytelling, cultural transmission, and community bonding.',
       modernRelevance: 'Jhumar is now performed on national and international stages, representing Jharkhand\'s cultural identity. It provides livelihood opportunities for traditional artists and helps preserve tribal culture.',
       galleries: [
-        'https://images.unsplash.com/photo-1504609813442-a8924e83f76e?w=800&q=80',
-        'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&q=80',
-        'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80'
+        'https://www.gosahin.com/go/p/j/1576435575_jhumair-dance.jpg',
+        'https://jharkhandculture.com/sites/default/files/inline-images/domjach.jpg',
+        'https://www.gosahin.com/go/p/j/1576435575_jhumair-dance.jpg'
       ]
     }
   },
@@ -101,7 +101,7 @@ const culturalElements = {
     category: 'Handicrafts',
     briefDescription: 'Sustainable artistry transforming bamboo and cane into beautiful and functional items using traditional weaving techniques.',
     fullDescription: 'The bamboo and cane craft tradition of Jharkhand represents the perfect harmony between nature and human ingenuity. Skilled artisans transform locally sourced bamboo and cane into a wide variety of functional and decorative items using time-tested techniques.',
-    image: 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
+    image: 'https://youngintach.org/public/frontend_assets/images/JHARKHAND-25july24-big1.jpg',
     highlights: ['Traditional Weaving', 'Sustainable Materials', 'Functional Design', 'Eco-friendly Crafts', 'Rural Livelihood'],
     detailedContent: {
       history: 'Bamboo and cane crafting in Jharkhand has ancient roots, with evidence of these crafts dating back over 2,000 years. The abundant bamboo forests in the region have provided sustainable raw materials for tribal communities who developed sophisticated techniques to create everything from household items to decorative pieces.',
@@ -131,9 +131,9 @@ const culturalElements = {
       culturalSignificance: 'Bamboo and cane craft represents the deep understanding of natural materials and sustainable living practices of tribal communities. It embodies the principle of using renewable resources responsibly.',
       modernRelevance: 'With growing environmental consciousness, bamboo and cane crafts are gaining recognition as sustainable alternatives to plastic and synthetic materials, providing livelihood opportunities for rural artisans.',
       galleries: [
-        'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&q=80',
-        'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
-        'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80'
+        'https://www.shutterstock.com/image-photo/ranchi-jharkhand-friday-16-2019-600w-1480129874.jpg',
+        'https://youngintach.org/public/frontend_assets/images/JHARKHAND-25july24-big1.jpg',
+        'https://www.shutterstock.com/image-photo/ranchi-jharkhand-friday-16-2019-600w-1480129874.jpg'
       ]
     }
   },
@@ -143,7 +143,7 @@ const culturalElements = {
     category: 'Music',
     briefDescription: 'Melodious expressions of tribal life, nature worship, and ancestral wisdom through traditional songs and instruments.',
     fullDescription: 'Tribal folk music of Jharkhand is a rich tapestry of melodies that capture the essence of tribal life, seasonal celebrations, and spiritual beliefs. These musical traditions serve as repositories of oral history and cultural values.',
-    image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+    image: 'https://www.forwardpress.in/wp-content/uploads/2021/06/jharkhand-tribes-1.jpg',
     highlights: ['Traditional Instruments', 'Seasonal Songs', 'Oral History', 'Community Singing', 'Cultural Preservation'],
     detailedContent: {
       history: 'The folk music tradition of Jharkhand\'s tribal communities dates back thousands of years, serving as the primary medium for preserving oral history, transmitting cultural values, and strengthening community bonds. Each tribe has developed its unique musical identity while sharing common themes of nature worship and ancestral reverence.',
@@ -173,9 +173,9 @@ const culturalElements = {
       culturalSignificance: 'Tribal folk music is the heartbeat of community life, providing a medium for cultural expression, social bonding, and spiritual connection. It embodies the collective memory and identity of tribal communities.',
       modernRelevance: 'Contemporary musicians are incorporating tribal folk elements into modern compositions, creating fusion music that appeals to younger generations while preserving traditional melodies.',
       galleries: [
-        'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
-        'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&q=80',
-        'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&q=80'
+        'https://avenuemail.in/wp-content/uploads/2022/11/samvaad-2-696x464.jpg',
+        'https://www.forwardpress.in/wp-content/uploads/2021/06/jharkhand-tribes-1.jpg',
+        'https://avenuemail.in/wp-content/uploads/2022/11/samvaad-2-696x464.jpg'
       ]
     }
   },
@@ -185,7 +185,7 @@ const culturalElements = {
     category: 'Culinary Arts',
     briefDescription: 'Authentic flavors and traditional cooking methods that celebrate local ingredients and ancestral culinary wisdom.',
     fullDescription: 'The traditional tribal cuisine of Jharkhand reflects the deep connection between the tribal communities and their natural environment. Using locally sourced ingredients and time-honored cooking methods, this cuisine offers unique flavors and nutritional wisdom.',
-    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&q=80',
+    image: 'https://pandareviewz.com/wp-content/uploads/2017/07/Famous-Foods-of-Jharkhand.jpg',
     highlights: ['Local Ingredients', 'Traditional Methods', 'Forest Foods', 'Seasonal Cooking', 'Cultural Significance'],
     detailedContent: {
       history: 'The culinary traditions of Jharkhand\'s tribal communities have evolved over thousands of years, deeply rooted in the abundance of the region\'s forests and agricultural practices. These food traditions reflect the sustainable relationship between tribal communities and their natural environment.',
@@ -215,9 +215,9 @@ const culturalElements = {
       culturalSignificance: 'Tribal cuisine is more than just food; it represents the cultural identity, ecological wisdom, and social traditions of the community. Meals are often communal experiences that strengthen social bonds.',
       modernRelevance: 'Traditional tribal cuisine is gaining recognition for its organic, sustainable, and nutritious qualities, inspiring contemporary movements toward healthy and environmentally conscious eating.',
       galleries: [
-        'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&q=80',
-        'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80',
-        'https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800&q=80'
+        'https://assets.cntraveller.in/photos/656094b7b1b23f6efc757456/1:1/w_4160,h_4160,c_limit/IMG_6472.jpeg',
+        'https://pandareviewz.com/wp-content/uploads/2017/07/Famous-Foods-of-Jharkhand.jpg',
+        'https://assets.cntraveller.in/photos/656094b7b1b23f6efc757456/1:1/w_4160,h_4160,c_limit/IMG_6472.jpeg'
       ]
     }
   }

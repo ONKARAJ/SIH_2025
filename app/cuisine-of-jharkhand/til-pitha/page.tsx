@@ -77,7 +77,7 @@ export default function TilPithaPage() {
             {/* Image */}
             <div className="relative h-96 rounded-2xl overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1578996953842-e3e98ae77f26?w=800&q=80"
+                src="https://masalachilli.com/wp-content/uploads/2018/07/dal-pitha-10.jpg"
                 alt="Til Pitha - Sesame Rice Dumplings"
                 fill
                 className="object-cover"

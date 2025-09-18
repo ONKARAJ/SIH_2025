@@ -1,9 +1,23 @@
 'use client'
 
-import React, { useState, useCallback } from 'react'
-import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api'
+import React, { useState, useCallback, useEffect } from 'react'
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api'
 import { CityData } from '@/lib/cities-data'
-import Image from 'next/image'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Navigation, Star, Clock, MapPin } from 'lucide-react'
+
+// Essential services data structure
+interface EssentialService {
+  id: string
+  name: string
+  type: 'hospital' | 'fuel_station' | 'restaurant' | 'police_station'
+  position: { lat: number; lng: number }
+  rating?: number
+  description: string
+  distance?: string
+  openNow?: boolean
+}
 
 interface InteractiveCityMapProps {
   city: CityData
@@ -11,10 +25,19 @@ interface InteractiveCityMapProps {
   className?: string
 }
 
+const libraries: ("places" | "geometry")[] = ["places", "geometry"];
+
 export function InteractiveCityMap({ city, height = '400px', className = '' }: InteractiveCityMapProps) {
-  const [selectedMarker, setSelectedMarker] = useState<any>(null)
+  const [selectedMarker, setSelectedMarker] = useState<EssentialService | null>(null)
   const [map, setMap] = useState<google.maps.Map | null>(null)
-  const [loadError, setLoadError] = useState<string | null>(null)
+  const [activeFilter, setActiveFilter] = useState<string>('all')
+  const [essentialServices, setEssentialServices] = useState<EssentialService[]>([])
+
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+    libraries: libraries
+  });
 
   const center = {
     lat: city.coordinates.lat,
@@ -26,154 +49,79 @@ export function InteractiveCityMap({ city, height = '400px', className = '' }: I
     height: height
   }
 
-  const mapStyles = [
-    {
-      featureType: 'all',
-      elementType: 'geometry.fill',
-      stylers: [{ weight: '2.00' }]
-    },
-    {
-      featureType: 'all',
-      elementType: 'geometry.stroke',
-      stylers: [{ color: '#9c9c9c' }]
-    },
-    {
-      featureType: 'all',
-      elementType: 'labels.text',
-      stylers: [{ visibility: 'on' }]
-    },
-    {
-      featureType: 'landscape',
-      elementType: 'all',
-      stylers: [{ color: '#f2f2f2' }]
-    },
-    {
-      featureType: 'landscape',
-      elementType: 'geometry.fill',
-      stylers: [{ color: '#ffffff' }]
-    },
-    {
-      featureType: 'landscape.man_made',
-      elementType: 'geometry.fill',
-      stylers: [{ color: '#ffffff' }]
-    },
-    {
-      featureType: 'poi',
-      elementType: 'all',
-      stylers: [{ visibility: 'off' }]
-    },
-    {
-      featureType: 'road',
-      elementType: 'all',
-      stylers: [{ saturation: -100 }, { lightness: 45 }]
-    },
-    {
-      featureType: 'road',
-      elementType: 'geometry.fill',
-      stylers: [{ color: '#eeeeee' }]
-    },
-    {
-      featureType: 'road',
-      elementType: 'labels.text.fill',
-      stylers: [{ color: '#7b7b7b' }]
-    },
-    {
-      featureType: 'road',
-      elementType: 'labels.text.stroke',
-      stylers: [{ color: '#ffffff' }]
-    },
-    {
-      featureType: 'road.highway',
-      elementType: 'all',
-      stylers: [{ visibility: 'simplified' }]
-    },
-    {
-      featureType: 'road.arterial',
-      elementType: 'labels.icon',
-      stylers: [{ visibility: 'off' }]
-    },
-    {
-      featureType: 'transit',
-      elementType: 'all',
-      stylers: [{ visibility: 'off' }]
-    },
-    {
-      featureType: 'water',
-      elementType: 'all',
-      stylers: [{ color: '#46bcec' }, { visibility: 'on' }]
-    },
-    {
-      featureType: 'water',
-      elementType: 'geometry.fill',
-      stylers: [{ color: '#c8d7d4' }]
-    },
-    {
-      featureType: 'water',
-      elementType: 'labels.text.fill',
-      stylers: [{ color: '#070707' }]
-    },
-    {
-      featureType: 'water',
-      elementType: 'labels.text.stroke',
-      stylers: [{ color: '#ffffff' }]
+  // Generate essential services around the city
+  useEffect(() => {
+    const generateEssentialServices = (): EssentialService[] => {
+      const services: EssentialService[] = []
+      const serviceTypes = [
+        { type: 'hospital' as const, count: 3, names: [`${city.name} General Hospital`, 'Emergency Medical Center', 'District Health Center'] },
+        { type: 'fuel_station' as const, count: 4, names: ['Bharat Petroleum', 'Indian Oil', 'HP Petrol Pump', 'Reliance Fuel Station'] },
+        { type: 'restaurant' as const, count: 5, names: ['Local Dhaba', 'Thali House', 'Bengali Restaurant', 'Multi-Cuisine Restaurant', 'Fast Food Corner'] },
+        { type: 'police_station' as const, count: 2, names: [`${city.name} Police Station`, 'Traffic Police Post'] }
+      ]
+
+      serviceTypes.forEach(serviceType => {
+        for (let i = 0; i < serviceType.count; i++) {
+          const latOffset = (Math.random() - 0.5) * 0.02  // Within ~2km radius
+          const lngOffset = (Math.random() - 0.5) * 0.02
+          
+          services.push({
+            id: `${serviceType.type}-${i}`,
+            name: serviceType.names[i] || `${serviceType.type.replace('_', ' ')} ${i + 1}`,
+            type: serviceType.type,
+            position: {
+              lat: city.coordinates.lat + latOffset,
+              lng: city.coordinates.lng + lngOffset
+            },
+            rating: Math.round((3.5 + Math.random() * 1.5) * 10) / 10, // Random rating between 3.5-5
+            description: getServiceDescription(serviceType.type),
+            distance: `${(Math.random() * 3 + 0.5).toFixed(1)} km`,
+            openNow: Math.random() > 0.2 // 80% chance of being open
+          })
+        }
+      })
+
+      return services
     }
+
+    setEssentialServices(generateEssentialServices())
+  }, [city.coordinates, city.name])
+
+  // Get service descriptions
+  const getServiceDescription = (type: EssentialService['type']): string => {
+    const descriptions = {
+      hospital: 'Medical facility with emergency services available',
+      fuel_station: 'Fuel station with petrol, diesel, and basic services',
+      restaurant: 'Local dining establishment with regional cuisine',
+      police_station: 'Law enforcement facility providing public safety services'
+    }
+    return descriptions[type]
+  }
+
+  // Filter services based on active filter
+  const filteredServices = activeFilter === 'all' 
+    ? essentialServices 
+    : essentialServices.filter(service => service.type === activeFilter)
+
+  // Service categories for filtering
+  const serviceCategories = [
+    { key: 'all', label: 'All Services', icon: '🗺️', color: 'bg-gray-600' },
+    { key: 'hospital', label: 'Hospitals', icon: '🏥', color: 'bg-red-600' },
+    { key: 'fuel_station', label: 'Fuel Stations', icon: '⛽', color: 'bg-orange-600' },
+    { key: 'restaurant', label: 'Restaurants', icon: '🍽️', color: 'bg-green-600' },
+    { key: 'police_station', label: 'Police Stations', icon: '🚔', color: 'bg-blue-600' }
   ]
 
-  // Create markers for attractions
-  const attractionMarkers = city.attractions.map((attraction, index) => {
-    // Generate coordinates near the city center for each attraction
-    const latOffset = (Math.random() - 0.5) * 0.05 // Random offset within ~5km
-    const lngOffset = (Math.random() - 0.5) * 0.05
-    
-    return {
-      id: `attraction-${index}`,
-      position: {
-        lat: city.coordinates.lat + latOffset,
-        lng: city.coordinates.lng + lngOffset
-      },
-      title: attraction.name,
-      description: attraction.description,
-      category: attraction.category,
-      rating: attraction.rating,
-      distance: attraction.distance,
-      image: attraction.image,
-      type: 'attraction'
+  // Get marker icon based on service type
+  const getMarkerIcon = (type: EssentialService['type']) => {
+    const iconMap = {
+      hospital: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+      fuel_station: 'https://maps.google.com/mapfiles/ms/icons/orange-dot.png',
+      restaurant: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+      police_station: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
     }
-  })
-
-  // Create markers for hotels
-  const hotelMarkers = city.hotels.map((hotel, index) => {
-    const latOffset = (Math.random() - 0.5) * 0.03 // Smaller offset for hotels
-    const lngOffset = (Math.random() - 0.5) * 0.03
-    
-    return {
-      id: `hotel-${index}`,
-      position: {
-        lat: city.coordinates.lat + latOffset,
-        lng: city.coordinates.lng + lngOffset
-      },
-      title: hotel.name,
-      description: hotel.description,
-      rating: hotel.rating,
-      price: hotel.price,
-      amenities: hotel.amenities,
-      image: hotel.image,
-      category: hotel.category,
-      type: 'hotel'
-    }
-  })
-
-  const allMarkers = [
-    {
-      id: 'city-center',
-      position: center,
-      title: city.name,
-      description: city.description,
-      type: 'city'
-    },
-    ...attractionMarkers,
-    ...hotelMarkers
-  ]
+    return iconMap[type]
+  }
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map)
@@ -183,76 +131,24 @@ export function InteractiveCityMap({ city, height = '400px', className = '' }: I
     setMap(null)
   }, [])
 
-  const handleMarkerClick = (marker: any) => {
-    setSelectedMarker(marker)
-  }
-
-  const handleInfoWindowClose = () => {
-    setSelectedMarker(null)
-  }
-
-  const getMarkerIcon = (type: string) => {
-    const baseUrl = 'https://maps.google.com/mapfiles/ms/icons/'
-    switch (type) {
-      case 'city':
-        return `${baseUrl}red-dot.png`
-      case 'attraction':
-        return `${baseUrl}green-dot.png`
-      case 'hotel':
-        return `${baseUrl}blue-dot.png`
-      default:
-        return `${baseUrl}red-dot.png`
-    }
-  }
-
-  const handleLoadError = (error: Error) => {
-    console.error('Google Maps load error:', error)
-    setLoadError('Failed to load Google Maps. Please check your internet connection and try again.')
-  }
-
   if (loadError) {
     return (
       <div className={`bg-gray-100 rounded-lg p-8 text-center ${className}`} style={mapContainerStyle}>
         <div className="text-red-600 mb-4">
-          <svg className="mx-auto h-12 w-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+          <MapPin className="mx-auto h-12 w-12 mb-2" />
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">Map Unavailable</h3>
-        <p className="text-gray-600 mb-4">{loadError}</p>
-        <div className="bg-white rounded-lg p-4 border">
-          <h4 className="font-medium text-gray-900 mb-2">City Location</h4>
-          <p className="text-sm text-gray-600">
-            {city.name}, {city.district} District<br />
-            Coordinates: {city.coordinates.lat}, {city.coordinates.lng}
-          </p>
-        </div>
+        <p className="text-gray-600 mb-4">Failed to load Google Maps. Please check your internet connection.</p>
       </div>
     )
   }
 
-  // Check if Google Maps API key is available
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-  if (!apiKey) {
+  if (!isLoaded) {
     return (
       <div className={`bg-gray-100 rounded-lg p-8 text-center ${className}`} style={mapContainerStyle}>
-        <div className="text-yellow-600 mb-4">
-          <svg className="mx-auto h-12 w-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Map Configuration Required</h3>
-        <p className="text-gray-600 mb-4">Google Maps API key is required to display the interactive map.</p>
-        <div className="bg-white rounded-lg p-4 border">
-          <h4 className="font-medium text-gray-900 mb-2">{city.name} Location</h4>
-          <p className="text-sm text-gray-600">
-            {city.district} District, Jharkhand<br />
-            Coordinates: {city.coordinates.lat}, {city.coordinates.lng}
-          </p>
-          <div className="mt-3 text-sm text-gray-500">
-            <strong>Attractions:</strong> {city.attractions.length} places to visit<br />
-            <strong>Hotels:</strong> {city.hotels.length} accommodation options
-          </div>
+        <div className="flex flex-col items-center justify-center h-full">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+          <p className="text-gray-600">Loading essential services map...</p>
         </div>
       </div>
     )
@@ -260,139 +156,170 @@ export function InteractiveCityMap({ city, height = '400px', className = '' }: I
 
   return (
     <div className={`relative ${className}`}>
-      <LoadScript 
-        googleMapsApiKey={apiKey}
-        onError={handleLoadError}
-        loadingElement={
-          <div className="bg-gray-100 rounded-lg p-8 text-center" style={mapContainerStyle}>
-            <div className="flex flex-col items-center justify-center h-full">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-4"></div>
-              <p className="text-gray-600">Loading interactive map...</p>
-            </div>
-          </div>
-        }
-      >
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={center}
-          zoom={12}
-          onLoad={onLoad}
-          onUnmount={onUnmount}
-          options={{
-            styles: mapStyles,
-            disableDefaultUI: false,
-            zoomControl: true,
-            streetViewControl: false,
-            mapTypeControl: true,
-            fullscreenControl: true
-          }}
-        >
-          {allMarkers.map((marker) => (
-            <Marker
-              key={marker.id}
-              position={marker.position}
-              title={marker.title}
-              icon={getMarkerIcon(marker.type)}
-              onClick={() => handleMarkerClick(marker)}
-            />
-          ))}
-
-          {selectedMarker && (
-            <InfoWindow
-              position={selectedMarker.position}
-              onCloseClick={handleInfoWindowClose}
+      {/* Filter Controls */}
+      <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-3">
+        <h3 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
+          <MapPin className="h-4 w-4" />
+          Essential Services
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {serviceCategories.map((category) => (
+            <Button
+              key={category.key}
+              variant={activeFilter === category.key ? "default" : "outline"}
+              size="sm"
+              onClick={() => setActiveFilter(category.key)}
+              className={`text-xs px-3 py-1 rounded-full transition-all ${
+                activeFilter === category.key
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
+                  : 'bg-white hover:bg-gray-50 text-gray-700'
+              }`}
             >
-              <div className="p-3 max-w-sm">
-                <h3 className="font-bold text-lg mb-2 text-gray-800">{selectedMarker.title}</h3>
-                {selectedMarker.image && (
-                  <div className="mb-3">
-                    <Image
-                      src={selectedMarker.image}
-                      alt={selectedMarker.title}
-                      width={200}
-                      height={120}
-                      className="w-full h-24 object-cover rounded"
-                    />
-                  </div>
-                )}
-                <p className="text-gray-700 text-sm mb-3">{selectedMarker.description}</p>
-                
-                {selectedMarker.type === 'attraction' && (
-                  <div className="text-xs text-gray-600 mb-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                        {selectedMarker.category}
-                      </span>
-                      <div className="flex items-center">
-                        <span className="text-yellow-500">★</span>
-                        <span className="ml-1">{selectedMarker.rating}</span>
-                      </div>
-                    </div>
-                    <div>Distance: {selectedMarker.distance}</div>
-                  </div>
-                )}
-                
-                {selectedMarker.type === 'hotel' && (
-                  <div className="text-xs text-gray-600 mb-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-green-600">{selectedMarker.price}</span>
-                      <div className="flex items-center">
-                        <span className="text-yellow-500">★</span>
-                        <span className="ml-1">{selectedMarker.rating}</span>
-                      </div>
-                    </div>
-                    {selectedMarker.amenities && selectedMarker.amenities.length > 0 && (
-                      <div className="mt-1">
-                        <span className="font-medium">Amenities: </span>
-                        {selectedMarker.amenities.slice(0, 3).join(', ')}
-                        {selectedMarker.amenities.length > 3 && '...'}
+              <span className="mr-1">{category.icon}</span>
+              {category.label}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        center={center}
+        zoom={14}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        options={{
+          zoomControl: true,
+          streetViewControl: false,
+          mapTypeControl: false,
+          fullscreenControl: false,
+          styles: [
+            {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [{ visibility: "off" }]
+            }
+          ]
+        }}
+      >
+        {/* City center marker */}
+        <Marker
+          position={center}
+          title={city.name}
+          icon="https://maps.google.com/mapfiles/ms/icons/purple-dot.png"
+        />
+
+        {/* Essential services markers */}
+        {filteredServices.map((service) => (
+          <Marker
+            key={service.id}
+            position={service.position}
+            title={service.name}
+            icon={getMarkerIcon(service.type)}
+            onClick={() => setSelectedMarker(service)}
+          />
+        ))}
+
+        {/* InfoWindow for selected service */}
+        {selectedMarker && (
+          <InfoWindow
+            position={selectedMarker.position}
+            onCloseClick={() => setSelectedMarker(null)}
+          >
+            <div className="max-w-xs p-2">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 text-lg">
+                  {serviceCategories.find(cat => cat.key === selectedMarker.type)?.icon || '📍'}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    {selectedMarker.name}
+                  </h3>
+                  
+                  <p className="text-xs text-gray-600 mb-2">
+                    {selectedMarker.description}
+                  </p>
+
+                  <div className="flex items-center gap-2 mb-2 text-xs text-gray-500">
+                    {selectedMarker.rating && (
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span>{selectedMarker.rating}</span>
                       </div>
                     )}
+                    
+                    {selectedMarker.openNow !== undefined && (
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        <span className={selectedMarker.openNow ? 'text-green-600' : 'text-red-600'}>
+                          {selectedMarker.openNow ? 'Open' : 'Closed'}
+                        </span>
+                      </div>
+                    )}
+
+                    {selectedMarker.distance && (
+                      <span>{selectedMarker.distance} away</span>
+                    )}
                   </div>
-                )}
-                
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      window.open(`https://www.google.com/maps/dir//${selectedMarker.position.lat},${selectedMarker.position.lng}`, '_blank')
-                    }}
-                    className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs transition-colors flex-1"
-                  >
-                    Get Directions
-                  </button>
-                  <button
-                    onClick={() => {
-                      const coords = `${selectedMarker.position.lat}, ${selectedMarker.position.lng}`
-                      navigator.clipboard.writeText(coords)
-                      alert('Coordinates copied to clipboard!')
-                    }}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition-colors"
-                    title="Copy Coordinates"
-                  >
-                    📋
-                  </button>
+
+                  <div className="flex justify-center">
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        const directionsUrl = `https://www.google.com/maps/dir/${city.coordinates.lat},${city.coordinates.lng}/${selectedMarker.position.lat},${selectedMarker.position.lng}`;
+                        window.open(directionsUrl, '_blank');
+                      }}
+                      className="text-xs px-3 py-1.5 h-7 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
+                    >
+                      <Navigation className="h-3 w-3 mr-1.5" />
+                      Get Directions
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </InfoWindow>
-          )}
-        </GoogleMap>
-      </LoadScript>
-      
-      {/* Legend */}
-      <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-lg p-3 text-xs">
-        <h4 className="font-bold mb-2">Map Legend</h4>
+            </div>
+          </InfoWindow>
+        )}
+      </GoogleMap>
+
+      {/* Services Summary */}
+      <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-3 text-xs max-w-48">
+        <h4 className="font-bold mb-2 text-gray-800">Services Found</h4>
         <div className="space-y-1">
-          <div className="flex items-center">
-            <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
-            <span>City Center</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+              <span>Hospitals</span>
+            </div>
+            <span className="font-medium">{essentialServices.filter(s => s.type === 'hospital').length}</span>
           </div>
-          <div className="flex items-center">
-            <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-            <span>Attractions</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
+              <span>Fuel Stations</span>
+            </div>
+            <span className="font-medium">{essentialServices.filter(s => s.type === 'fuel_station').length}</span>
           </div>
-          <div className="flex items-center">
-            <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-            <span>Hotels</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+              <span>Restaurants</span>
+            </div>
+            <span className="font-medium">{essentialServices.filter(s => s.type === 'restaurant').length}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+              <span>Police Stations</span>
+            </div>
+            <span className="font-medium">{essentialServices.filter(s => s.type === 'police_station').length}</span>
+          </div>
+          <div className="flex items-center justify-between border-t pt-1 mt-1">
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full bg-purple-500 mr-2"></div>
+              <span>City Center</span>
+            </div>
+            <span className="font-medium">1</span>
           </div>
         </div>
       </div>

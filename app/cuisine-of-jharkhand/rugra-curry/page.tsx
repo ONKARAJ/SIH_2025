@@ -77,7 +77,7 @@ export default function RugraCurryPage() {
             {/* Image */}
             <div className="relative h-96 rounded-2xl overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&q=80"
+                src="https://i.ytimg.com/vi/lunQeSDwCUI/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBM-dGXET3l_OeWLX9Bl74Oj3Ksww"
                 alt="Rugra Curry - Wild Mushroom Curry"
                 fill
                 className="object-cover"
