@@ -57,12 +57,13 @@ const nextConfig = {
     remotePatterns: []
     // Note: With unoptimized: true, all hostnames are allowed but images won't be optimized
   },
+  // Skip trailing slash redirect
+  skipTrailingSlashRedirect: true,
+  
   // Experimental features for better performance
   experimental: {
     // Disable missing suspense with CSR bailout during build
     missingSuspenseWithCSRBailout: false,
-    // Skip prerendering for pages with client-side features
-    skipTrailingSlashRedirect: true,
     turbo: {
       rules: {
         '*.svg': {

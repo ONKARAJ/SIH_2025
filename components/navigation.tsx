@@ -18,7 +18,9 @@ import GlobalSearch from "@/components/search/global-search"
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
-  const { data: session, status } = useSession()
+  const sessionData = useSession()
+  const session = sessionData?.data || null
+  const status = sessionData?.status || "loading"
 
   const navLinks = [
     { href: "/", label: "Home" },

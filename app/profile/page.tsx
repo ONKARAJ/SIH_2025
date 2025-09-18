@@ -30,7 +30,9 @@ import {
 import { toast } from "sonner"
 
 export default function ProfilePage() {
-  const { data: session, status } = useSession()
+  const sessionData = useSession()
+  const session = sessionData?.data || null
+  const status = sessionData?.status || "loading"
   const router = useRouter()
   const [isEditing, setIsEditing] = useState(false)
   const [isLoading, setIsLoading] = useState(false)

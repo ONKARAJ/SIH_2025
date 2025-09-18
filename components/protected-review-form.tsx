@@ -23,7 +23,9 @@ interface ProtectedReviewFormProps {
 }
 
 export function ProtectedReviewForm({ onSubmit }: ProtectedReviewFormProps) {
-  const { data: session, status } = useSession()
+  const sessionData = useSession()
+  const session = sessionData?.data || null
+  const status = sessionData?.status || "loading"
   const router = useRouter()
   const [showProfileDialog, setShowProfileDialog] = useState(false)
 

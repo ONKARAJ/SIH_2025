@@ -31,7 +31,9 @@ interface CityProtectedReviewFormProps {
 }
 
 export function CityProtectedReviewForm({ cityId, cityName, onReviewSubmitted }: CityProtectedReviewFormProps) {
-  const { data: session, status } = useSession()
+  const sessionData = useSession()
+  const session = sessionData?.data || null
+  const status = sessionData?.status || "loading"
   const router = useRouter()
   const [reviewData, setReviewData] = useState({
     rating: 5,

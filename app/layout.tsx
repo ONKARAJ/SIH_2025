@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
+import { SessionProvider } from "@/components/auth/session-provider";
 import { ChatbotWrapper } from "@/components/chatbot-wrapper";
 import { SidebarNavigation } from "@/components/sidebar-navigation";
 import { SOSWrapper } from "@/components/sos-wrapper";
@@ -29,10 +30,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        {children}
-        <SidebarNavigation />
-        <SOSWrapper />
-        <ChatbotWrapper />
+        <SessionProvider>
+          {children}
+          <SidebarNavigation />
+          <SOSWrapper />
+          <ChatbotWrapper />
+        </SessionProvider>
         <Analytics />
       </body>
     </html>
