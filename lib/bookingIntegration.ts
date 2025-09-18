@@ -25,11 +25,11 @@ export class BookingService {
   // Lazy load database to avoid build-time issues
   private async getDb() {
     try {
-      const { db } = await import('@/lib/db');
-      if (!db || typeof db.train?.findMany !== 'function') {
+      const { prisma } = await import('@/lib/prisma');
+      if (!prisma || typeof prisma.train?.findMany !== 'function') {
         throw new Error('Database not available');
       }
-      return db;
+      return prisma;
     } catch (error) {
       console.error('Failed to initialize database:', error);
       throw new Error('Database service unavailable');

@@ -77,7 +77,7 @@ export function JharkhandInteractiveMap({ touristSpots, onLocationSelect }: Jhar
 
     clearMarkers();
 
-    touristSpots.forEach((spot, index) => {
+    touristSpots.forEach((spot) => {
       // Create custom marker
       const marker = new window.google.maps.Marker({
         position: { lat: spot.lat, lng: spot.lng },
@@ -165,7 +165,7 @@ export function JharkhandInteractiveMap({ touristSpots, onLocationSelect }: Jhar
       mapTypeId: 'roadmap',
       restriction: {
         latLngBounds: bounds,
-        strictBounds: false // Allow slight panning outside for better UX
+        strictBounds: false
       },
       zoomControl: true,
       mapTypeControl: true,
@@ -193,11 +193,11 @@ export function JharkhandInteractiveMap({ touristSpots, onLocationSelect }: Jhar
 
     if (!window.google) {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initJharkhandMap`;
       script.async = true;
       script.defer = true;
       
-      script.onload = () => {
+      window.initJharkhandMap = () => {
         try {
           console.log('Google Maps API loaded for Jharkhand map');
           initializeMap();
@@ -214,17 +214,7 @@ export function JharkhandInteractiveMap({ touristSpots, onLocationSelect }: Jhar
         setIsLoading(false);
       };
       
-      // Avoid duplicate script tags
-      const existing = document.querySelector('script[src^="https://maps.googleapis.com/maps/api/js"]') as HTMLScriptElement | null;
-      if (!existing) {
-        document.head.appendChild(script);
-      } else {
-        if (window.google) {
-          initializeMap();
-        } else {
-          existing.addEventListener('load', () => initializeMap());
-        }
-      }
+      document.head.appendChild(script);
     } else {
       console.log('Google Maps API already loaded, initializing map...');
       initializeMap();
@@ -256,7 +246,6 @@ export function JharkhandInteractiveMap({ touristSpots, onLocationSelect }: Jhar
     }, 100);
   };
 
-  // Listen for fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
