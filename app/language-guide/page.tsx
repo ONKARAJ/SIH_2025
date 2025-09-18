@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Languages, ArrowRight, Loader2, Copy, CheckCircle2, Volume2, VolumeX } from 'lucide-react';
+import { Languages, ArrowRight, Loader2, Copy, CheckCircle2, Volume2, VolumeX, Mic, RefreshCw } from 'lucide-react';
+import VoiceInput from '@/components/voice-input';
 
 interface TranslationResponse {
   translatedText: string;
   detectedLanguage?: string;
+  error?: string;
 }
 
 export default function LanguageGuidePage() {
@@ -17,6 +19,9 @@ export default function LanguageGuidePage() {
   const [copied, setCopied] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
+  const [showVoiceInput, setShowVoiceInput] = useState(false);
+  const [sourceLanguage, setSourceLanguage] = useState<'en' | 'hi'>('en');
+  const [targetLanguage, setTargetLanguage] = useState<'en' | 'hi'>('hi');
 
   // Check for speech synthesis support on component mount
   useEffect(() => {
@@ -39,8 +44,8 @@ export default function LanguageGuidePage() {
 
     const utterance = new SpeechSynthesisUtterance(translatedText);
     
-    // Set language to Hindi
-    utterance.lang = 'hi-IN';
+    // Set language based on target language
+    utterance.lang = getVoiceLanguageCode(targetLanguage);
     
     // Configure speech settings
     utterance.rate = 0.8; // Slightly slower for clarity
@@ -92,7 +97,8 @@ export default function LanguageGuidePage() {
         },
         body: JSON.stringify({
           text: inputText,
-          targetLanguage: 'hi', // Hindi language code
+          targetLanguage: targetLanguage,
+          sourceLanguage: sourceLanguage,
         }),
       });
 
@@ -128,6 +134,34 @@ export default function LanguageGuidePage() {
     }
   };
 
+  const handleVoiceInput = (transcript: string) => {
+    setInputText(transcript);
+    setError('');
+  };
+
+  const swapLanguages = () => {
+    const newSource = targetLanguage;
+    const newTarget = sourceLanguage;
+    setSourceLanguage(newSource);
+    setTargetLanguage(newTarget);
+    
+    // Swap text content if both fields have content
+    if (inputText && translatedText) {
+      setInputText(translatedText);
+      setTranslatedText(inputText);
+    }
+    
+    setError('');
+  };
+
+  const getLanguageLabel = (lang: 'en' | 'hi') => {
+    return lang === 'en' ? 'English' : 'हिंदी (Hindi)';
+  };
+
+  const getVoiceLanguageCode = (lang: 'en' | 'hi') => {
+    return lang === 'en' ? 'en-US' : 'hi-IN';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Background Pattern */}
@@ -151,7 +185,7 @@ export default function LanguageGuidePage() {
           </h1>
           <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
             Break language barriers and communicate easily during your Jharkhand journey. 
-            Translate any text to Hindi instantly.
+            Translate between English and Hindi instantly with text or voice input.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-orange-400 to-red-500 mx-auto mt-6 rounded-full"></div>
         </div>
@@ -159,12 +193,26 @@ export default function LanguageGuidePage() {
         {/* Main Translation Card */}
         <div className="max-w-4xl mx-auto">
           <div className="bg-white/5 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
-            {/* Card Header */}
+            {/* Card Header - Bidirectional Language Selector */}
             <div className="bg-gradient-to-r from-orange-500/20 to-red-500/20 border-b border-white/10 p-6">
-              <div className="flex items-center justify-center space-x-3">
-                <span className="text-gray-300 font-medium">Any Language</span>
-                <ArrowRight className="w-5 h-5 text-orange-400" />
-                <span className="text-orange-400 font-semibold">हिंदी (Hindi)</span>
+              <div className="flex items-center justify-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <div className="text-2xl">{sourceLanguage === 'en' ? '🇺🇸' : '🇮🇳'}</div>
+                  <span className="text-gray-300 font-medium text-lg">{getLanguageLabel(sourceLanguage)}</span>
+                </div>
+                
+                <button 
+                  onClick={swapLanguages}
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 group"
+                  title="Swap languages"
+                >
+                  <RefreshCw className="w-5 h-5 text-orange-400 group-hover:text-white group-hover:rotate-180 transition-all duration-300" />
+                </button>
+                
+                <div className="flex items-center space-x-2">
+                  <div className="text-2xl">{targetLanguage === 'en' ? '🇺🇸' : '🇮🇳'}</div>
+                  <span className="text-orange-400 font-semibold text-lg">{getLanguageLabel(targetLanguage)}</span>
+                </div>
               </div>
             </div>
 
@@ -172,16 +220,37 @@ export default function LanguageGuidePage() {
             <div className="p-6 md:p-8 space-y-8">
               {/* Input Section */}
               <div className="space-y-4">
-                <label htmlFor="input-text" className="block text-lg font-semibold text-gray-200">
-                  Enter text to translate:
-                </label>
+                <div className="flex items-center justify-between">  
+                  <label htmlFor="input-text" className="block text-lg font-semibold text-gray-200">
+                    Enter text in {getLanguageLabel(sourceLanguage)}:
+                  </label>
+                  <button 
+                    onClick={() => setShowVoiceInput(!showVoiceInput)} 
+                    className="flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-orange-500/20 to-red-500/20 hover:from-orange-500/30 hover:to-red-500/30 border border-orange-500/30 rounded-lg text-gray-300 hover:text-white transition-all duration-200 text-sm">
+                    <Mic className="w-4 h-4 text-orange-400" />
+                    <span>{showVoiceInput ? 'Hide Voice Input' : 'Voice Input'}</span>
+                  </button>
+                </div>
+                
+                {showVoiceInput && (
+                  <div className="animate-fadeIn">
+                    <VoiceInput 
+                      onTranscript={handleVoiceInput} 
+                      disabled={isLoading} 
+                      className="mb-4"
+                      initialLanguage={getVoiceLanguageCode(sourceLanguage)}
+                      placeholder={`Speak in ${getLanguageLabel(sourceLanguage)} and we'll translate it to ${getLanguageLabel(targetLanguage)}`}
+                    />
+                  </div>
+                )}
+                
                 <div className="relative">
                   <textarea
                     id="input-text"
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="Type here in any language…"
+                    placeholder={`Type here in ${getLanguageLabel(sourceLanguage)}…`}
                     className="w-full h-32 md:h-40 p-4 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 text-lg leading-relaxed"
                     disabled={isLoading}
                   />
@@ -206,7 +275,7 @@ export default function LanguageGuidePage() {
                   ) : (
                     <>
                       <Languages className="w-5 h-5" />
-                      <span>Translate to Hindi</span>
+                      <span>Translate to {getLanguageLabel(targetLanguage)}</span>
                     </>
                   )}
                 </button>
@@ -224,7 +293,7 @@ export default function LanguageGuidePage() {
                 <div className="space-y-4 animate-fadeIn">
                   <div className="flex items-center justify-between">
                     <label className="block text-lg font-semibold text-gray-200">
-                      In Hindi:
+                      In {getLanguageLabel(targetLanguage)}:
                     </label>
                     {detectedLanguage && (
                       <span className="text-sm text-gray-400 bg-slate-700/50 px-3 py-1 rounded-full">
@@ -247,7 +316,7 @@ export default function LanguageGuidePage() {
                               ? 'bg-orange-500/20 hover:bg-orange-500/30' 
                               : 'bg-white/10 hover:bg-white/20'
                           }`}
-                          title={isSpeaking ? "Stop speaking" : "Listen to Hindi pronunciation"}
+                          title={isSpeaking ? "Stop speaking" : `Listen to ${getLanguageLabel(targetLanguage)} pronunciation`}
                         >
                           {isSpeaking ? (
                             <VolumeX className="w-5 h-5 text-orange-400" />
@@ -278,11 +347,11 @@ export default function LanguageGuidePage() {
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
               <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🗣️</span>
+                <Mic className="w-6 h-6 text-blue-400 mx-auto" />
               </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Instant Communication</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">Voice Input</h3>
               <p className="text-gray-400 text-sm">
-                Translate phrases for asking directions, ordering food, or basic conversations with locals.
+                Speak directly in English or Hindi - no typing needed. Perfect for quick translations on the go.
               </p>
             </div>
 
@@ -328,29 +397,35 @@ export default function LanguageGuidePage() {
                 { english: "Where is the nearest hotel?", hindi: "सबसे नजदीकी होटल कहाँ है? (Sabse najdeeki hotel kahan hai?)" },
                 { english: "Can you help me?", hindi: "क्या आप मेरी मदद कर सकते हैं? (Kya aap meri madad kar sakte hain?)" },
                 { english: "I don't understand", hindi: "मुझे समझ नहीं आया (Mujhe samajh nahin aaya)" }
-              ].map((phrase, index) => (
-                <div key={index} className="bg-slate-800/30 rounded-lg p-4 border border-slate-600/30 relative group">
-                  <p className="text-gray-300 text-sm mb-2">{phrase.english}</p>
-                  <p className="text-orange-300 font-medium pr-10">{phrase.hindi}</p>
-                  {speechSupported && (
-                    <button
-                      onClick={() => {
-                        if (window.speechSynthesis) {
-                          window.speechSynthesis.cancel();
-                          const utterance = new SpeechSynthesisUtterance(phrase.hindi.split(' (')[0]); // Remove transliteration
-                          utterance.lang = 'hi-IN';
-                          utterance.rate = 0.8;
-                          window.speechSynthesis.speak(utterance);
-                        }
-                      }}
-                      className="absolute top-3 right-3 p-1.5 bg-orange-500/20 hover:bg-orange-500/30 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
-                      title="Listen to pronunciation"
-                    >
-                      <Volume2 className="w-4 h-4 text-orange-400" />
-                    </button>
-                  )}
-                </div>
-              ))}
+              ].map((phrase, index) => {
+                const sourceText = sourceLanguage === 'en' ? phrase.english : phrase.hindi;
+                const targetText = targetLanguage === 'en' ? phrase.english : phrase.hindi;
+                const speechText = targetLanguage === 'en' ? phrase.english : phrase.hindi.split(' (')[0];
+                
+                return (
+                  <div key={index} className="bg-slate-800/30 rounded-lg p-4 border border-slate-600/30 relative group">
+                    <p className="text-gray-300 text-sm mb-2">{sourceText}</p>
+                    <p className="text-orange-300 font-medium pr-10">{targetText}</p>
+                    {speechSupported && (
+                      <button
+                        onClick={() => {
+                          if (window.speechSynthesis) {
+                            window.speechSynthesis.cancel();
+                            const utterance = new SpeechSynthesisUtterance(speechText);
+                            utterance.lang = getVoiceLanguageCode(targetLanguage);
+                            utterance.rate = 0.8;
+                            window.speechSynthesis.speak(utterance);
+                          }
+                        }}
+                        className="absolute top-3 right-3 p-1.5 bg-orange-500/20 hover:bg-orange-500/30 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
+                        title="Listen to pronunciation"
+                      >
+                        <Volume2 className="w-4 h-4 text-orange-400" />
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

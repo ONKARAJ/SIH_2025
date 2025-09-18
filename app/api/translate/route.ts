@@ -35,9 +35,19 @@ const languageNames: { [key: string]: string } = {
   'ru': 'Russian'
 };
 
+// Helper function to clean and preprocess text for better translation
+function preprocessText(text: string): string {
+  return text
+    .trim()
+    .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+    .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width characters
+    .replace(/^[.,!?;:]+|[.,!?;:]+$/g, '') // Remove leading/trailing punctuation
+    .trim();
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { text, targetLanguage = 'hi' } = await request.json();
+    const { text, targetLanguage = 'hi', sourceLanguage } = await request.json();
 
     // Validate input
     if (!text || typeof text !== 'string') {
@@ -46,8 +56,18 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+    
+    // Preprocess the text
+    const cleanText = preprocessText(text);
+    
+    if (!cleanText) {
+      return NextResponse.json(
+        { error: 'Text cannot be empty after preprocessing' },
+        { status: 400 }
+      );
+    }
 
-    if (text.length > 5000) {
+    if (cleanText.length > 5000) {
       return NextResponse.json(
         { error: 'Text is too long. Maximum 5000 characters allowed.' },
         { status: 400 }
@@ -76,9 +96,11 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          q: text,
+          q: cleanText,
           target: targetLanguage,
-          format: 'text'
+          source: sourceLanguage || 'auto', // Use provided source or auto-detect
+          format: 'text',
+          model: 'base' // Use base model for better quality
         }),
       }
     );
@@ -104,8 +126,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       translatedText,
       detectedLanguage: detectedLanguage || undefined,
-      originalText: text,
-      targetLanguage: languageNames[targetLanguage] || targetLanguage.toUpperCase()
+      originalText: cleanText,
+      targetLanguage: languageNames[targetLanguage] || targetLanguage.toUpperCase(),
+      sourceLanguage: languageNames[detectedLanguageCode || sourceLanguage || 'auto'] || (detectedLanguageCode || sourceLanguage || 'auto').toUpperCase()
     });
 
   } catch (error) {
