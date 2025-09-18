@@ -61,6 +61,8 @@ const nextConfig = {
   experimental: {
     // Disable missing suspense with CSR bailout during build
     missingSuspenseWithCSRBailout: false,
+    // Skip prerendering for pages with client-side features
+    skipTrailingSlashRedirect: true,
     turbo: {
       rules: {
         '*.svg': {

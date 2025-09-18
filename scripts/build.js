@@ -26,7 +26,7 @@ try {
 
   // Build Next.js application
   console.log('🔨 Building Next.js application...');
-  execSync('next build', { 
+  execSync('npx next build', { 
     stdio: 'inherit',
     env: { ...process.env }
   });
