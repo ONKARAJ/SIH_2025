@@ -18,7 +18,7 @@ export function ChatbotWrapper() {
       {!isChatbotOpen && (
         <Button
           onClick={toggleChatbot}
-          className="fixed bottom-4 right-4 h-14 w-14 rounded-full shadow-lg hover:shadow-xl z-40 bg-primary hover:bg-primary/90"
+          className="fixed bottom-4 right-4 h-14 w-14 rounded-full shadow-lg hover:shadow-xl z-40 bg-primary hover:bg-primary/90 pointer-events-auto"
           size="lg"
         >
           <MessageCircle className="h-6 w-6" />

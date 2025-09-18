@@ -1,5 +1,5 @@
 // Booking system integration for transport price comparisons
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
 interface TransportOption {
   type: 'train' | 'bus' | 'flight';
@@ -74,7 +74,7 @@ export class BookingService {
   // Get train options from database
   private async getTrainOptions(origin: string, destination: string, date: Date): Promise<TransportOption[]> {
     try {
-      const trains = await db.train.findMany({
+      const trains = await prisma.train.findMany({
         where: {
           isActive: true,
           OR: [
@@ -133,7 +133,7 @@ export class BookingService {
   // Get flight options from database
   private async getFlightOptions(origin: string, destination: string, date: Date): Promise<TransportOption[]> {
     try {
-      const flights = await db.flight.findMany({
+      const flights = await prisma.flight.findMany({
         where: {
           isActive: true,
           departure: {
