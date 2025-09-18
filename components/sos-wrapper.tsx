@@ -535,7 +535,15 @@ export function SOSWrapper() {
   // Emergency handlers
   const onFuel = async () => {
     setSelectedEmergency("fuel");
-    await findFuelAlongRoute();
+    // If we have both current location and destination, find fuel along route
+    // Otherwise, find nearby fuel stations
+    const hasDestination = destLatLng || toText;
+    if (hasDestination) {
+      await findFuelAlongRoute();
+    } else {
+      // Find nearby fuel stations instead of along route
+      await findNearby(["gas_station"], 10000, false);
+    }
   };
 
   const onMedical = async () => {
@@ -622,12 +630,12 @@ className={`fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-[min(640px,100vw-1re
           <CardHeader className="px-4 py-3 border-b border-border bg-white/90 dark:bg-background/90 backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center animate-pulse">
                   <AlertTriangle className="w-4 h-4" />
                 </div>
                 <div>
                   <CardTitle className="text-base">Emergency SOS</CardTitle>
-                  <div className="text-xs text-muted-foreground">Quick access to nearby help and services</div>
+                  <div className="text-xs text-muted-foreground">Quick access to nearby help and services • Click X to close</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -646,8 +654,14 @@ className={`fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-[min(640px,100vw-1re
                     </a>
                   </Button>
                 )}
-                <Button size="sm" variant="ghost" onClick={closePanel} title="Close">
-                  <X className="w-4 h-4" />
+                <Button 
+                  size="sm" 
+                  variant="destructive" 
+                  onClick={closePanel} 
+                  title="Close SOS Panel"
+                  className="bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
+                >
+                  <X className="w-5 h-5" />
                 </Button>
               </div>
             </div>
@@ -762,7 +776,7 @@ className={`fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-[min(640px,100vw-1re
                   <div className="font-semibold">Fuel Emergency</div>
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  Find fuel stations along your route
+                  Find nearby fuel stations (add destination for route-based search)
                 </div>
               </button>
 
