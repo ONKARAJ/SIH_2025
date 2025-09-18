@@ -4,6 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import { ChatbotWrapper } from "@/components/chatbot-wrapper";
 import { SidebarNavigation } from "@/components/sidebar-navigation";
+import { SOSWrapper } from "@/components/sos-wrapper";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         {children}
         <SidebarNavigation />
+        <SOSWrapper />
         <ChatbotWrapper />
         <Analytics />
       </body>
