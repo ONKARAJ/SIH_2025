@@ -169,46 +169,35 @@
 
                 // Create polygon coordinates using extreme geographical points
                 const jharkhandCoordinates = [
-                    // Creating rectangular boundary using extreme coordinates
-                    { lat: JHARKHAND_BOUNDS.north, lng: JHARKHAND_BOUNDS.west }, // Northwest corner
-                    { lat: JHARKHAND_BOUNDS.north, lng: JHARKHAND_BOUNDS.east }, // Northeast corner  
-                    { lat: JHARKHAND_BOUNDS.south, lng: JHARKHAND_BOUNDS.east }, // Southeast corner
-                    { lat: JHARKHAND_BOUNDS.south, lng: JHARKHAND_BOUNDS.west }, // Southwest corner
-                    { lat: JHARKHAND_BOUNDS.north, lng: JHARKHAND_BOUNDS.west }  // Back to start
+                    { lat: JHARKHAND_BOUNDS.north, lng: JHARKHAND_BOUNDS.west },
+                    { lat: JHARKHAND_BOUNDS.north, lng: JHARKHAND_BOUNDS.east },
+                    { lat: JHARKHAND_BOUNDS.south, lng: JHARKHAND_BOUNDS.east },
+                    { lat: JHARKHAND_BOUNDS.south, lng: JHARKHAND_BOUNDS.west },
+                    { lat: JHARKHAND_BOUNDS.north, lng: JHARKHAND_BOUNDS.west }
                 ];
 
-                // Create the Jharkhand state boundary polygon
                 jharkhandPolygon = new google.maps.Polygon({
                     paths: jharkhandCoordinates,
-                    strokeColor: "#FF0000",    // Red border
+                    strokeColor: "#FF0000",
                     strokeOpacity: 0.8,
                     strokeWeight: 2,
-                    fillColor: "#FF0000",      // Red fill
-                    fillOpacity: 0.1,          // Semi-transparent fill
+                    fillColor: "#FF0000",
+                    fillOpacity: 0.1,
                     clickable: true
                 });
 
-                // Add the polygon to the map
                 jharkhandPolygon.setMap(map);
-
-                // Add click event to show state information
                 jharkhandPolygon.addListener("click", showStateInfo);
 
-                // Zoom to fit the Jharkhand polygon
                 const bounds = new google.maps.LatLngBounds();
-                jharkhandCoordinates.forEach(coord => {
-                    bounds.extend(coord);
-                });
+                jharkhandCoordinates.forEach(coord => bounds.extend(coord));
                 map.fitBounds(bounds);
 
-                // Add a slight padding to the bounds
                 setTimeout(() => {
-                    map.fitBounds(bounds, 20); // 20px padding
+                    map.fitBounds(bounds, 20);
                 }, 500);
 
                 console.log("✅ Jharkhand map initialized successfully!");
-                console.log(`📍 Bounds: N:${JHARKHAND_BOUNDS.north}° S:${JHARKHAND_BOUNDS.south}° E:${JHARKHAND_BOUNDS.east}° W:${JHARKHAND_BOUNDS.west}°`);
-
             } catch (error) {
                 console.error("❌ Error initializing map:", error);
                 document.getElementById("map").innerHTML = `
@@ -256,7 +245,6 @@
             infoWindow.open(map);
         }
 
-        // Global error handler for Google Maps API
         window.gm_authFailure = function() {
             console.error("❌ Google Maps API authentication failed");
             document.getElementById("map").innerHTML = `
@@ -271,8 +259,6 @@
         };
     </script>
 
-    <!-- Google Maps JavaScript API -->
-    <!-- API key configured for Jharkhand tourism map -->
     <script async defer 
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt673xUNzOyptAU4YW_NMIuM7ChbeQE0g&callback=initMap">
     </script>

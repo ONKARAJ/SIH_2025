@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -16,7 +16,7 @@ model User {
   isVerified Boolean @default(false)
   role      String   @default("user")
   avatar    String?
-  preferences Json   @default("{}")
+  preferences String   @default("{}")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -24,8 +24,12 @@ model User {
   flightBookings FlightBooking[]
   trainBookings  TrainBooking[]
   hotelReviews   HotelReview[]
-  sessions       UserSession[]
+  userSessions   UserSession[] @relation("UserSessions")
   paymentMethods PaymentMethod[]
+  
+  // NextAuth relations
+  accounts Account[]
+  sessions Session[]
   
   @@map("users")
 }
@@ -33,7 +37,7 @@ model User {
 model Hotel {
   id          String   @id @default(uuid())
   name        String
-  description String   @db.Text
+  description String
   address     String
   city        String
   state       String   @default("Jharkhand")
@@ -43,9 +47,9 @@ model Hotel {
   website     String?
   rating      Float    @default(4.0)
   reviewCount Int      @default(0)
-  images      Json     @default("[]")
-  amenities   Json     @default("[]")
-  policies    Json     @default("{}")
+  images      String     @default("[]")
+  amenities   String     @default("[]")
+  policies    String     @default("{}")
   latitude    Float?
   longitude   Float?
   checkInTime String   @default("14:00")
@@ -68,15 +72,15 @@ model Room {
   hotelId     String
   name        String
   type        String
-  description String?  @db.Text
+  description String?
   maxGuests   Int      @default(2)
   basePrice   Float
   discountPrice Float?
   size        String?
   bedType     String   @default("double")
   view        String?
-  images      Json     @default("[]")
-  amenities   Json     @default("[]")
+  images      String     @default("[]")
+  amenities   String     @default("[]")
   totalRooms  Int      @default(1)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -96,8 +100,8 @@ model HotelBooking {
   hotelId     String
   roomId      String
   bookingRef  String   @unique
-  checkIn     DateTime @db.Date
-  checkOut    DateTime @db.Date
+  checkIn     DateTime
+  checkOut    DateTime
   nights      Int
   adults      Int      @default(1)
   children    Int      @default(0)
@@ -112,7 +116,7 @@ model HotelBooking {
   guestName   String
   guestEmail  String
   guestPhone  String
-  specialRequests String? @db.Text
+  specialRequests String?
   cancellationPolicy String?
   confirmationNumber String? @unique
   checkInTime String?
@@ -144,11 +148,11 @@ model Flight {
   availableSeats Int
   aircraft      String   @default("Boeing 737")
   flightType    String   @default("domestic")
-  classTypes    Json     @default("[\"economy\", \"business\"]")
-  amenities     Json     @default("[]")
-  baggage       Json     @default("{}")
+  classTypes    String     @default("[\"economy\", \"business\"]")
+  amenities     String     @default("[]")
+  baggage       String     @default("{}")
   isActive      Boolean  @default(true)
-  operatingDays Json     @default("[1,2,3,4,5,6,7]")
+  operatingDays String     @default("[1,2,3,4,5,6,7]")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   
@@ -163,8 +167,8 @@ model FlightBooking {
   flightId      String
   bookingRef    String   @unique
   pnr           String?  @unique
-  passengers    Json     // Array of passenger objects
-  seatNumbers   Json     @default("[]")
+  passengers    String     // Array of passenger objects
+  seatNumbers   String     @default("[]")
   class         String   @default("economy")
   baseAmount    Float
   taxAmount     Float    @default(0)
@@ -176,8 +180,8 @@ model FlightBooking {
   paymentStatus String   @default("pending") // pending, paid, failed, refunded
   contactEmail  String
   contactPhone  String
-  specialRequests String? @db.Text
-  baggage       Json     @default("{}")
+  specialRequests String? 
+  baggage       String     @default("{}")
   mealPreference String?
   confirmationNumber String? @unique
   eTicketNumber String?
@@ -247,7 +251,7 @@ model Payment {
 model RoomAvailability {
   id        String   @id @default(uuid())
   roomId    String
-  date      DateTime @db.Date
+  date      DateTime 
   available Int      @default(1)
   price     Float?
   createdAt DateTime @default(now())
@@ -262,7 +266,7 @@ model RoomAvailability {
 model RoomInventory {
   id        String   @id @default(uuid())
   roomId    String
-  date      DateTime @db.Date
+  date      DateTime 
   totalRooms Int     @default(1)
   bookedRooms Int    @default(0)
   blockedRooms Int   @default(0)
@@ -283,7 +287,7 @@ model UserSession {
   expires   DateTime
   createdAt DateTime @default(now())
   
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
   
   @@map("user_sessions")
 }
@@ -292,13 +296,13 @@ model BookingCancellation {
   id              String   @id @default(uuid())
   bookingId       String
   bookingType     String   // 'hotel' or 'flight'
-  reason          String   @db.Text
+  reason          String   
   cancellationFee Float    @default(0)
   refundAmount    Float
   status          String   @default("pending") // pending, processed, rejected
   processedAt     DateTime?
   processedBy     String?
-  adminNotes      String?  @db.Text
+  adminNotes      String?  
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   
@@ -316,7 +320,7 @@ model PaymentMethod {
   expiryYear  Int?
   isDefault Boolean  @default(false)
   isActive  Boolean  @default(true)
-  metadata  Json     @default("{}")
+  metadata  String     @default("{}")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -335,15 +339,15 @@ model Train {
   arrivalTime   String   // HH:MM format
   duration      String   // Journey duration
   distance      Int      // Distance in km
-  frequency     Json     @default("[1,2,3,4,5,6,7]") // Days of week (1=Monday)
+  frequency     String     @default("[1,2,3,4,5,6,7]") // Days of week (1=Monday)
   trainType     String   @default("Express") // Express, Superfast, Passenger, etc.
-  classes       Json     @default("[\"SL\", \"3A\", \"2A\", \"1A\"]") // Available classes
+  classes       String     @default("[\"SL\", \"3A\", \"2A\", \"1A\"]") // Available classes
   basePrice     Float    // Base price for SL class
-  priceMultiplier Json   @default("{}")
+  priceMultiplier String   @default("{}")
   totalSeats    Int      @default(800)
   availableSeats Int
-  route         Json     @default("[]") // Array of intermediate stations
-  amenities     Json     @default("[]") // Available amenities
+  route         String     @default("[]") // Array of intermediate stations
+  amenities     String     @default("[]") // Available amenities
   isActive      Boolean  @default(true)
   isFeatured    Boolean  @default(false)
   createdAt     DateTime @default(now())
@@ -360,10 +364,10 @@ model TrainBooking {
   trainId       String
   bookingRef    String   @unique
   pnr           String?  @unique
-  passengers    Json     // Array of passenger objects
-  seatNumbers   Json     @default("[]")
+  passengers    String     // Array of passenger objects
+  seatNumbers   String     @default("[]")
   class         String   @default("SL") // SL, 3A, 2A, 1A
-  travelDate    DateTime @db.Date
+  travelDate    DateTime 
   departureStation String
   arrivalStation String
   baseAmount    Float
@@ -376,7 +380,7 @@ model TrainBooking {
   paymentStatus String   @default("pending") // pending, paid, failed, refunded
   contactEmail  String
   contactPhone  String
-  specialRequests String? @db.Text
+  specialRequests String? 
   mealPreference String? // veg, non-veg, jain
   confirmationNumber String? @unique
   ticketNumber  String?
@@ -389,4 +393,49 @@ model TrainBooking {
   train Train @relation(fields: [trainId], references: [id], onDelete: Cascade)
   
   @@map("train_bookings")
+}
+
+// NextAuth.js Models
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? 
+  access_token      String? 
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? 
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }

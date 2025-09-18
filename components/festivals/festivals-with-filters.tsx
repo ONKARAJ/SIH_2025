@@ -7,20 +7,30 @@ import FestivalGrid from './festival-grid';
 export default function FestivalsWithFilters() {
   const [filters, setFilters] = useState<FilterOptions>({
     search: '',
-    category: '',
-    season: '',
-    location: '',
-    month: ''
+    category: 'all',
+    season: 'all',
+    location: 'all',
+    month: 'all'
   });
 
   const handleFilterChange = (newFilters: FilterOptions) => {
     setFilters(newFilters);
   };
 
+  const handleClearFilters = () => {
+    setFilters({
+      search: '',
+      category: 'all',
+      season: 'all',
+      location: 'all',
+      month: 'all'
+    });
+  };
+
   return (
     <div className="space-y-8">
-      <FestivalFilters onFilterChange={handleFilterChange} />
-      <FestivalGrid filters={filters} />
+      <FestivalFilters onFilterChange={handleFilterChange} filters={filters} />
+      <FestivalGrid filters={filters} onClearFilters={handleClearFilters} />
     </div>
   );
 }

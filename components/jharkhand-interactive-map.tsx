@@ -77,7 +77,7 @@ export function JharkhandInteractiveMap({ touristSpots, onLocationSelect }: Jhar
 
     clearMarkers();
 
-    touristSpots.forEach((spot, index) => {
+    touristSpots.forEach((spot) => {
       // Create custom marker
       const marker = new window.google.maps.Marker({
         position: { lat: spot.lat, lng: spot.lng },
@@ -165,7 +165,7 @@ export function JharkhandInteractiveMap({ touristSpots, onLocationSelect }: Jhar
       mapTypeId: 'roadmap',
       restriction: {
         latLngBounds: bounds,
-        strictBounds: false // Allow slight panning outside for better UX
+        strictBounds: false
       },
       zoomControl: true,
       mapTypeControl: true,
@@ -246,7 +246,6 @@ export function JharkhandInteractiveMap({ touristSpots, onLocationSelect }: Jhar
     }, 100);
   };
 
-  // Listen for fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);

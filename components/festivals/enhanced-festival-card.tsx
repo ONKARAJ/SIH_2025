@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo, useCallback } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { 
   Calendar, MapPin, Clock, Users, Heart, Share2, Eye, ArrowRight, 
   Star, Sparkles, Play, Bookmark, TrendingUp, Zap
@@ -29,30 +30,61 @@ export default function EnhancedFestivalCard({
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const cardRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     
     const rect = cardRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     
-    setMousePosition({ x, y });
-  };
+    // Throttle updates to reduce re-renders
+    setMousePosition(prev => {
+      if (Math.abs(prev.x - x) < 2 && Math.abs(prev.y - y) < 2) {
+        return prev; // Don't update if change is too small
+      }
+      return { x, y };
+    });
+  }, []);
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = useCallback(() => {
     setIsHovered(true);
-  };
+  }, []);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
     setMousePosition({ x: 50, y: 50 });
-  };
+  }, []);
 
   const isFavorited = favorites.includes(festival.id);
-  const rating = 4.2 + (Math.random() * 0.8);
-  const views = Math.floor(Math.random() * 10000) + 1000;
-  const popularity = Math.floor(Math.random() * 100);
+  
+  // Memoize random values to prevent infinite re-renders
+  const { rating, views, popularity } = useMemo(() => ({
+    rating: 4.2 + (Math.random() * 0.8),
+    views: Math.floor(Math.random() * 10000) + 1000,
+    popularity: Math.floor(Math.random() * 100)
+  }), [festival.id]);
+
+  // Memoize transform style to prevent excessive re-renders
+  const transformStyle = useMemo(() => ({
+    transform: isHovered 
+      ? `rotateX(${(mousePosition.y - 50) * 0.1}deg) rotateY(${(mousePosition.x - 50) * 0.1}deg) translateZ(20px)` 
+      : 'rotateX(0deg) rotateY(0deg) translateZ(0px)',
+    transition: 'transform 0.1s ease-out',
+  }), [isHovered, mousePosition.x, mousePosition.y]);
+
+  // Memoize background gradient style
+  const backgroundGradientStyle = useMemo(() => ({
+    backgroundImage: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, var(--primary) 0%, transparent 50%)`,
+    opacity: isHovered ? 0.15 : 0.05,
+  }), [mousePosition.x, mousePosition.y, isHovered]);
+
+  // Memoize overlay gradient style
+  const overlayGradientStyle = useMemo(() => ({
+    background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(255,255,255,0.1) 0%, transparent 60%)`,
+    opacity: isHovered ? 1 : 0,
+  }), [mousePosition.x, mousePosition.y, isHovered]);
 
   return (
     <div
@@ -61,22 +93,14 @@ export default function EnhancedFestivalCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={() => onFestivalClick(festival)}
-      style={{
-        transform: isHovered 
-          ? `rotateX(${(mousePosition.y - 50) * 0.1}deg) rotateY(${(mousePosition.x - 50) * 0.1}deg) translateZ(20px)` 
-          : 'rotateX(0deg) rotateY(0deg) translateZ(0px)',
-        transition: 'transform 0.1s ease-out',
-      }}
+      onClick={() => router.push(`/explore-festivals#${festival.id}`)}
+      style={transformStyle}
     >
       <Card className="cursor-pointer transition-all duration-500 overflow-hidden bg-gradient-to-br from-background via-background to-primary/5 border-2 hover:border-primary/20 hover:shadow-2xl relative">
         {/* Animated Background Pattern */}
         <div 
           className="absolute inset-0 opacity-10 transition-opacity duration-500"
-          style={{
-            backgroundImage: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, var(--primary) 0%, transparent 50%)`,
-            opacity: isHovered ? 0.15 : 0.05,
-          }}
+          style={backgroundGradientStyle}
         />
 
         <CardHeader className="p-0 relative overflow-hidden">
@@ -95,10 +119,7 @@ export default function EnhancedFestivalCard({
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
             <div 
               className="absolute inset-0 transition-opacity duration-300"
-              style={{
-                background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(255,255,255,0.1) 0%, transparent 60%)`,
-                opacity: isHovered ? 1 : 0,
-              }}
+              style={overlayGradientStyle}
             />
 
             {/* Floating Elements */}
@@ -286,7 +307,7 @@ export default function EnhancedFestivalCard({
               }`}
               onClick={(e) => {
                 e.stopPropagation();
-                onFestivalClick(festival);
+                router.push(`/explore-festivals#${festival.id}`);
               }}
             >
               {/* Button Background Animation */}

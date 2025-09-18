@@ -43,17 +43,18 @@ const nextConfig = {
     return config;
   },
   
-  // Handle external resources
+  // Use custom image loader to bypass hostname restrictions
   images: {
-    domains: [
-      'pannellum.org',
-      'maps.google.com',
-      'maps.googleapis.com',
-    ],
+    loader: 'custom',
+    loaderFile: './lib/imageLoader.js',
+    unoptimized: true, // This allows all external images without hostname restrictions
+    remotePatterns: []
+    // Note: With unoptimized: true, all hostnames are allowed but images won't be optimized
   },
-  
   // Experimental features for better performance
   experimental: {
+    // Disable missing suspense with CSR bailout during build
+    missingSuspenseWithCSRBailout: false,
     turbo: {
       rules: {
         '*.svg': {

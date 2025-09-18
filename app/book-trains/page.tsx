@@ -61,11 +61,11 @@ const trainClasses = [
 ];
 
 const popularDestinations = [
-  'Ranchi', 'Jamshedpur', 'Dhanbad', 'Bokaro Steel City', 'Deoghar', 'Dumka', 'Hazaribagh'
+  'Ranchi', 'Jamshedpur', 'Dhanbad', 'Bokaro Steel City', 'Deoghar', 'Dumka', 'Hazaribagh', 'Chaibasa', 'Giridih', 'Lohardaga', 'Medininagar', 'Daltonganj'
 ];
 
 const popularSources = [
-  'New Delhi', 'Mumbai', 'Kolkata', 'Chennai', 'Bangalore', 'Howrah', 'Patna', 'Lucknow'
+  'New Delhi', 'Mumbai', 'Kolkata', 'Chennai', 'Bangalore', 'Howrah', 'Patna', 'Lucknow', 'Bhubaneswar', 'Puri', 'Cuttack', 'Berhampur', 'Rourkela', 'Sambalpur'
 ];
 
 const getAmenityIcon = (amenity: string) => {
@@ -179,15 +179,42 @@ export default function BookTrainsPage() {
       {/* Header Section */}
       <section className="py-20 bg-gradient-to-r from-blue-50 to-emerald-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+            <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               <Train className="inline-block w-12 h-12 mr-4 text-blue-600" />
               Book Train Tickets to Jharkhand
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Discover 50+ trains connecting major cities across India to Jharkhand's beautiful destinations. 
-              Find the perfect journey with our comprehensive search and booking platform.
+              Discover 115+ trains connecting major cities across India to Jharkhand's beautiful destinations. 
+              Including trains from Odisha, intra-Jharkhand routes, and major Indian cities.
             </p>
+            
+            {/* Quick Search Suggestions */}
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <span className="text-sm text-gray-500">Popular routes:</span>
+              {[
+                'Puri → Ranchi',
+                'Bhubaneswar → Jamshedpur', 
+                'Delhi → Dhanbad',
+                'Mumbai → Bokaro',
+                'Ranchi → Deoghar'
+              ].map((route) => {
+                const [src, dest] = route.split(' → ');
+                return (
+                  <button
+                    key={route}
+                    onClick={() => {
+                      setSource(src);
+                      setDestination(dest);
+                      setTimeout(() => handleSearch(), 100);
+                    }}
+                    className="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1 rounded-full transition-colors"
+                  >
+                    {route}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Search Form */}
@@ -196,31 +223,73 @@ export default function BookTrainsPage() {
               {/* Source Station */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">From</label>
-                <Select value={source} onValueChange={setSource}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select source station" />
-                  </SelectTrigger>
-                  <SelectContent>
+                <div className="relative">
+                  <Input
+                    type="text"
+                    placeholder="Enter source station (e.g., New Delhi, Mumbai, Puri...)"
+                    value={source}
+                    onChange={(e) => setSource(e.target.value)}
+                    className="pr-8"
+                    list="source-suggestions"
+                  />
+                  {source && (
+                    <button
+                      onClick={() => setSource('')}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      type="button"
+                    >
+                      ×
+                    </button>
+                  )}
+                  <datalist id="source-suggestions">
                     {popularSources.map((city) => (
-                      <SelectItem key={city} value={city}>{city}</SelectItem>
+                      <option key={city} value={city} />
                     ))}
-                  </SelectContent>
-                </Select>
+                  </datalist>
+                </div>
+                {source && (
+                  <div className="mt-1 text-xs text-gray-500">
+                    Popular: {popularSources.filter(city => 
+                      city.toLowerCase().includes(source.toLowerCase())
+                    ).slice(0, 3).join(', ')}
+                  </div>
+                )}
               </div>
 
               {/* Destination Station */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">To</label>
-                <Select value={destination} onValueChange={setDestination}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select destination" />
-                  </SelectTrigger>
-                  <SelectContent>
+                <div className="relative">
+                  <Input
+                    type="text"
+                    placeholder="Enter destination (e.g., Ranchi, Jamshedpur, Dhanbad...)"
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                    className="pr-8"
+                    list="destination-suggestions"
+                  />
+                  {destination && (
+                    <button
+                      onClick={() => setDestination('')}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      type="button"
+                    >
+                      ×
+                    </button>
+                  )}
+                  <datalist id="destination-suggestions">
                     {popularDestinations.map((city) => (
-                      <SelectItem key={city} value={city}>{city}</SelectItem>
+                      <option key={city} value={city} />
                     ))}
-                  </SelectContent>
-                </Select>
+                  </datalist>
+                </div>
+                {destination && (
+                  <div className="mt-1 text-xs text-gray-500">
+                    Popular: {popularDestinations.filter(city => 
+                      city.toLowerCase().includes(destination.toLowerCase())
+                    ).slice(0, 3).join(', ')}
+                  </div>
+                )}
               </div>
 
               {/* Travel Date */}

@@ -176,6 +176,98 @@ const featuredFlights = [
     aircraft: 'Airbus A320neo',
     type: 'Direct',
     rating: 4.5
+  },
+  // Additional flights to Ranchi for better variety
+  {
+    id: 'flight-010',
+    airline: 'IndiGo',
+    flightNumber: '6E-892',
+    departure: 'Hyderabad',
+    departureCode: 'HYD',
+    arrival: 'Ranchi',
+    arrivalCode: 'IXR',
+    departureTime: '10:30',
+    arrivalTime: '13:15',
+    duration: '2h 45m',
+    price: 8900,
+    originalPrice: 10800,
+    availableSeats: 41,
+    aircraft: 'Airbus A320',
+    type: 'Direct',
+    rating: 4.2
+  },
+  {
+    id: 'flight-011',
+    airline: 'SpiceJet',
+    flightNumber: 'SG-234',
+    departure: 'Pune',
+    departureCode: 'PNQ',
+    arrival: 'Ranchi',
+    arrivalCode: 'IXR',
+    departureTime: '16:45',
+    arrivalTime: '19:20',
+    duration: '2h 35m',
+    price: 8200,
+    originalPrice: 9800,
+    availableSeats: 44,
+    aircraft: 'Boeing 737',
+    type: 'Direct',
+    rating: 4.0
+  },
+  // Additional flights to Deoghar for better variety
+  {
+    id: 'flight-012',
+    airline: 'IndiGo',
+    flightNumber: '6E-456',
+    departure: 'Bangalore',
+    departureCode: 'BLR',
+    arrival: 'Deoghar',
+    arrivalCode: 'DGH',
+    departureTime: '15:30',
+    arrivalTime: '18:25',
+    duration: '2h 55m',
+    price: 10200,
+    originalPrice: 12200,
+    availableSeats: 39,
+    aircraft: 'Airbus A320',
+    type: 'Direct',
+    rating: 4.2
+  },
+  {
+    id: 'flight-013',
+    airline: 'Air India',
+    flightNumber: 'AI-234',
+    departure: 'Hyderabad',
+    departureCode: 'HYD',
+    arrival: 'Deoghar',
+    arrivalCode: 'DGH',
+    departureTime: '12:10',
+    arrivalTime: '14:55',
+    duration: '2h 45m',
+    price: 9100,
+    originalPrice: 11000,
+    availableSeats: 35,
+    aircraft: 'Airbus A321',
+    type: 'Direct',
+    rating: 3.9
+  },
+  {
+    id: 'flight-014',
+    airline: 'Vistara',
+    flightNumber: 'UK-178',
+    departure: 'Pune',
+    departureCode: 'PNQ',
+    arrival: 'Deoghar',
+    arrivalCode: 'DGH',
+    departureTime: '17:20',
+    arrivalTime: '20:10',
+    duration: '2h 50m',
+    price: 9700,
+    originalPrice: 11800,
+    availableSeats: 33,
+    aircraft: 'Airbus A320neo',
+    type: 'Direct',
+    rating: 4.5
   }
 ];
 
@@ -201,10 +293,11 @@ export default function BookFlightsPage() {
   // Get unique cities for dropdown options
   const cities = useMemo(() => {
     const departureCities = [...new Set(featuredFlights.map(f => f.departure))];
-    const arrivalCities = [...new Set(featuredFlights.map(f => f.arrival))];
-    const allCities = [...new Set([...departureCities, ...arrivalCities])];
-    return allCities.sort();
+    return departureCities.sort();
   }, []);
+  
+  // Jharkhand destinations (only cities with airports)
+  const jharkhandDestinations = ['Ranchi', 'Deoghar'];
   
   // Filter flights based on search criteria
   const filteredFlights = useMemo(() => {
@@ -308,16 +401,21 @@ export default function BookFlightsPage() {
                 
                 {/* To */}
                 <div>
-                  <Label className="text-sm font-medium text-gray-700 mb-2 block">To</Label>
+                  <Label className="text-sm font-medium text-gray-700 mb-2 block">To (Jharkhand)</Label>
                   <Select value={arrivalCity || 'all'} onValueChange={(value) => setArrivalCity(value === 'all' ? '' : value)}>
                     <SelectTrigger className="h-12">
-                      <SelectValue placeholder="Select destination city" />
+                      <SelectValue placeholder="Select Jharkhand destination" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All destinations</SelectItem>
-                      {cities.map((city) => (
+                      <SelectItem value="all">All Jharkhand destinations</SelectItem>
+                      {jharkhandDestinations.map((city) => (
                         <SelectItem key={city} value={city}>
-                          {city}
+                          <div className="flex items-center justify-between w-full">
+                            <span>{city}</span>
+                            <span className="text-xs text-gray-500 ml-2">
+                              ({city === 'Ranchi' ? 'IXR' : 'DGH'})
+                            </span>
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -352,7 +450,9 @@ export default function BookFlightsPage() {
                   { from: 'Delhi', to: 'Ranchi' },
                   { from: 'Mumbai', to: 'Ranchi' },
                   { from: 'Kolkata', to: 'Deoghar' },
-                  { from: 'Chennai', to: 'Deoghar' }
+                  { from: 'Bangalore', to: 'Deoghar' },
+                  { from: 'Hyderabad', to: 'Ranchi' },
+                  { from: 'Pune', to: 'Deoghar' }
                 ].map((route) => (
                   <Button
                     key={`${route.from}-${route.to}`}
@@ -634,6 +734,14 @@ export default function BookFlightsPage() {
                   <span className="text-sm">Bangalore → Ranchi</span>
                   <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">2h 45m</span>
                 </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Hyderabad → Ranchi</span>
+                  <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">2h 45m</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Pune → Ranchi</span>
+                  <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">2h 35m</span>
+                </div>
               </div>
             </div>
 
@@ -657,6 +765,18 @@ export default function BookFlightsPage() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Chennai → Deoghar</span>
+                  <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded">2h 50m</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Bangalore → Deoghar</span>
+                  <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded">2h 55m</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Hyderabad → Deoghar</span>
+                  <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded">2h 45m</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Pune → Deoghar</span>
                   <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded">2h 50m</span>
                 </div>
               </div>

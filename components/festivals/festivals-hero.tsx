@@ -10,21 +10,21 @@ const FestivalsHero = () => {
       title: "Sarhul Festival",
       subtitle: "Spring Celebration of Nature",
       description: "Experience the vibrant Sarhul festival, celebrating the renewal of life and nature's bounty with traditional dances and rituals.",
-      image: "/images/sarhul-hero.svg",
+      image: "https://www.shutterstock.com/image-photo/ranchi-jharkhand-08-tuesday-2019-260nw-1488666659.jpg",
       video: "/videos/sarhul.mp4"
     },
     {
       title: "Sohrai Festival",
       subtitle: "Harvest Festival of Joy",
       description: "Join the colorful Sohrai celebration, where communities come together to celebrate the harvest season with folk art and music.",
-      image: "/images/sohrai-hero.svg",
+      image: "https://pbs.twimg.com/media/EmwhdmKVkAA5nCm.jpg",
       video: "/videos/sohrai.mp4"
     },
     {
       title: "Tusu Festival",
       subtitle: "Winter Folk Celebration",
       description: "Discover the enchanting Tusu festival, marking the winter season with traditional songs, dances, and cultural performances.",
-      image: "/images/tusu-hero.svg",
+      image: "https://i.pinimg.com/736x/d1/5e/0c/d15e0c73f97fe02eaafd28dfc88b4a0f.jpg",
       video: "/videos/tusu.mp4"
     }
   ];
@@ -108,12 +108,9 @@ const FestivalsHero = () => {
         </p>
         
         {/* Call to Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex justify-center">
           <Button size="lg" className="px-8 py-3 text-lg font-semibold">
             Explore Festivals
-          </Button>
-          <Button variant="outline" size="lg" className="px-8 py-3 text-lg font-semibold border-white text-white hover:bg-white hover:text-black">
-            Plan Your Visit
           </Button>
         </div>
       </div>

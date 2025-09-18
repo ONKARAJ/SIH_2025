@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Calendar, MapPin, Clock, Users, Heart, Share2, Eye, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -24,9 +24,13 @@ export default function FestivalGrid({ filters, className = '', limit }: Festiva
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Core tribal festivals to display in Explore Festivals section
+  const coreFestivals = ['sarhul', 'sohrai', 'tusu', 'karma', 'bandna', 'jitiya'];
+
   // Filter festivals based on provided filters
   useEffect(() => {
-    let filtered = [...festivalData];
+    // Start with only core festivals for Explore Festivals section
+    let filtered = festivalData.filter(festival => coreFestivals.includes(festival.id));
 
     if (filters) {
       // Search filter
@@ -43,17 +47,17 @@ export default function FestivalGrid({ filters, className = '', limit }: Festiva
       }
 
       // Category filter
-      if (filters.category) {
+      if (filters.category && filters.category !== 'all') {
         filtered = filtered.filter(festival => festival.category === filters.category);
       }
 
       // Season filter
-      if (filters.season) {
+      if (filters.season && filters.season !== 'all') {
         filtered = filtered.filter(festival => festival.season === filters.season);
       }
 
       // Location filter
-      if (filters.location) {
+      if (filters.location && filters.location !== 'all') {
         filtered = filtered.filter(festival =>
           festival.location.primary.toLowerCase().includes(filters.location.toLowerCase()) ||
           festival.location.districts.some(district =>
@@ -63,7 +67,7 @@ export default function FestivalGrid({ filters, className = '', limit }: Festiva
       }
 
       // Month filter
-      if (filters.month) {
+      if (filters.month && filters.month !== 'all') {
         filtered = filtered.filter(festival => festival.months.includes(filters.month));
       }
     }
@@ -76,18 +80,18 @@ export default function FestivalGrid({ filters, className = '', limit }: Festiva
     setFilteredFestivals(filtered);
   }, [filters, limit]);
 
-  const toggleFavorite = (festivalId: string) => {
+  const toggleFavorite = useCallback((festivalId: string) => {
     setFavorites(prev => 
       prev.includes(festivalId)
         ? prev.filter(id => id !== festivalId)
         : [...prev, festivalId]
     );
-  };
+  }, []);
 
-  const handleFestivalClick = (festival: Festival) => {
+  const handleFestivalClick = useCallback((festival: Festival) => {
     setSelectedFestival(festival);
     setIsModalOpen(true);
-  };
+  }, []);
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -303,12 +307,11 @@ export default function FestivalGrid({ filters, className = '', limit }: Festiva
             <Calendar className="h-12 w-12 text-muted-foreground" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold">No festivals found</h3>
+            <h3 className="text-lg font-semibold">No festivals available</h3>
             <p className="text-muted-foreground">
-              Try adjusting your filters to discover more festivals
+              Check back later for upcoming festivals and celebrations
             </p>
           </div>
-          <Button variant="outline">Clear Filters</Button>
         </div>
       </div>
     );
@@ -319,7 +322,7 @@ export default function FestivalGrid({ filters, className = '', limit }: Festiva
       {/* View Mode Toggle */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Found {filteredFestivals.length} festival{filteredFestivals.length !== 1 ? 's' : ''}
+          Showing {filteredFestivals.length} festival{filteredFestivals.length !== 1 ? 's' : ''}
         </p>
         <div className="flex gap-2">
           <Button
@@ -358,15 +361,6 @@ export default function FestivalGrid({ filters, className = '', limit }: Festiva
           {filteredFestivals.map((festival) => (
             <FestivalListItem key={festival.id} festival={festival} />
           ))}
-        </div>
-      )}
-
-      {/* Load More Button */}
-      {!limit && filteredFestivals.length > 0 && (
-        <div className="text-center pt-6">
-          <Button variant="outline" size="lg">
-            Load More Festivals
-          </Button>
         </div>
       )}
 

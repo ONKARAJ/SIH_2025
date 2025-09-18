@@ -7,156 +7,100 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { useState, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useMemo, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { citiesData, getCityBySlug } from '@/lib/cities-data'
 
-// Featured hotels data
-const featuredHotels = [
-  {
-    id: 'hotel-001',
-    name: 'Jharkhand Tourism Lodge Ranchi',
-    location: 'Ranchi',
-    description: 'Comfortable accommodation in the heart of Jharkhand capital with modern amenities and excellent service.',
-    rating: 4.2,
-    reviews: 156,
-    price: 2500,
-    originalPrice: 3200,
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
-    amenities: ['WiFi', 'Restaurant', 'Parking', 'AC', '24/7 Room Service'],
-    rooms: [
-      { type: 'Standard Room', price: 2500, capacity: 2 },
-      { type: 'Executive Suite', price: 4000, capacity: 4 }
-    ]
-  },
-  {
-    id: 'hotel-002',
-    name: 'Netarhat Hill Resort',
-    location: 'Netarhat',
-    description: 'Scenic hill station resort with panoramic valley views and sunrise point access for nature lovers.',
-    rating: 4.5,
-    reviews: 89,
-    price: 3200,
-    originalPrice: 4000,
-    image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80',
-    amenities: ['WiFi', 'Restaurant', 'Nature Walks', 'Bonfire', 'Valley View'],
-    rooms: [
-      { type: 'Valley View Room', price: 3200, capacity: 2 },
-      { type: 'Sunrise Suite', price: 4500, capacity: 4 }
-    ]
-  },
-  {
-    id: 'hotel-003',
-    name: 'Dalma Wildlife Eco Lodge',
-    location: 'Dalma Wildlife Sanctuary',
-    description: 'Eco-friendly lodge near Dalma Wildlife Sanctuary with guided nature tours and wildlife viewing.',
-    rating: 4.1,
-    reviews: 73,
-    price: 2800,
-    originalPrice: 3500,
-    image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80',
-    amenities: ['Nature Walks', 'Wildlife Tours', 'Restaurant', 'Library', 'Birding'],
-    rooms: [
-      { type: 'Forest Room', price: 2800, capacity: 2 }
-    ]
-  },
-  {
-    id: 'hotel-004',
-    name: 'Deoghar Pilgrimage Hotel',
-    location: 'Deoghar',
-    description: 'Comfortable stay near Baidyanath Temple with spiritual ambiance and temple shuttle service.',
-    rating: 4.0,
-    reviews: 124,
-    price: 2200,
-    originalPrice: 2800,
-    image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&q=80',
-    amenities: ['WiFi', 'Restaurant', 'Parking', 'AC', 'Temple Shuttle'],
-    rooms: [
-      { type: 'Pilgrimage Room', price: 2200, capacity: 3 },
-      { type: 'Family Suite', price: 3500, capacity: 6 }
-    ]
-  },
-  {
-    id: 'hotel-005',
-    name: 'Jamshedpur Business Hotel',
-    location: 'Jamshedpur',
-    description: 'Modern business hotel in the steel city with corporate facilities and conference rooms.',
-    rating: 4.3,
-    reviews: 98,
-    price: 3500,
-    originalPrice: 4200,
-    image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&q=80',
-    amenities: ['WiFi', 'Restaurant', 'Gym', 'Business Center', 'Conference Rooms'],
-    rooms: [
-      { type: 'Business Room', price: 3500, capacity: 2 }
-    ]
-  },
-  {
-    id: 'hotel-006',
-    name: 'Betla Forest Lodge',
-    location: 'Betla National Park',
-    description: 'Wildlife lodge inside Betla National Park for nature enthusiasts with safari experiences.',
-    rating: 4.2,
-    reviews: 67,
-    price: 3800,
-    originalPrice: 4500,
-    image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
-    amenities: ['Nature Walks', 'Wildlife Safari', 'Restaurant', 'Campfire'],
-    rooms: [
-      { type: 'Safari Lodge', price: 3800, capacity: 2 }
-    ]
-  },
-  {
-    id: 'hotel-007',
-    name: 'Hazaribagh Lake View Resort',
-    location: 'Hazaribagh',
-    description: 'Lakeside resort with beautiful views and water sports activities for adventure seekers.',
-    rating: 4.1,
-    reviews: 82,
-    price: 2900,
-    originalPrice: 3400,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',
-    amenities: ['WiFi', 'Restaurant', 'Lake View', 'Boating', 'Water Sports'],
-    rooms: [
-      { type: 'Lake View Room', price: 2900, capacity: 2 }
-    ]
-  },
-  {
-    id: 'hotel-008',
-    name: 'Bokaro Spa Resort',
-    location: 'Bokaro',
-    description: 'Relaxing spa resort with wellness treatments and steel city views for ultimate relaxation.',
-    rating: 4.4,
-    reviews: 91,
-    price: 4200,
-    originalPrice: 5000,
-    image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=80',
-    amenities: ['Spa', 'Gym', 'Swimming Pool', 'Restaurant', 'Wellness Center'],
-    rooms: [
-      { type: 'Spa Suite', price: 4200, capacity: 2 }
-    ]
-  }
-];
+// Function to get all hotels from cities data
+function getAllHotels() {
+  const hotels = [];
+  let hotelId = 1;
+  
+  citiesData.forEach(city => {
+    city.hotels.forEach(hotel => {
+      // Extract price as number (remove ₹ and 'per night', convert to number)
+      const priceMatch = hotel.price.match(/(\d{1,3}(?:,\d{3})*)/); 
+      const price = priceMatch ? parseInt(priceMatch[1].replace(/,/g, '')) : 3000;
+      
+      hotels.push({
+        id: `hotel-${String(hotelId).padStart(3, '0')}`,
+        name: hotel.name,
+        location: city.name,
+        description: hotel.description,
+        rating: hotel.rating,
+        reviews: Math.floor(Math.random() * 150) + 50, // Random reviews count
+        price: price,
+        originalPrice: Math.floor(price * 1.25), // 25% higher original price
+        image: hotel.image,
+        amenities: hotel.amenities,
+        rooms: [
+          { 
+            type: hotel.category === 'luxury' ? 'Luxury Suite' : hotel.category === 'business' ? 'Business Room' : 'Standard Room', 
+            price: price, 
+            capacity: 2 
+          }
+        ],
+        cityId: city.id
+      });
+      hotelId++;
+    });
+  });
+  
+  return hotels;
+}
 
-export default function BookHotelsPage() {
+// Get all hotels from cities data
+const featuredHotels = getAllHotels();
+
+function BookHotelsContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [selectedCity, setSelectedCity] = useState('');
+  const [highlightedHotel, setHighlightedHotel] = useState('');
   
-  // Filter hotels based on search query
+  // Handle city and hotel filtering from URL parameters
+  useEffect(() => {
+    const cityParam = searchParams?.get('city');
+    const hotelParam = searchParams?.get('hotel');
+    
+    if (cityParam) {
+      const city = getCityBySlug(cityParam);
+      if (city) {
+        setSelectedCity(cityParam);
+        setSearchQuery(hotelParam || city.name);
+        setIsSearching(true);
+        if (hotelParam) {
+          setHighlightedHotel(hotelParam);
+        }
+      }
+    }
+  }, [searchParams]);
+  
+  // Filter hotels based on search query and city
   const filteredHotels = useMemo(() => {
+    let hotels = featuredHotels;
+    
+    // Filter by city if a city is selected
+    if (selectedCity) {
+      hotels = hotels.filter(hotel => hotel.cityId === selectedCity);
+    }
+    
+    // Filter by search query
     if (!searchQuery.trim()) {
-      return featuredHotels;
+      return hotels;
     }
     
     const query = searchQuery.toLowerCase();
-    return featuredHotels.filter(hotel => 
+    return hotels.filter(hotel => 
       hotel.name.toLowerCase().includes(query) ||
       hotel.location.toLowerCase().includes(query) ||
       hotel.description.toLowerCase().includes(query)
     );
-  }, [searchQuery]);
+  }, [searchQuery, selectedCity]);
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -166,6 +110,13 @@ export default function BookHotelsPage() {
   const clearSearch = () => {
     setSearchQuery('');
     setIsSearching(false);
+    setSelectedCity('');
+    setHighlightedHotel('');
+    // Clear URL parameters
+    const url = new URL(window.location.href);
+    url.searchParams.delete('city');
+    url.searchParams.delete('hotel');
+    window.history.replaceState({}, '', url);
   };
   
   // Helper function to highlight search terms
@@ -241,7 +192,7 @@ export default function BookHotelsPage() {
             {/* Popular destinations */}
             <div className="flex flex-wrap justify-center gap-2 mt-4">
               <span className="text-sm text-gray-500">Popular:</span>
-              {['Ranchi', 'Netarhat', 'Deoghar', 'Jamshedpur', 'Hazaribagh', 'Bokaro'].map((destination) => (
+              {['Ranchi', 'Jamshedpur', 'Bokaro', 'Dhanbad', 'Deoghar'].map((destination) => (
                 <Button
                   key={destination}
                   variant="outline"
@@ -264,16 +215,21 @@ export default function BookHotelsPage() {
             {isSearching ? (
               <>
                 <h2 className="text-3xl font-bold mb-4">
-                  Search Results for "{searchQuery}"
+                  {selectedCity ? `Hotels in ${getCityBySlug(selectedCity)?.name || searchQuery}` : `Search Results for "${searchQuery}"`}
                 </h2>
                 <p className="text-muted-foreground mb-4">
-                  Found {filteredHotels.length} hotel{filteredHotels.length !== 1 ? 's' : ''} matching your search
+                  Found {filteredHotels.length} hotel{filteredHotels.length !== 1 ? 's' : ''} {selectedCity ? `in ${getCityBySlug(selectedCity)?.name}` : 'matching your search'}
                 </p>
                 {filteredHotels.length === 0 && (
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 max-w-2xl mx-auto">
-                    <p className="text-yellow-800 font-medium mb-2">No hotels found for "{searchQuery}"</p>
+                    <p className="text-yellow-800 font-medium mb-2">
+                      {selectedCity ? `No hotels found in ${getCityBySlug(selectedCity)?.name}` : `No hotels found for "${searchQuery}"`}
+                    </p>
                     <p className="text-yellow-600 text-sm mb-4">
-                      Try searching for popular destinations like Ranchi, Netarhat, or Deoghar
+                      {selectedCity ? 
+                        'This city might not have hotel listings yet. Try browsing other cities.' :
+                        'Try searching for popular destinations like Ranchi, Jamshedpur, or Deoghar'
+                      }
                     </p>
                     <Button 
                       onClick={clearSearch}
@@ -299,7 +255,11 @@ export default function BookHotelsPage() {
           {filteredHotels.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredHotels.map((hotel) => (
-              <Card key={hotel.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              <Card key={hotel.id} className={`overflow-hidden hover:shadow-lg transition-all duration-300 ${
+                highlightedHotel && hotel.name === highlightedHotel 
+                  ? 'ring-2 ring-blue-500 ring-offset-2 shadow-xl bg-blue-50/50' 
+                  : ''
+              }`}>
                 <div className="relative">
                   <img
                     src={hotel.image}
@@ -309,6 +269,11 @@ export default function BookHotelsPage() {
                   {hotel.originalPrice > hotel.price && (
                     <Badge className="absolute top-3 right-3 bg-red-500 text-white">
                       Save ₹{hotel.originalPrice - hotel.price}
+                    </Badge>
+                  )}
+                  {highlightedHotel && hotel.name === highlightedHotel && (
+                    <Badge className="absolute top-3 left-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold">
+                      🌟 Featured Hotel
                     </Badge>
                   )}
                   <div className="absolute bottom-3 left-3">
@@ -460,5 +425,13 @@ export default function BookHotelsPage() {
         </div>
       </section>
     </div>
+  )
+}
+
+export default function BookHotelsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="text-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div><p>Loading hotels...</p></div></div>}>
+      <BookHotelsContent />
+    </Suspense>
   )
 }

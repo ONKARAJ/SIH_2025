@@ -25,10 +25,11 @@ export interface FilterOptions {
 interface FestivalFiltersProps {
   onFilterChange?: (filters: FilterOptions) => void;
   className?: string;
+  filters?: FilterOptions;
 }
 
 const categories = [
-  { value: '', label: 'All Categories' },
+  { value: 'all', label: 'All Categories' },
   { value: 'tribal', label: 'Tribal Festivals' },
   { value: 'religious', label: 'Religious Festivals' },
   { value: 'harvest', label: 'Harvest Festivals' },
@@ -37,7 +38,7 @@ const categories = [
 ];
 
 const seasons = [
-  { value: '', label: 'All Seasons' },
+  { value: 'all', label: 'All Seasons' },
   { value: 'spring', label: 'Spring (Mar-May)' },
   { value: 'summer', label: 'Summer (Jun-Aug)' },
   { value: 'monsoon', label: 'Monsoon (Sep-Oct)' },
@@ -45,7 +46,7 @@ const seasons = [
 ];
 
 const locations = [
-  { value: '', label: 'All Locations' },
+  { value: 'all', label: 'All Locations' },
   { value: 'ranchi', label: 'Ranchi Region' },
   { value: 'hazaribagh', label: 'Hazaribagh Region' },
   { value: 'dumka', label: 'Dumka Region' },
@@ -55,7 +56,7 @@ const locations = [
 ];
 
 const months = [
-  { value: '', label: 'All Months' },
+  { value: 'all', label: 'All Months' },
   { value: 'January', label: 'January' },
   { value: 'February', label: 'February' },
   { value: 'March', label: 'March' },
@@ -70,14 +71,21 @@ const months = [
   { value: 'December', label: 'December' }
 ];
 
-export default function FestivalFilters({ onFilterChange, className = '' }: FestivalFiltersProps) {
+export default function FestivalFilters({ onFilterChange, className = '', filters: externalFilters }: FestivalFiltersProps) {
   const [filters, setFilters] = useState<FilterOptions>({
     search: '',
-    category: '',
-    season: '',
-    location: '',
-    month: ''
+    category: 'all',
+    season: 'all',
+    location: 'all',
+    month: 'all'
   });
+
+  // Update internal state when external filters change
+  useEffect(() => {
+    if (externalFilters) {
+      setFilters(externalFilters);
+    }
+  }, [externalFilters]);
   
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
@@ -86,10 +94,10 @@ export default function FestivalFilters({ onFilterChange, className = '' }: Fest
   useEffect(() => {
     const active: string[] = [];
     if (filters.search) active.push(`Search: "${filters.search}"`);
-    if (filters.category) active.push(`Category: ${categories.find(c => c.value === filters.category)?.label}`);
-    if (filters.season) active.push(`Season: ${seasons.find(s => s.value === filters.season)?.label}`);
-    if (filters.location) active.push(`Location: ${locations.find(l => l.value === filters.location)?.label}`);
-    if (filters.month) active.push(`Month: ${filters.month}`);
+    if (filters.category && filters.category !== 'all') active.push(`Category: ${categories.find(c => c.value === filters.category)?.label}`);
+    if (filters.season && filters.season !== 'all') active.push(`Season: ${seasons.find(s => s.value === filters.season)?.label}`);
+    if (filters.location && filters.location !== 'all') active.push(`Location: ${locations.find(l => l.value === filters.location)?.label}`);
+    if (filters.month && filters.month !== 'all') active.push(`Month: ${filters.month}`);
     setActiveFilters(active);
   }, [filters]);
 
@@ -107,10 +115,10 @@ export default function FestivalFilters({ onFilterChange, className = '' }: Fest
   const clearAllFilters = () => {
     setFilters({
       search: '',
-      category: '',
-      season: '',
-      location: '',
-      month: ''
+      category: 'all',
+      season: 'all',
+      location: 'all',
+      month: 'all'
     });
   };
 
@@ -118,13 +126,13 @@ export default function FestivalFilters({ onFilterChange, className = '' }: Fest
     if (filterText.startsWith('Search:')) {
       updateFilter('search', '');
     } else if (filterText.startsWith('Category:')) {
-      updateFilter('category', '');
+      updateFilter('category', 'all');
     } else if (filterText.startsWith('Season:')) {
-      updateFilter('season', '');
+      updateFilter('season', 'all');
     } else if (filterText.startsWith('Location:')) {
-      updateFilter('location', '');
+      updateFilter('location', 'all');
     } else if (filterText.startsWith('Month:')) {
-      updateFilter('month', '');
+      updateFilter('month', 'all');
     }
   };
 
