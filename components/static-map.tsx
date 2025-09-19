@@ -61,22 +61,29 @@ export function StaticMap({ touristSpots, onLocationSelect, selectedLocationId }
             viewBox={`0 0 ${svgWidth} ${svgHeight}`}
             className="bg-green-50"
           >
-            {/* Jharkhand outline (simplified) */}
-            <path
-              d="M100 150 L150 100 L300 120 L450 100 L600 130 L700 180 L720 250 L700 350 L650 420 L600 480 L500 520 L400 530 L300 520 L200 500 L150 450 L120 400 L100 300 Z"
-              fill="#c6f6d5"
-              stroke="#22c55e"
-              strokeWidth="2"
-              opacity="0.3"
-            />
-            
-            {/* Grid lines */}
+            {/* Definitions - Must come first */}
             <defs>
+              <linearGradient id="jharkhandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#d4f1d4" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#a7f3d0" stopOpacity="0.8" />
+              </linearGradient>
               <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-                <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e5e7eb" strokeWidth="1" opacity="0.3"/>
+                <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e5e7eb" strokeWidth="1" opacity="0.2"/>
               </pattern>
             </defs>
+            
+            {/* Grid background */}
             <rect width="100%" height="100%" fill="url(#grid)" />
+            
+            {/* Jharkhand outline (more accurate simplified shape) */}
+            <path
+              d="M120 200 L180 150 L280 140 L380 130 L480 140 L580 160 L650 180 L720 220 L730 280 L720 340 L700 400 L680 450 L650 480 L600 510 L520 530 L420 540 L320 535 L250 520 L180 480 L140 430 L110 370 L100 310 L110 250 Z"
+              fill="url(#jharkhandGradient)"
+              stroke="#059669"
+              strokeWidth="3"
+              opacity="0.8"
+              className="drop-shadow-sm"
+            />
 
             {/* Tourist spots */}
             {touristSpots.map((spot) => {
@@ -185,32 +192,36 @@ export function StaticMap({ touristSpots, onLocationSelect, selectedLocationId }
           </div>
         </div>
         
-        {/* Selected spot details below map */}
+          {/* Selected spot details below map */}
         {selectedSpot && (
-          <div className="p-4 border-t bg-gray-50">
+          <div className="p-6 border-t bg-gradient-to-r from-gray-50 to-blue-50">
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <h3 className="font-semibold text-lg text-gray-800">{selectedSpot.name}</h3>
-                <Badge variant="secondary" className="mt-1">{selectedSpot.type}</Badge>
-                <p className="text-sm text-gray-600 mt-2 line-clamp-3">
-                  {selectedSpot.description.substring(0, 200)}
-                  {selectedSpot.description.length > 200 && '...'}
+                <h3 className="font-semibold text-xl text-gray-800 mb-2">{selectedSpot.name}</h3>
+                <div className="flex items-center space-x-2 mb-3">
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-800">{selectedSpot.type}</Badge>
+                  <span className="text-sm text-green-600 font-medium bg-green-100 px-2 py-1 rounded">
+                    📅 Best Time: {selectedSpot.bestTime}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-700 leading-relaxed line-clamp-4 mb-4">
+                  {selectedSpot.description}
                 </p>
-                <p className="text-sm text-green-600 font-medium mt-2">
-                  Best Time: {selectedSpot.bestTime}
-                </p>
-              </div>
-              <div className="ml-4">
-                <a 
-                  href={selectedSpot.googleMaps} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  <Button size="sm" className="bg-orange-600 hover:bg-orange-700">
-                    <Navigation className="h-4 w-4 mr-2" />
-                    Get Directions
-                  </Button>
-                </a>
+                <div className="flex flex-wrap gap-2">
+                  <a href={selectedSpot.googleMaps} target="_blank" rel="noopener noreferrer">
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                      <Navigation className="h-4 w-4 mr-2" />
+                      Get Directions
+                    </Button>
+                  </a>
+                  {selectedSpot.streetViewUrl && (
+                    <a href={selectedSpot.streetViewUrl} target="_blank" rel="noopener noreferrer">
+                      <Button size="sm" variant="outline">
+                        🌍 360° View
+                      </Button>
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           </div>

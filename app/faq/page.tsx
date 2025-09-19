@@ -207,6 +207,7 @@ export default function FAQPage() {
   const [expandedFAQs, setExpandedFAQs] = useState<Set<number>>(new Set())
   const [showSubmitForm, setShowSubmitForm] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [userSubmittedFAQs, setUserSubmittedFAQs] = useState<any[]>([])
   const [newQuestion, setNewQuestion] = useState({
     name: "",
     email: "",
@@ -214,8 +215,56 @@ export default function FAQPage() {
     category: "general"
   })
 
+  // Load user-submitted and answered questions
+  useEffect(() => {
+    const storedQuestions = localStorage.getItem("jharkhand-faq-questions")
+    if (storedQuestions) {
+      try {
+        const parsedQuestions = JSON.parse(storedQuestions)
+        const answeredQuestions = parsedQuestions
+          .filter((q: any) => q.status === 'answered' && q.answer)
+          .map((q: any) => ({
+            id: q.id + 1000, // Offset to avoid conflicts with static FAQs
+            question: q.question,
+            answer: q.answer,
+            isPopular: false,
+            tags: ["user-submitted", q.category],
+            category: q.category,
+            submittedBy: q.name
+          }))
+        setUserSubmittedFAQs(answeredQuestions)
+      } catch (error) {
+        console.error("Error loading user FAQs:", error)
+      }
+    }
+  }, [])
+
+  // Combine static FAQs with user-submitted answered FAQs
+  const allFAQData = [...faqData]
+  
+  // Add user-submitted FAQs to appropriate categories
+  if (userSubmittedFAQs.length > 0) {
+    const categoryMap: { [key: string]: string } = {
+      general: "General Travel",
+      destinations: "Destinations & Attractions",
+      cultural: "Cultural Experiences",
+      accommodation: "Accommodation & Booking",
+      transportation: "Transportation",
+      safety: "Safety & Health"
+    }
+    
+    userSubmittedFAQs.forEach(userFAQ => {
+      const targetCategory = categoryMap[userFAQ.category] || "General Travel"
+      const categoryIndex = allFAQData.findIndex(cat => cat.category === targetCategory)
+      
+      if (categoryIndex !== -1) {
+        allFAQData[categoryIndex].faqs.push(userFAQ)
+      }
+    })
+  }
+
   // Filter FAQs based on search and category
-  const filteredFAQs = faqData.map(category => ({
+  const filteredFAQs = allFAQData.map(category => ({
     ...category,
     faqs: category.faqs.filter(faq => {
       const matchesSearch = searchQuery === "" || 
@@ -229,7 +278,7 @@ export default function FAQPage() {
     })
   })).filter(category => category.faqs.length > 0)
 
-  // Get popular FAQs
+  // Get popular FAQs (only from static data to avoid showing user submissions as "popular")
   const popularFAQs = faqData.flatMap(category => 
     category.faqs.filter(faq => faq.isPopular)
   ).slice(0, 6)
@@ -444,6 +493,11 @@ export default function FAQPage() {
                                       {tag}
                                     </Badge>
                                   ))}
+                                  {(faq as any).submittedBy && (
+                                    <Badge variant="secondary" className="text-xs">
+                                      👤 Community Answer
+                                    </Badge>
+                                  )}
                                 </div>
                               </div>
                             </div>

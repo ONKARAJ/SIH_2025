@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, X, Expand, Minimize2 } from 'lucide-react';
-import { IframeStreetView } from './iframe-street-view';
 
 interface TouristSpot {
   id: string;
@@ -21,6 +20,8 @@ interface TouristSpot {
 interface GoogleMapProps {
   touristSpots: TouristSpot[];
   onLocationSelect: (locationId: string) => void; // Required for right-hand side panel
+  onMapLoaded?: () => void; // Callback when map loads successfully
+  onError?: () => void; // Callback when map fails to load
 }
 
 declare global {
@@ -30,7 +31,7 @@ declare global {
   }
 }
 
-export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
+export function GoogleMap({ touristSpots, onLocationSelect, onMapLoaded, onError }: GoogleMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const infoWindowRef = useRef<any>(null);
@@ -43,11 +44,6 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [streetViewModal, setStreetViewModal] = useState<{
-    isOpen: boolean;
-    spot: TouristSpot | null;
-    hasStreetView: boolean;
-  }>({ isOpen: false, spot: null, hasStreetView: false });
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
   const [isMapLoading, setIsMapLoading] = useState(true);
@@ -153,7 +149,7 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
           <!-- Action buttons -->
           <div style="display: flex; gap: 8px; margin-bottom: 12px;">
             <button 
-              onclick="window.handleStreetView_${uniqueId}()"
+              onclick="window.open('https://www.google.com/maps/@${spot.lat},${spot.lng},3a,75y,90t/data=!3m6!1e1!3m4!1s0x0:0x0!2e0!7i16384!8i8192', '_blank')"
               style="flex: 1; padding: 12px 8px; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);"
               onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(220, 38, 38, 0.4)';" 
               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(220, 38, 38, 0.3)';"
@@ -191,31 +187,7 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
     `;
   };
 
-  // Street View modal functionality removed - now opens directly in Google Maps
-
-  // Open Street View in iframe modal with multiple approaches
-  const openStreetViewAtCoordinates = useCallback((lat: number, lng: number) => {
-    console.log('Opening Street View iframe modal for coordinates:', lat, lng);
-    
-    // Create a temporary spot object for the clicked location
-    const clickedSpot: TouristSpot = {
-      id: `clicked-${lat}-${lng}`,
-      name: 'Street View Location',
-      type: 'Location',
-      color: '#4285f4',
-      description: `360° Street View at coordinates ${lat.toFixed(6)}, ${lng.toFixed(6)}`,
-      bestTime: '',
-      lat: lat,
-      lng: lng,
-      googleMaps: `https://maps.google.com/?q=${lat},${lng}`
-    };
-    
-    setStreetViewModal({
-      isOpen: true,
-      spot: clickedSpot,
-      hasStreetView: true
-    });
-  }, []);
+  // Street View functionality now redirects directly to Google Maps
 
   // Position synchronization removed since Street View opens in external tab
 
@@ -251,14 +223,11 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
     // Create unique handlers for the popup buttons
     const uniqueId = spot.id.replace(/[^a-zA-Z0-9]/g, '');
     
-    // Street View handler - opens iframe modal
+    // Street View handler - redirects to Google Maps Street View
     (window as any)[`handleStreetView_${uniqueId}`] = () => {
       console.log('Street View clicked for:', spot.name);
-      setStreetViewModal({
-        isOpen: true,
-        spot: spot,
-        hasStreetView: true
-      });
+      const streetViewUrl = `https://www.google.com/maps/@${spot.lat},${spot.lng},3a,75y,90t/data=!3m6!1e1!3m4!1s0x0:0x0!2e0!7i16384!8i8192`;
+      window.open(streetViewUrl, '_blank');
     };
     
     // Satellite view handler
@@ -350,9 +319,10 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
         }
       }, 1000);
       
-      // Automatically open Street View modal after a short delay (to show the marker animation)
+      // Automatically redirect to Google Maps Street View after a short delay (to show the marker animation)
       setTimeout(() => {
-        openStreetViewAtCoordinates(clickedLat, clickedLng);
+        const streetViewUrl = `https://www.google.com/maps/@${clickedLat},${clickedLng},3a,75y,90t/data=!3m6!1e1!3m4!1s0x0:0x0!2e0!7i16384!8i8192`;
+        window.open(streetViewUrl, '_blank');
       }, 800);
     });
 
@@ -427,12 +397,9 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
         // Prevent any scrolling or page movement
         document.body.style.overflow = 'hidden';
         
-        // Handle double-click immediately - open Street View iframe modal
-        setStreetViewModal({
-          isOpen: true,
-          spot: spot,
-          hasStreetView: true
-        });
+        // Handle double-click immediately - open Street View in Google Maps
+        const streetViewUrl = `https://www.google.com/maps/@${spot.lat},${spot.lng},3a,75y,90t/data=!3m6!1e1!3m4!1s0x0:0x0!2e0!7i16384!8i8192`;
+        window.open(streetViewUrl, '_blank');
         
         // Restore overflow after a brief delay
         setTimeout(() => {
@@ -444,7 +411,9 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
     });
 
     setIsMapLoaded(true);
-  }, [touristSpots, mapType, handleMarkerClick, openStreetViewAtCoordinates, clickMarker]);
+    // Notify parent component that map has loaded successfully
+    onMapLoaded?.();
+  }, [touristSpots, mapType, handleMarkerClick, clickMarker, onMapLoaded]);
 
   // Load Google Maps API
   useEffect(() => {
@@ -460,6 +429,7 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
       console.error('Make sure NEXT_PUBLIC_GOOGLE_MAPS_API_KEY is set in your deployment environment');
       setMapError('Google Maps API key is missing. Please check your environment configuration.');
       setIsMapLoading(false);
+      onError?.();
       return;
     }
     
@@ -479,6 +449,7 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
           console.error('Error initializing map:', error);
           setMapError(`Failed to initialize map: ${error instanceof Error ? error.message : 'Unknown error'}`);
           setIsMapLoading(false);
+          onError?.();
         }
       };
       
@@ -491,6 +462,7 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
         console.error('4. Domain restrictions are properly configured');
         setMapError('Failed to load Google Maps. Please check your internet connection and API configuration.');
         setIsMapLoading(false);
+        onError?.();
       };
       
       // Avoid duplicate script tags
@@ -891,18 +863,6 @@ export function GoogleMap({ touristSpots, onLocationSelect }: GoogleMapProps) {
         </div>
       )}
 
-      {/* Robust Street View Modal with multiple iframe approaches */}
-      {streetViewModal.isOpen && streetViewModal.spot && (
-        <IframeStreetView
-          isOpen={streetViewModal.isOpen}
-          onClose={() => setStreetViewModal({ isOpen: false, spot: null, hasStreetView: false })}
-          title={streetViewModal.spot.name}
-          description={streetViewModal.spot.description}
-          location={`${streetViewModal.spot.type} • Jharkhand, India`}
-          lat={streetViewModal.spot.lat}
-          lng={streetViewModal.spot.lng}
-        />
-      )}
     </div>
   );
 }

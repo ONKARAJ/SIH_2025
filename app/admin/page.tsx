@@ -13,8 +13,10 @@ import {
   CreditCard, 
   Users, 
   Settings,
-  Calendar
+  Calendar,
+  MessageSquare
 } from 'lucide-react'
+import Link from 'next/link'
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -25,6 +27,7 @@ export default function AdminDashboard() {
     { id: 'flights', label: 'Flights', icon: Plane },
     { id: 'bookings', label: 'Bookings', icon: Calendar },
     { id: 'payments', label: 'Payments', icon: CreditCard },
+    { id: 'faq', label: 'FAQ', icon: MessageSquare },
     { id: 'users', label: 'Users', icon: Users },
     { id: 'settings', label: 'Settings', icon: Settings }
   ]
@@ -51,7 +54,7 @@ export default function AdminDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-7 mb-8 w-full">
+          <TabsList className="grid grid-cols-8 mb-8 w-full">
             {navigation.map((item) => {
               const Icon = item.icon
               return (
@@ -169,6 +172,36 @@ export default function AdminDashboard() {
                       <Button variant="outline" size="sm">All Payments</Button>
                       <Button variant="outline" size="sm">Refunds</Button>
                       <Button variant="outline" size="sm">Reports</Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="faq">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5" />
+                  FAQ Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">FAQ Management</h3>
+                  <p className="text-gray-600 mb-6">Review and respond to user questions</p>
+                  <div className="space-y-3">
+                    <Link href="/admin/faq">
+                      <Button className="w-full max-w-sm">
+                        Manage FAQ Questions
+                      </Button>
+                    </Link>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-sm mx-auto">
+                      <Button variant="outline" size="sm">Pending</Button>
+                      <Button variant="outline" size="sm">Answered</Button>
+                      <Button variant="outline" size="sm">Statistics</Button>
                     </div>
                   </div>
                 </div>

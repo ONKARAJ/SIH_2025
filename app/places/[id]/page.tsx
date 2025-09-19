@@ -29,7 +29,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { allPlaces } from "@/data/places-data";
 import type { Place } from "@/types/place";
-import { InteractivePlacesMap } from '@/components/places/interactive-places-map';
+import { GoogleMap } from '@/components/google-map';
 import { EmergencyContacts } from '@/components/places/emergency-contacts';
 
 // Function to get category page URL
@@ -612,9 +612,19 @@ export default function PlaceDetailPage() {
                   <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl blur opacity-20"></div>
                   <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/50">
                     <div className="h-[650px] relative">
-                      <InteractivePlacesMap 
-                        selectedPlace={placeWithCoords}
-                        className="w-full h-full rounded-3xl"
+                      <GoogleMap 
+                        touristSpots={placeWithCoords ? [{
+                          id: placeWithCoords.id,
+                          name: placeWithCoords.title,
+                          type: placeWithCoords.category,
+                          color: '#3b82f6',
+                          description: placeWithCoords.description,
+                          bestTime: placeWithCoords.bestTimeToVisit || 'Year Round',
+                          lat: placeWithCoords.coordinates?.lat || 23.6102,
+                          lng: placeWithCoords.coordinates?.lng || 85.2799,
+                          googleMaps: `https://maps.google.com/?q=${placeWithCoords.coordinates?.lat || 23.6102},${placeWithCoords.coordinates?.lng || 85.2799}`
+                        }] : []}
+                        onLocationSelect={(locationId) => console.log('Selected:', locationId)}
                       />
                       
                       {/* Overlay Gradient */}
