@@ -106,6 +106,7 @@ export function MapWrapper({ touristSpots, onLocationSelect, selectedLocationId 
                 onLocationSelect={onLocationSelect}
                 onMapLoaded={handleMapSuccess}
                 onError={handleMapError}
+                showNearbyAmenities={false}
               />
             </div>
           </CardContent>

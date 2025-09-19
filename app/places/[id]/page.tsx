@@ -598,12 +598,12 @@ export default function PlaceDetailPage() {
                   <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
                     Explore {place?.title} & 
                     <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                      Nearby Places
+                      Nearby Amenities
                     </span>
                   </h2>
                   <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                    Discover amazing attractions, essential services, and hidden gems around {place?.title}. 
-                    Get real-time directions and make the most of your visit.
+                    Discover essential amenities around {place?.title} including hospitals, fuel stations, restaurants, 
+                    markets, and police stations. Click any marker to get directions and make your visit seamless.
                   </p>
                 </div>
                 
@@ -618,13 +618,16 @@ export default function PlaceDetailPage() {
                           name: placeWithCoords.title,
                           type: placeWithCoords.category,
                           color: '#3b82f6',
-                          description: placeWithCoords.description,
+                          description: placeWithCoords.overview || placeWithCoords.shortDescription || 'Explore this amazing destination in Jharkhand',
                           bestTime: placeWithCoords.bestTimeToVisit || 'Year Round',
                           lat: placeWithCoords.coordinates?.lat || 23.6102,
                           lng: placeWithCoords.coordinates?.lng || 85.2799,
                           googleMaps: `https://maps.google.com/?q=${placeWithCoords.coordinates?.lat || 23.6102},${placeWithCoords.coordinates?.lng || 85.2799}`
                         }] : []}
                         onLocationSelect={(locationId) => console.log('Selected:', locationId)}
+                        showNearbyAmenities={true}
+                        onMapLoaded={() => console.log('Map loaded successfully')}
+                        onError={() => console.error('Map failed to load')}
                       />
                       
                       {/* Overlay Gradient */}
@@ -643,7 +646,7 @@ export default function PlaceDetailPage() {
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 mb-3">Smart Filtering</h3>
                       <p className="text-gray-600 leading-relaxed">
-                        Use intelligent filter buttons to discover specific types of places - from tourist attractions to essential services.
+                        Use the filter panel to show specific types of nearby amenities - hospitals, restaurants, fuel stations, markets, and police stations.
                       </p>
                     </div>
                   </div>
@@ -656,7 +659,7 @@ export default function PlaceDetailPage() {
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 mb-3">Detailed Information</h3>
                       <p className="text-gray-600 leading-relaxed">
-                        Click any marker to reveal comprehensive details, ratings, opening hours, and user reviews.
+                        Click any amenity marker to see detailed information, ratings, opening hours, and address with a direct "Get Directions" button.
                       </p>
                     </div>
                   </div>
