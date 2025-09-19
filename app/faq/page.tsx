@@ -337,29 +337,29 @@ export default function FAQPage() {
       <Navigation />
 
       {/* Header Section */}
-      <section className="py-20 bg-gradient-to-b from-primary/5 to-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-6">
-              <HelpCircle className="h-10 w-10 text-white" />
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-primary/5 to-background">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12">
+            <div className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <HelpCircle className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 text-white" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6 px-2">
               Frequently Asked Questions
             </h1>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
               Find answers to common questions about visiting Jharkhand, planning your trip, 
               and experiencing the best of our natural and cultural heritage.
             </p>
           </div>
 
           {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <div className="max-w-2xl mx-auto mb-6 sm:mb-8">
+            <div className="relative px-2">
+              <Search className="absolute left-5 sm:left-6 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search FAQs by keyword, topic, or question..."
-                className="pl-12 pr-4 py-6 text-lg border-2 focus:border-primary rounded-full shadow-lg"
+                placeholder="Search FAQs..."
+                className="pl-10 sm:pl-12 pr-4 py-4 sm:py-6 text-base sm:text-lg border-2 focus:border-primary rounded-full shadow-lg w-full"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -367,16 +367,18 @@ export default function FAQPage() {
           </div>
 
           {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-10 md:mb-12 px-2">
             {categories.map((category) => (
               <Button
                 key={category.id}
                 variant={selectedCategory === category.id ? "default" : "outline"}
                 onClick={() => setSelectedCategory(category.id)}
-                className="rounded-full px-6 py-2"
+                className="rounded-full px-3 sm:px-4 md:px-6 py-2 text-xs sm:text-sm md:text-base touch-manipulation"
+                size="sm"
               >
-                <category.icon className="h-4 w-4 mr-2" />
-                {category.label}
+                <category.icon className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden xs:inline sm:inline">{category.label}</span>
+                <span className="xs:hidden sm:hidden">{category.label.split(' ')[0]}</span>
               </Button>
             ))}
           </div>
@@ -385,25 +387,25 @@ export default function FAQPage() {
 
       {/* Popular FAQs Section */}
       {searchQuery === "" && selectedCategory === "all" && (
-        <section className="py-12 bg-card/50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center mb-8">
-              <TrendingUp className="h-6 w-6 text-primary mr-2" />
-              <h2 className="text-2xl font-bold text-card-foreground">Most Popular Questions</h2>
+        <section className="py-8 sm:py-10 md:py-12 bg-card/50">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+            <div className="flex items-center justify-center mb-6 sm:mb-8">
+              <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-primary mr-2" />
+              <h2 className="text-xl sm:text-2xl font-bold text-card-foreground text-center">Most Popular Questions</h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {popularFAQs.map((faq) => (
-                <Card key={faq.id} className="border-border hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={() => toggleFAQ(faq.id)}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-4">
+                <Card key={faq.id} className="border-border hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation" onClick={() => toggleFAQ(faq.id)}>
+                  <CardContent className="p-4 sm:p-5 md:p-6">
+                    <div className="flex items-start justify-between mb-3 sm:mb-4">
                       <Badge variant="secondary" className="text-xs">Popular</Badge>
                       {expandedFAQs.has(faq.id) ? 
-                        <Minus className="h-5 w-5 text-muted-foreground" /> : 
-                        <Plus className="h-5 w-5 text-muted-foreground" />
+                        <Minus className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" /> : 
+                        <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                       }
                     </div>
-                    <h3 className="font-semibold text-card-foreground mb-3 line-clamp-2">
+                    <h3 className="font-semibold text-card-foreground mb-3 line-clamp-3 text-sm sm:text-base">
                       {faq.question}
                     </h3>
                     {expandedFAQs.has(faq.id) && (
@@ -427,64 +429,64 @@ export default function FAQPage() {
       )}
 
       {/* FAQ Categories Section */}
-      <section className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-8 sm:py-10 md:py-12">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           {filteredFAQs.length === 0 ? (
-            <div className="text-center py-12">
-              <HelpCircle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-foreground mb-2">No FAQs found</h3>
-              <p className="text-muted-foreground mb-6">
+            <div className="text-center py-8 sm:py-10 md:py-12 px-4">
+              <HelpCircle className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2">No FAQs found</h3>
+              <p className="text-muted-foreground mb-6 text-sm sm:text-base max-w-md mx-auto">
                 No questions match your search criteria. Try different keywords or browse all categories.
               </p>
-              <Button onClick={() => { setSearchQuery(""); setSelectedCategory("all") }}>
+              <Button onClick={() => { setSearchQuery(""); setSelectedCategory("all") }} className="touch-manipulation">
                 View All FAQs
               </Button>
             </div>
           ) : (
-            <div className="space-y-12">
+            <div className="space-y-8 sm:space-y-10 md:space-y-12">
               {filteredFAQs.map((categoryData, categoryIndex) => (
                 <div key={categoryIndex}>
-                  <div className="flex items-center mb-6">
-                    <categoryData.icon className="h-6 w-6 text-primary mr-3" />
-                    <h2 className="text-2xl font-bold text-foreground">{categoryData.category}</h2>
-                    <Badge variant="secondary" className="ml-3">{categoryData.faqs.length} questions</Badge>
+                  <div className="flex items-center mb-4 sm:mb-6 px-2">
+                    <categoryData.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mr-2 sm:mr-3 flex-shrink-0" />
+                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground flex-1 min-w-0">{categoryData.category}</h2>
+                    <Badge variant="secondary" className="ml-2 sm:ml-3 text-xs">{categoryData.faqs.length} questions</Badge>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {categoryData.faqs.map((faq) => (
-                      <Card key={faq.id} className="border-border hover:shadow-md transition-all duration-300">
+                      <Card key={faq.id} className="border-border hover:shadow-md transition-all duration-300 mx-1 sm:mx-0">
                         <CardContent className="p-0">
                           <div
-                            className="p-6 cursor-pointer flex items-start justify-between"
+                            className="p-4 sm:p-5 md:p-6 cursor-pointer flex items-start justify-between touch-manipulation"
                             onClick={() => toggleFAQ(faq.id)}
                           >
-                            <div className="flex-1 mr-4">
-                              <div className="flex items-center mb-2">
-                                <h3 className="font-semibold text-card-foreground">
+                            <div className="flex-1 mr-2 sm:mr-3 md:mr-4 min-w-0">
+                              <div className="flex items-start flex-col sm:flex-row sm:items-center mb-2">
+                                <h3 className="font-semibold text-card-foreground text-sm sm:text-base leading-tight flex-1 pr-2">
                                   {faq.question}
                                 </h3>
                                 {faq.isPopular && (
-                                  <Badge variant="secondary" className="ml-3 text-xs">Popular</Badge>
+                                  <Badge variant="secondary" className="mt-1 sm:mt-0 sm:ml-3 text-xs self-start">Popular</Badge>
                                 )}
                               </div>
                             </div>
-                            <div className="flex-shrink-0">
+                            <div className="flex-shrink-0 ml-2">
                               {expandedFAQs.has(faq.id) ? 
-                                <Minus className="h-5 w-5 text-primary" /> : 
-                                <Plus className="h-5 w-5 text-muted-foreground hover:text-primary transition-colors" />
+                                <Minus className="h-4 w-4 sm:h-5 sm:w-5 text-primary" /> : 
+                                <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-primary transition-colors" />
                               }
                             </div>
                           </div>
 
                           {expandedFAQs.has(faq.id) && (
-                            <div className="px-6 pb-6 border-t border-border bg-muted/20">
-                              <div className="pt-6">
-                                <p className="text-muted-foreground leading-relaxed mb-4">
+                            <div className="px-4 sm:px-5 md:px-6 pb-4 sm:pb-5 md:pb-6 border-t border-border bg-muted/20">
+                              <div className="pt-4 sm:pt-5 md:pt-6">
+                                <p className="text-muted-foreground leading-relaxed mb-4 text-sm sm:text-base">
                                   {faq.answer}
                                 </p>
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex flex-wrap gap-1 sm:gap-2">
                                   {faq.tags.map((tag, tagIndex) => (
-                                    <Badge key={tagIndex} variant="outline" className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                                    <Badge key={tagIndex} variant="outline" className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors touch-manipulation"
                                       onClick={(e) => {
                                         e.stopPropagation()
                                         setSearchQuery(tag)

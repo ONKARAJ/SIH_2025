@@ -171,27 +171,27 @@ export default function ContactPage() {
       </section>
 
       {/* Header Section */}
-      <section className="py-20 bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-card-foreground mb-6">Contact Us</h1>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+      <section className="py-12 sm:py-16 md:py-20 bg-card">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-card-foreground mb-4 sm:mb-6 px-2">Contact Us</h1>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
               Have questions about visiting Jharkhand? Need help planning your trip or want to share feedback? We're
               here to help make your journey memorable and hassle-free.
             </p>
           </div>
 
           {/* Quick Contact Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {quickContacts.map((contact, index) => (
-              <Card key={index} className="border-border bg-background text-center hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                    <contact.icon className="h-6 w-6 text-primary-foreground" />
+              <Card key={index} className="border-border bg-background text-center hover:shadow-lg transition-shadow touch-manipulation">
+                <CardContent className="p-4 sm:p-5 md:p-6">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                    <contact.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
                   </div>
-                  <h3 className="font-semibold text-foreground mb-2">{contact.title}</h3>
-                  <p className="text-primary font-medium mb-1">{contact.value}</p>
-                  <p className="text-xs text-muted-foreground">{contact.description}</p>
+                  <h3 className="font-semibold text-foreground mb-2 text-sm sm:text-base">{contact.title}</h3>
+                  <p className="text-primary font-medium mb-1 text-sm sm:text-base break-words">{contact.value}</p>
+                  <p className="text-xs text-muted-foreground leading-tight">{contact.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -200,35 +200,35 @@ export default function ContactPage() {
       </section>
 
       {/* Main Contact Section */}
-      <section className="py-12 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <section className="py-8 sm:py-10 md:py-12 bg-background">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Contact Form */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 order-2 lg:order-1">
               <Card className="border-border bg-card">
-                <CardHeader>
-                  <CardTitle className="text-2xl text-card-foreground flex items-center">
-                    <MessageSquare className="h-6 w-6 mr-2" />
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="text-xl sm:text-2xl text-card-foreground flex items-center">
+                    <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6 mr-2" />
                     Send us a Message
                   </CardTitle>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground text-sm sm:text-base">
                     Fill out the form below and we'll get back to you within 24 hours.
                   </p>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6">
                   {isSubmitted ? (
-                    <div className="text-center py-8">
-                      <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                      <h3 className="text-xl font-semibold text-card-foreground mb-2">Message Sent Successfully!</h3>
-                      <p className="text-muted-foreground">
+                    <div className="text-center py-6 sm:py-8">
+                      <CheckCircle className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 text-green-500 mx-auto mb-4" />
+                      <h3 className="text-lg sm:text-xl font-semibold text-card-foreground mb-2">Message Sent Successfully!</h3>
+                      <p className="text-muted-foreground text-sm sm:text-base">
                         Thank you for contacting us. We'll respond to your inquiry within 24 hours.
                       </p>
                     </div>
                   ) : (
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                         <div>
-                          <label htmlFor="name" className="block text-sm font-medium text-card-foreground mb-2">
+                          <label htmlFor="name" className="block text-sm sm:text-base font-medium text-card-foreground mb-2">
                             Full Name *
                           </label>
                           <Input
@@ -238,11 +238,12 @@ export default function ContactPage() {
                             value={formData.name}
                             onChange={handleInputChange}
                             placeholder="Enter your full name"
+                            className="h-12 sm:h-14 text-base touch-manipulation"
                             required
                           />
                         </div>
                         <div>
-                          <label htmlFor="email" className="block text-sm font-medium text-card-foreground mb-2">
+                          <label htmlFor="email" className="block text-sm sm:text-base font-medium text-card-foreground mb-2">
                             Email Address *
                           </label>
                           <Input
@@ -252,6 +253,7 @@ export default function ContactPage() {
                             value={formData.email}
                             onChange={handleInputChange}
                             placeholder="Enter your email"
+                            className="h-12 sm:h-14 text-base touch-manipulation"
                             required
                           />
                         </div>
@@ -326,16 +328,16 @@ export default function ContactPage() {
                         disabled={
                           !formData.name.trim() || !formData.email.trim() || !formData.message.trim() || isSubmitting
                         }
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground"
+                        className="w-full h-12 sm:h-14 bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground touch-manipulation text-base sm:text-lg font-semibold"
                       >
                         {isSubmitting ? (
                           <>
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                            <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2" />
                             Sending Message...
                           </>
                         ) : (
                           <>
-                            <Send className="h-4 w-4 mr-2" />
+                            <Send className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                             Send Message
                           </>
                         )}
@@ -347,26 +349,26 @@ export default function ContactPage() {
             </div>
 
             {/* Tourism Office Information */}
-            <div className="lg:col-span-1">
-              <div className="space-y-6">
+            <div className="lg:col-span-1 order-1 lg:order-2">
+              <div className="space-y-4 sm:space-y-6">
                 <Card className="border-border bg-card">
-                  <CardHeader>
-                    <CardTitle className="text-xl text-card-foreground flex items-center">
+                  <CardHeader className="p-4 sm:p-6">
+                    <CardTitle className="text-lg sm:text-xl text-card-foreground flex items-center">
                       <Users className="h-5 w-5 mr-2" />
                       Tourism Offices
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
                     {tourismOffices.map((office, index) => (
                       <div key={index} className="border-b border-border last:border-b-0 pb-4 last:pb-0">
-                        <div className="flex items-start justify-between mb-2">
-                          <h4 className="font-semibold text-card-foreground text-sm">{office.name}</h4>
-                          <Badge variant="outline" className="text-xs">
+                        <div className="flex items-start justify-between mb-2 gap-2">
+                          <h4 className="font-semibold text-card-foreground text-sm sm:text-base flex-1 leading-tight">{office.name}</h4>
+                          <Badge variant="outline" className="text-xs flex-shrink-0">
                             {office.type}
                           </Badge>
                         </div>
 
-                        <div className="space-y-2 text-sm">
+                        <div className="space-y-2 text-xs sm:text-sm">
                           <div className="flex items-start space-x-2">
                             <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                             <span className="text-muted-foreground">{office.address}</span>

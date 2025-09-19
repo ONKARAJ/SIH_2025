@@ -62,16 +62,16 @@ export function Navigation() {
           : "bg-white/20 backdrop-blur-md"
       }`}
     >
-      <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8 w-full">
+      <div className="flex items-center justify-between h-14 sm:h-16 px-3 sm:px-4 md:px-6 lg:px-8 w-full">
           {/* Left Section - Logo */}
-          <div className="flex items-center flex-shrink-0">
-            <Link href="/" className="flex items-center space-x-2 hover:opacity-90 transition-opacity">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-600 to-orange-500 rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
-                <span className="text-white font-bold text-base">JH</span>
+          <div className="flex items-center flex-shrink-0 min-w-0">
+            <Link href="/" className="flex items-center space-x-2 hover:opacity-90 transition-opacity touch-manipulation">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-green-600 to-orange-500 rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
+                <span className="text-white font-bold text-sm sm:text-base">JH</span>
               </div>
-              <div className="hidden sm:block">
-                <div className="text-lg font-bold text-green-700 leading-tight">Jharkhand Tourism</div>
-                <div className="text-xs text-gray-500 leading-tight">Explore Nature's Paradise</div>
+              <div className="hidden xs:block sm:block min-w-0">
+                <div className="text-sm sm:text-lg font-bold text-green-700 leading-tight truncate">Jharkhand Tourism</div>
+                <div className="text-xs text-gray-500 leading-tight truncate hidden sm:block">Explore Nature's Paradise</div>
               </div>
             </Link>
           </div>
@@ -176,12 +176,14 @@ export function Navigation() {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-gray-700 hover:text-green-700 transition-colors duration-200"
+              className="p-2 sm:p-3 text-gray-700 hover:text-green-700 active:text-green-800 transition-colors duration-200 touch-manipulation rounded-lg hover:bg-green-50 active:bg-green-100"
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMenuOpen}
             >
               {isMenuOpen ? (
-                <X className="h-6 w-6" />
+                <X className="h-6 w-6 sm:h-7 sm:w-7" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-6 w-6 sm:h-7 sm:w-7" />
               )}
             </button>
           </div>
@@ -189,18 +191,18 @@ export function Navigation() {
 
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-white/20 bg-white/40 backdrop-blur-md">
+        <div className="md:hidden border-t border-white/20 bg-white/90 backdrop-blur-md shadow-lg">
           {/* Mobile Navigation Links */}
-          <div className="px-4 pt-4 pb-2 space-y-2">
+          <div className="px-3 sm:px-4 pt-3 sm:pt-4 pb-2 space-y-1 sm:space-y-2 max-h-screen overflow-y-auto">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
+                className={`block px-4 sm:px-5 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-medium transition-all duration-200 touch-manipulation ${
                   pathname === link.href
-                    ? "text-white bg-green-600/90 shadow-md backdrop-blur-sm"
-                    : "text-gray-800 hover:text-green-700 hover:bg-white/30 backdrop-blur-sm"
-                }`}
+                    ? "text-white bg-green-600 shadow-md"
+                    : "text-gray-800 hover:text-green-700 active:text-green-800 hover:bg-white/60 active:bg-white/80"
+                } border border-transparent hover:border-green-200`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.label}
@@ -208,45 +210,48 @@ export function Navigation() {
             ))}
             
             {/* Mobile Help Section */}
-            <div className="pt-2 border-t border-white/20">
-              <div className="px-4 py-2">
-                <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Help & Support</h3>
+            <div className="pt-3 sm:pt-4 border-t border-white/20">
+              <div className="px-4 sm:px-5 py-2 sm:py-3">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-600 uppercase tracking-wide">Help & Support</h3>
               </div>
               {helpLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
+                  className={`flex items-center px-4 sm:px-5 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-medium transition-all duration-200 touch-manipulation ${
                     pathname === link.href
-                      ? "text-white bg-green-600/90 shadow-md backdrop-blur-sm"
-                      : "text-gray-800 hover:text-green-700 hover:bg-white/30 backdrop-blur-sm"
-                  }`}
+                      ? "text-white bg-green-600 shadow-md"
+                      : "text-gray-800 hover:text-green-700 active:text-green-800 hover:bg-white/60 active:bg-white/80"
+                  } border border-transparent hover:border-green-200`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <link.icon className="h-5 w-5 mr-3" />
-                  {link.label}
+                  <link.icon className="h-5 w-5 sm:h-6 sm:w-6 mr-3 sm:mr-4 flex-shrink-0" />
+                  <span className="flex-1">{link.label}</span>
+                  <span className="text-green-600 opacity-70">→</span>
                 </Link>
               ))}
             </div>
           </div>
           
             {/* Mobile Search Bar */}
-            <div className="px-4 py-3 border-t border-white/20">
-              <EnhancedSearch placeholder="Search destinations, festivals..." showPopular={false} />
+            <div className="px-3 sm:px-4 py-3 sm:py-4 border-t border-white/20">
+              <div className="w-full">
+                <EnhancedSearch placeholder="Search destinations, festivals..." showPopular={false} />
+              </div>
             </div>
           
           {/* Mobile Auth Buttons */}
-          <div className="px-4 py-4 border-t border-white/20 space-y-3">
+          <div className="px-3 sm:px-4 py-3 sm:py-4 border-t border-white/20 space-y-2 sm:space-y-3">
             <Link
               href="/auth/signin"
-              className="block w-full text-center px-4 py-3 text-green-700 font-medium hover:bg-white/30 backdrop-blur-sm rounded-lg transition-colors duration-200"
+              className="block w-full text-center px-4 sm:px-5 py-3 sm:py-4 text-green-700 font-medium hover:bg-white/60 active:bg-white/80 rounded-lg transition-all duration-200 touch-manipulation border border-green-200 hover:border-green-300"
               onClick={() => setIsMenuOpen(false)}
             >
               Sign In
             </Link>
             <Link
               href="/auth/signup"
-              className="block w-full text-center px-4 py-3 bg-gradient-to-r from-green-600/90 to-orange-500/90 backdrop-blur-sm text-white font-medium rounded-lg hover:from-green-700/90 hover:to-orange-600/90 transition-all duration-200 shadow-md"
+              className="block w-full text-center px-4 sm:px-5 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-orange-500 text-white font-medium rounded-lg hover:from-green-700 hover:to-orange-600 active:from-green-800 active:to-orange-700 transition-all duration-200 shadow-md hover:shadow-lg touch-manipulation"
               onClick={() => setIsMenuOpen(false)}
             >
               Sign Up
