@@ -31,6 +31,7 @@ import { allPlaces } from "@/data/places-data";
 import type { Place } from "@/types/place";
 import { GoogleMap } from '@/components/google-map';
 import { EmergencyContacts } from '@/components/places/emergency-contacts';
+import PlaceReviews from '@/components/places/place-reviews';
 
 // Function to get category page URL
 function getCategoryPageUrl(category: string): string {
@@ -446,28 +447,12 @@ export default function PlaceDetailPage() {
                 <Separator />
 
                 {/* Reviews */}
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">What Travelers Say</h2>
-                  <div className="space-y-4">
-                    {place.reviews?.slice(0, 6).map((review, index) => (
-                      <Card key={index} className="bg-white/60">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between mb-3">
-                            <span className="font-semibold text-gray-900">{review.name}</span>
-                            <div className="flex items-center gap-1">
-                              <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                              <span className="font-medium">{review.rating}</span>
-                            </div>
-                          </div>
-                          <p className="text-gray-600 mb-2">{review.comment}</p>
-                          <span className="text-sm text-gray-400">{review.date}</span>
-                        </CardContent>
-                      </Card>
-                    )) || (
-                      <p className="text-gray-500 italic">No reviews yet. Be the first to share your experience!</p>
-                    )}
-                  </div>
-                </div>
+                <PlaceReviews 
+                  placeId={place.id}
+                  placeName={place.title}
+                  existingReviews={place.reviews || []}
+                  averageRating={place.rating}
+                />
               </div>
 
               {/* Sidebar */}

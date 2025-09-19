@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Calendar, Users, Camera, Navigation, Satellite, X } from 'lucide-react';
+import { MapPin, Calendar, Users, Camera, Navigation, X } from 'lucide-react';
 
 interface CulturalSpot {
   id: string;
@@ -581,12 +581,6 @@ export function InteractiveCulturalMap() {
               >
                 🧭 Directions
               </button>
-              <button 
-                onclick="toggleSatelliteView_${spot.id}()"
-                style="flex: 1; padding: 8px 12px; background: #059669; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;"
-              >
-                🛰️ Satellite
-              </button>
             </div>
             
             <div style="text-align: center; padding-top: 8px; border-top: 1px solid #e5e7eb;">
@@ -609,14 +603,6 @@ export function InteractiveCulturalMap() {
         infoWindow.open(map, marker);
         infoWindowRef.current = infoWindow;
         setSelectedSpot(spot);
-        
-        // Add global function for satellite toggle
-        (window as any)[`toggleSatelliteView_${spot.id}`] = () => {
-          const currentMapType = map.getMapTypeId();
-          const newMapType = currentMapType === 'satellite' ? 'roadmap' : 'satellite';
-          map.setMapTypeId(newMapType);
-          setMapType(newMapType);
-        };
       });
 
       marker.addListener('dblclick', () => {

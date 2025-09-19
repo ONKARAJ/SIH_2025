@@ -520,9 +520,6 @@ export default function ExploreFestivalsPage() {
 
                   {/* Action Buttons */}
                   <div className="flex gap-4 pt-4">
-                    <Button asChild className="flex-1">
-                      <Link href="/festivals">Learn More</Link>
-                    </Button>
                     <Button variant="outline" size="icon">
                       <Heart className="h-4 w-4" />
                     </Button>

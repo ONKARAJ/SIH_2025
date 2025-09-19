@@ -229,10 +229,11 @@ const PlaceCard = ({ place, index }: { place: Place; index: number }) => {
             </div>
           </div>
 
-          <div className="flex gap-2">
+          {/* Action buttons - stacked vertically and contained within card */}
+          <div className="flex flex-col gap-2 pt-2">
             <Button 
               onClick={handleBookNow}
-              className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 group"
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 group text-sm py-2.5"
             >
               Book Now
               <Plane className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
@@ -240,7 +241,7 @@ const PlaceCard = ({ place, index }: { place: Place; index: number }) => {
             <Button 
               onClick={handleExploreDetails}
               variant="outline"
-              className="flex-1 border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 group"
+              className="w-full border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 group text-sm py-2.5"
             >
               Explore Details
               <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
