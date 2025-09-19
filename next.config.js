@@ -17,6 +17,12 @@ const nextConfig = {
       };
     }
 
+    // Redirect Prisma client to stub implementation since database functionality is removed
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@prisma/client': require.resolve('./lib/prisma-client-stub.ts')
+    };
+
     // Enable top-level await support
     config.experiments = {
       ...config.experiments,
@@ -62,14 +68,15 @@ const nextConfig = {
   
   // Experimental features for better performance
   experimental: {
-    // Disable missing suspense with CSR bailout during build
-    missingSuspenseWithCSRBailout: false,
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+    // Future experimental features can be added here
+  },
+  
+  // Turbopack configuration
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
   },
