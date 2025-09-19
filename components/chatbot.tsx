@@ -66,19 +66,41 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     setIsLoading(true);
 
     try {
-      // Simulate API call - replace with actual implementation
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const botResponse: ChatMessage = {
+      // Call the chat API
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: inputValue,
+          sessionId: 'chatbot-session-' + Date.now() // Simple session management
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const botResponse: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          content: data.message || "Sorry, I couldn't process your request right now.",
+          isBot: true,
+          timestamp: new Date(),
+          source: data.source
+        };
+        setMessages(prev => [...prev, botResponse]);
+      } else {
+        throw new Error('API request failed');
+      }
+    } catch (error) {
+      console.error('Chat error:', error);
+      // Fallback response
+      const errorResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
-        content: "Thank you for your question! I'm currently being improved to provide better assistance with Jharkhand tourism information.",
+        content: "Sorry, I'm having trouble connecting to my AI service right now. Please try asking again in a moment!",
         isBot: true,
         timestamp: new Date(),
       };
-
-      setMessages(prev => [...prev, botResponse]);
-    } catch (error) {
-      console.error('Chat error:', error);
+      setMessages(prev => [...prev, errorResponse]);
     } finally {
       setIsLoading(false);
     }
@@ -115,7 +137,7 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
               <div
                 key={message.id}
                 className={cn(
-                  "flex gap-2 sm:gap-3 animate-in slide-in-from-bottom-2",
+                  "flex gap-2 sm:gap-3 animate-fadeIn",
                   message.isBot ? "justify-start" : "justify-end"
                 )}
               >
