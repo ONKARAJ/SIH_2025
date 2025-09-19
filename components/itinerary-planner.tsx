@@ -109,89 +109,31 @@ export function ItineraryPlanner() {
 
     setIsLoading(true);
     
-    // Simulate API call - In real implementation, this would call an AI service
-    setTimeout(() => {
-      const sampleItinerary: ItineraryResponse = {
-        title: `${formData.duration} Days in ${formData.cities.join(" & ")} – ${
-          formData.interests.includes("nature") ? "Nature & Culture" : 
-          formData.interests.includes("religious") ? "Spiritual Journey" :
-          "Complete"
-        } Experience`,
-        overview: `A perfect ${formData.travelStyle === "family" ? "family-friendly" : formData.travelStyle === "solo-female" ? "safe and empowering solo female" : formData.travelStyle} blend of ${
-          formData.interests.includes("nature") ? "waterfalls, temples, and city vibes" :
-          formData.interests.includes("history") ? "ancient heritage and cultural exploration" :
-          "diverse experiences across Jharkhand's highlights"
-        }.${formData.travelStyle === "solo-female" ? " Prioritizing safety, well-connected locations, and women-friendly accommodations." : ""}`,
-        days: Array.from({ length: parseInt(formData.duration) }, (_, i) => ({
-          day: i + 1,
-          title: i === 0 ? "Arrival & City Exploration" : 
-                i === parseInt(formData.duration) - 1 ? "Cultural Immersion & Departure" :
-                `Adventure & Discovery Day ${i + 1}`,
-          morning: formData.interests.includes("nature") && i === 0 ? 
-            `Visit Hundru Falls (9:00 AM) - Experience the 320-foot cascade surrounded by rocky cliffs${formData.travelStyle === "solo-female" ? ". Safe timing with good crowd presence" : ""}` :
-            formData.interests.includes("religious") && formData.cities.includes("Deoghar") ?
-            `Darshan at Baidyanath Dham (6:00 AM) - One of the 12 Jyotirlingas, perfect for morning prayers${formData.travelStyle === "solo-female" ? ". Early visit ensures peaceful experience and safety" : ""}` :
-            `Morning sightseeing in ${formData.cities[0]} - Explore local attractions and scenic spots${formData.travelStyle === "solo-female" ? " with good public presence" : ""}`,
-          afternoon: "Enjoy authentic litti chokha at a traditional local eatery - Yeh jagah zaroor dekhni chahiye! Try local specialties like dhuska and pua",
-          evening: i === 0 ? `Sunset at Ranchi Lake with boating - Perfect for ${formData.travelStyle === "family" ? "family photos" : "photos"} and relaxation${formData.travelStyle === "solo-female" ? ". Well-lit area with good security" : ""}` :
-            i === parseInt(formData.duration) - 1 ? `Local shopping at Main Road market - Buy Dokra art and tribal handicrafts${formData.travelStyle === "solo-female" ? ". Visit during daylight hours for safety" : ""}` :
-            `Evening cultural program or nature walk - Experience local traditions${formData.travelStyle === "solo-female" ? " in well-populated areas" : ""}`,
-          transport: formData.transport === "private" ? "Private vehicle with local guide" : "Local transport available"
-        })),
-        recommendations: {
-          foods: [
-            "Litti Chokha - Traditional roasted wheat balls with spiced mashed vegetables",
-            "Dhuska - Deep-fried rice and black gram pancakes", 
-            "Mitha Pua - Sweet rice flour fritters perfect with evening chai",
-            "Thekua - Crunchy sweet snacks made during festivals",
-            "Local chai stalls - Experience authentic flavors"
-          ],
-          markets: [
-            "Main Road Market, Ranchi - Tribal handicrafts and Dokra art",
-            "Sakchi Market, Jamshedpur - Local textiles and souvenirs",
-            "Local weekly haats - Authentic tribal products and vegetables"
-          ],
-          experiences: [
-            "Tribal village visit - Learn about Santhal, Munda, and Ho cultures",
-            "Waterfall photography - Best during monsoon season",
-            "Traditional dance performances - Jhumur and Chhau dance forms"
-          ],
-          ...(formData.travelStyle === "solo-female" ? {
-            safetyTips: [
-              "Choose well-reviewed accommodations with 24/7 front desk service",
-              "Share your itinerary with trusted friends or family members",
-              "Keep emergency contacts easily accessible on your phone",
-              "Use reputable ride-sharing apps or pre-booked taxis for transportation",
-              "Visit popular tourist spots during daytime hours with good crowd presence",
-              "Trust your instincts and avoid isolated areas, especially after sunset",
-              "Carry a charged power bank and keep your phone battery full",
-              "Dress modestly and respect local customs for comfortable travel"
-            ],
-            womenFriendlyPlaces: [
-              "Hotel Radisson Blu, Ranchi - Women-safe accommodation with excellent security",
-              "Jagannath Temple, Ranchi - Well-maintained temple with good crowd and security",
-              "Nakshatra Van, Ranchi - Popular park with families, safe for solo visits",
-              "City Centre Mall, Dhanbad - Safe shopping environment with good security",
-              "Main Road shopping area - Well-lit and crowded market areas"
-            ]
-          } : {})
+    try {
+      // Call the AI-powered itinerary API
+      const response = await fetch('/api/itinerary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        tips: {
-          weather: "Best time to visit is October to March. Monsoon season (July-September) is perfect for waterfalls but carry rain gear.",
-          customs: "Respect tribal customs and photography permissions. Remove shoes before entering temples. Jharkhand mein aapka swagat hai! 🙏",
-          budget: formData.budget === "budget" ? 
-            "Budget tip: Use local buses, stay in government guest houses, eat at local dhabas - save 40-50% on expenses" :
-            "Mid-range accommodations and private transport recommended for comfort. Local guides cost ₹500-800 per day",
-          ...(formData.travelStyle === "solo-female" ? {
-            safety: "For solo female travelers: Book verified accommodations, inform someone about your plans, avoid late-night travel, and trust local women for guidance. Jharkhand is generally safe but taking precautions ensures a worry-free experience. Emergency helpline: 112 📞"
-          } : {})
-        }
-      };
+        body: JSON.stringify(formData),
+      });
 
-      setItinerary(sampleItinerary);
+      if (!response.ok) {
+        throw new Error('Failed to generate itinerary');
+      }
+
+      const aiGeneratedItinerary: ItineraryResponse = await response.json();
+      setItinerary(aiGeneratedItinerary);
+    } catch (error) {
+      console.error('Error generating itinerary:', error);
+      // Fallback to a basic error message
+      alert('Sorry, there was an issue generating your itinerary. Please try again.');
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
+
 
   const resetForm = () => {
     setFormData({
