@@ -56,21 +56,21 @@ export function Navigation() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+      className={`sticky top-0 z-50 transition-all duration-300 w-full overflow-hidden ${
         isScrolled
           ? "bg-white/40 backdrop-blur-md shadow-lg"
           : "bg-white/20 backdrop-blur-md"
       }`}
     >
-      <div className="flex items-center justify-between h-14 sm:h-16 px-3 sm:px-4 md:px-6 lg:px-8 w-full">
+      <div className="flex items-center justify-between h-12 xs:h-14 sm:h-16 px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 w-full">
           {/* Left Section - Logo */}
-          <div className="flex items-center flex-shrink-0 min-w-0">
-            <Link href="/" className="flex items-center space-x-2 hover:opacity-90 transition-opacity touch-manipulation">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-green-600 to-orange-500 rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
-                <span className="text-white font-bold text-sm sm:text-base">JH</span>
+          <div className="flex items-center flex-shrink-0 min-w-0 max-w-[60%] xs:max-w-[70%] sm:max-w-none">
+            <Link href="/" className="flex items-center space-x-1 xs:space-x-2 hover:opacity-90 transition-opacity touch-manipulation">
+              <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-green-600 to-orange-500 rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
+                <span className="text-white font-bold text-xs xs:text-sm sm:text-base">JH</span>
               </div>
-              <div className="hidden xs:block sm:block min-w-0">
-                <div className="text-sm sm:text-lg font-bold text-green-700 leading-tight truncate">Jharkhand Tourism</div>
+              <div className="hidden xs:block min-w-0">
+                <div className="text-xs xs:text-sm sm:text-lg font-bold text-green-700 leading-tight truncate">Jharkhand Tourism</div>
                 <div className="text-xs text-gray-500 leading-tight truncate hidden sm:block">Explore Nature's Paradise</div>
               </div>
             </Link>
@@ -173,17 +173,17 @@ export function Navigation() {
           </div>
           
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center flex-shrink-0">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 sm:p-3 text-gray-700 hover:text-green-700 active:text-green-800 transition-colors duration-200 touch-manipulation rounded-lg hover:bg-green-50 active:bg-green-100"
+              className="p-1.5 xs:p-2 sm:p-3 text-gray-700 hover:text-green-700 active:text-green-800 transition-colors duration-200 touch-manipulation rounded-lg hover:bg-green-50 active:bg-green-100 min-w-[40px] min-h-[40px] flex items-center justify-center"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMenuOpen}
             >
               {isMenuOpen ? (
-                <X className="h-6 w-6 sm:h-7 sm:w-7" />
+                <X className="h-5 w-5 xs:h-6 xs:w-6 sm:h-7 sm:w-7" />
               ) : (
-                <Menu className="h-6 w-6 sm:h-7 sm:w-7" />
+                <Menu className="h-5 w-5 xs:h-6 xs:w-6 sm:h-7 sm:w-7" />
               )}
             </button>
           </div>
@@ -191,14 +191,14 @@ export function Navigation() {
 
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-white/20 bg-white/90 backdrop-blur-md shadow-lg">
+        <div className="md:hidden border-t border-white/20 bg-white/95 backdrop-blur-md shadow-lg">
           {/* Mobile Navigation Links */}
-          <div className="px-3 sm:px-4 pt-3 sm:pt-4 pb-2 space-y-1 sm:space-y-2 max-h-screen overflow-y-auto">
+          <div className="px-2 xs:px-3 sm:px-4 pt-2 xs:pt-3 sm:pt-4 pb-2 space-y-0.5 xs:space-y-1 sm:space-y-2 max-h-[calc(100vh-48px)] xs:max-h-[calc(100vh-56px)] sm:max-h-[calc(100vh-64px)] overflow-y-auto">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`block px-4 sm:px-5 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-medium transition-all duration-200 touch-manipulation ${
+                className={`block px-3 xs:px-4 sm:px-5 py-2.5 xs:py-3 sm:py-4 rounded-lg text-sm xs:text-base sm:text-lg font-medium transition-all duration-200 touch-manipulation ${
                   pathname === link.href
                     ? "text-white bg-green-600 shadow-md"
                     : "text-gray-800 hover:text-green-700 active:text-green-800 hover:bg-white/60 active:bg-white/80"
@@ -210,48 +210,48 @@ export function Navigation() {
             ))}
             
             {/* Mobile Help Section */}
-            <div className="pt-3 sm:pt-4 border-t border-white/20">
-              <div className="px-4 sm:px-5 py-2 sm:py-3">
-                <h3 className="text-sm sm:text-base font-semibold text-gray-600 uppercase tracking-wide">Help & Support</h3>
+            <div className="pt-2 xs:pt-3 sm:pt-4 border-t border-white/20">
+              <div className="px-3 xs:px-4 sm:px-5 py-1.5 xs:py-2 sm:py-3">
+                <h3 className="text-xs xs:text-sm sm:text-base font-semibold text-gray-600 uppercase tracking-wide">Help & Support</h3>
               </div>
               {helpLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center px-4 sm:px-5 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-medium transition-all duration-200 touch-manipulation ${
+                  className={`flex items-center px-3 xs:px-4 sm:px-5 py-2.5 xs:py-3 sm:py-4 rounded-lg text-sm xs:text-base sm:text-lg font-medium transition-all duration-200 touch-manipulation ${
                     pathname === link.href
                       ? "text-white bg-green-600 shadow-md"
                       : "text-gray-800 hover:text-green-700 active:text-green-800 hover:bg-white/60 active:bg-white/80"
                   } border border-transparent hover:border-green-200`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <link.icon className="h-5 w-5 sm:h-6 sm:w-6 mr-3 sm:mr-4 flex-shrink-0" />
+                  <link.icon className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 mr-2 xs:mr-3 sm:mr-4 flex-shrink-0" />
                   <span className="flex-1">{link.label}</span>
-                  <span className="text-green-600 opacity-70">→</span>
+                  <span className="text-green-600 opacity-70 text-sm xs:text-base">→</span>
                 </Link>
               ))}
             </div>
           </div>
           
             {/* Mobile Search Bar */}
-            <div className="px-3 sm:px-4 py-3 sm:py-4 border-t border-white/20">
+            <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-3 sm:py-4 border-t border-white/20">
               <div className="w-full">
-                <EnhancedSearch placeholder="Search destinations, festivals..." showPopular={false} />
+                <EnhancedSearch placeholder="Search..." showPopular={false} />
               </div>
             </div>
           
           {/* Mobile Auth Buttons */}
-          <div className="px-3 sm:px-4 py-3 sm:py-4 border-t border-white/20 space-y-2 sm:space-y-3">
+          <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-3 sm:py-4 border-t border-white/20 space-y-2">
             <Link
               href="/auth/signin"
-              className="block w-full text-center px-4 sm:px-5 py-3 sm:py-4 text-green-700 font-medium hover:bg-white/60 active:bg-white/80 rounded-lg transition-all duration-200 touch-manipulation border border-green-200 hover:border-green-300"
+              className="block w-full text-center px-4 py-3 text-green-700 font-medium hover:bg-white/60 active:bg-white/80 rounded-lg transition-all duration-200 touch-manipulation border border-green-200 hover:border-green-300 text-sm xs:text-base"
               onClick={() => setIsMenuOpen(false)}
             >
               Sign In
             </Link>
             <Link
               href="/auth/signup"
-              className="block w-full text-center px-4 sm:px-5 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-orange-500 text-white font-medium rounded-lg hover:from-green-700 hover:to-orange-600 active:from-green-800 active:to-orange-700 transition-all duration-200 shadow-md hover:shadow-lg touch-manipulation"
+              className="block w-full text-center px-4 py-3 bg-gradient-to-r from-green-600 to-orange-500 text-white font-medium rounded-lg hover:from-green-700 hover:to-orange-600 active:from-green-800 active:to-orange-700 transition-all duration-200 shadow-md hover:shadow-lg touch-manipulation text-sm xs:text-base"
               onClick={() => setIsMenuOpen(false)}
             >
               Sign Up
