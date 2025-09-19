@@ -87,16 +87,6 @@ export default function SignUpPage() {
     }
   }
 
-  const handleSocialSignUp = async (provider: string) => {
-    setIsLoading(true)
-    try {
-      await signIn(provider, { callbackUrl: "/" })
-    } catch (error) {
-      toast.error(`Error signing up with ${provider}`)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   return (
     <div className="min-h-screen flex">
@@ -185,43 +175,6 @@ export default function SignUpPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Social Sign Up */}
-              <div className="grid grid-cols-3 gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => handleSocialSignUp("google")}
-                  disabled={isLoading}
-                  className="h-12 border-2 hover:border-red-300 hover:bg-red-50"
-                >
-                  <Icons.google className="w-5 h-5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => handleSocialSignUp("facebook")}
-                  disabled={isLoading}
-                  className="h-12 border-2 hover:border-blue-300 hover:bg-blue-50"
-                >
-                  <Icons.facebook className="w-5 h-5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => handleSocialSignUp("twitter")}
-                  disabled={isLoading}
-                  className="h-12 border-2 hover:border-sky-300 hover:bg-sky-50"
-                >
-                  <Icons.twitter className="w-5 h-5" />
-                </Button>
-              </div>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <Separator className="w-full" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-2 text-gray-500">Or continue with email</span>
-                </div>
-              </div>
-
               {/* Email Sign Up Form */}
               <form onSubmit={handleEmailSignUp} className="space-y-4">
                 <div className="space-y-2">
