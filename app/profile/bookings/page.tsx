@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { Navigation } from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -61,11 +62,19 @@ interface Booking {
 
 export default function ProfileBookingsPage() {
   const router = useRouter();
+  const { user, isSignedIn, isLoaded } = useUser();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [activeTab, setActiveTab] = useState("all");
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/sign-in?redirect_url=/profile/bookings")
+    }
+  }, [isLoaded, isSignedIn, router]);
 
   useEffect(() => {
     // Load bookings from localStorage
@@ -153,6 +162,26 @@ export default function ProfileBookingsPage() {
     if (type === "all") return bookings.length;
     return bookings.filter(booking => booking.type === type).length;
   };
+
+  // Show loading state while user is being loaded
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+            <p>Loading your bookings...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect if not signed in (will be handled by useEffect)
+  if (!isSignedIn) {
+    return null;
+  }
 
   if (bookings.length === 0) {
     return (

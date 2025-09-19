@@ -190,13 +190,13 @@ export default function PlaceReviews({
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Share Your Experience</h3>
               <p className="text-gray-600 mb-4">Help other travelers by sharing your experience</p>
               <div className="space-y-3">
-                <Link href="/auth/signin">
+                <Link href="/sign-in">
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">
                     Sign In to Add Review
                   </Button>
                 </Link>
                 <p className="text-sm text-gray-500">
-                  Don't have an account? <Link href="/auth/signup" className="text-blue-600 hover:underline">Sign up here</Link>
+                  Don't have an account? <Link href="/sign-up" className="text-blue-600 hover:underline">Sign up here</Link>
                 </p>
               </div>
             </div>

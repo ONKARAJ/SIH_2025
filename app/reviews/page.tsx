@@ -23,10 +23,10 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 
 export default function ReviewsPage() {
-  const { data: session } = useSession()
+  const { user, isSignedIn } = useUser()
   
   // Default reviews with 12 total reviews (3 with photos, 9 without photos)
   const defaultReviews = [
@@ -351,7 +351,7 @@ export default function ReviewsPage() {
     const reviewWithDetails = {
       ...newReview,
       id: `review-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      userId: session?.user?.id || session?.user?.email || 'anonymous',
+      userId: user?.id || user?.emailAddresses?.[0]?.emailAddress || 'anonymous',
       date: "Just now",
       location: "Jharkhand",
       category: "General",
@@ -688,10 +688,10 @@ export default function ReviewsPage() {
               {/* Reviews Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 {filteredReviews.map((review, index) => {
-                  const canDelete = session?.user && (
-                    review.userId === session.user.id || 
-                    review.userId === session.user.email ||
-                    review.name === session.user.name
+                  const canDelete = isSignedIn && user && (
+                    review.userId === user.id || 
+                    review.userId === user.emailAddresses?.[0]?.emailAddress ||
+                    review.name === user.fullName || review.name === user.firstName + ' ' + user.lastName
                   );
                   
                   return (

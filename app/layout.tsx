@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
-import { SessionProvider } from "@/components/auth/session-provider";
+import { ClerkProvider } from '@clerk/nextjs';
+import { AuthSessionProvider } from "@/components/providers/session-provider";
 import { ChatbotWrapper } from "@/components/chatbot-wrapper";
 import { SidebarNavigation } from "@/components/sidebar-navigation";
 import { SOSWrapper } from "@/components/sos-wrapper";
@@ -55,12 +56,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="mobile-scroll">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} mobile-text-adjust touch-manipulation antialiased`}>
-        <SessionProvider>
-          {children}
-          <SidebarNavigation />
-          <SOSWrapper />
-          <ChatbotWrapper />
-        </SessionProvider>
+        <ClerkProvider>
+          <AuthSessionProvider>
+            {children}
+            <SidebarNavigation />
+            <SOSWrapper />
+            <ChatbotWrapper />
+          </AuthSessionProvider>
+        </ClerkProvider>
         <Analytics />
       </body>
     </html>

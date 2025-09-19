@@ -281,7 +281,7 @@ export default function ForgotPasswordPage() {
                   </div>
 
                   <Button
-                    onClick={() => router.push('/auth/signin')}
+                    onClick={() => router.push('/sign-in')}
                     className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium"
                   >
                     <Lock className="w-4 h-4 mr-2" />
@@ -304,7 +304,7 @@ export default function ForgotPasswordPage() {
                   <p className="text-center text-sm text-gray-600">
                     Remember your password?{" "}
                     <Link
-                      href="/auth/signin"
+                      href="/sign-in"
                       className="text-blue-600 hover:text-blue-700 font-medium"
                     >
                       Sign in here
@@ -313,7 +313,7 @@ export default function ForgotPasswordPage() {
                   <p className="text-center text-sm text-gray-600">
                     Don't have an account?{" "}
                     <Link
-                      href="/auth/signup"
+                      href="/sign-up"
                       className="text-blue-600 hover:text-blue-700 font-medium"
                     >
                       Sign up for free

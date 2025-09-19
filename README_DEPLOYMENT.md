@@ -163,7 +163,6 @@ The app works on any platform that supports Next.js:
 - `GET /api/hotels` - Hotel listings
 
 ### Protected APIs:
-- `POST /api/auth/signup` - User registration
 - `PUT /api/user/update` - Profile updates
 - `POST /api/bookings/hotels` - Hotel bookings
 - `GET /api/admin/dashboard` - Admin analytics

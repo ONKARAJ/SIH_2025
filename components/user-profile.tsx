@@ -41,12 +41,12 @@ export default function UserProfile() {
     return (
       <div className="fixed top-4 right-80 z-[9999]">
         <div className="flex gap-2">
-          <Link href="/auth/signin">
+          <Link href="/sign-in">
             <Button size="sm" variant="outline" className="bg-white shadow-lg border-2">
               Sign In
             </Button>
           </Link>
-          <Link href="/auth/signup">
+          <Link href="/sign-up">
             <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 shadow-lg">
               Sign Up
             </Button>

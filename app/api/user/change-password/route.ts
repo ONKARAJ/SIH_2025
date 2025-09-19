@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
-import { db } from "@/lib/db"
-import bcrypt from "bcrypt"
+import { demoUserStorage } from "@/lib/demo-users"
+import bcrypt from "bcryptjs"
 import { z } from "zod"
 
 const changePasswordSchema = z.object({

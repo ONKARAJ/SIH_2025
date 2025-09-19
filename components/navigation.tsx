@@ -5,7 +5,7 @@ import { createPortal } from "react-dom"
 import Link from "next/link"
 import { Menu, X, Search, ChevronDown, HelpCircle, Phone, MessageSquare } from "lucide-react"
 import { usePathname } from "next/navigation"
-import { useSession, signOut } from "next-auth/react"
+import { useUser, SignOutButton } from "@clerk/nextjs"
 import { User, LogOut, UserCircle, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,7 +25,7 @@ export function Navigation() {
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 })
   const helpButtonRef = useRef<HTMLButtonElement>(null)
   const pathname = usePathname()
-  const { data: session, status } = useSession()
+  const { user, isSignedIn, isLoaded } = useUser()
   
   
   // Close dropdown when clicking outside
@@ -157,19 +157,19 @@ export function Navigation() {
             </div>
             
             {/* User Profile / Auth Buttons */}
-            {status === "loading" ? (
+            {!isLoaded ? (
               <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse flex-shrink-0"></div>
-            ) : status === "authenticated" && session ? (
+            ) : isSignedIn && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
                     className="flex items-center gap-2 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-lg px-3 py-2 flex-shrink-0"
                   >
-                    {session.user.avatar ? (
+                    {user.imageUrl ? (
                       <img
-                        src={session.user.avatar}
-                        alt={session.user.name || "User"}
+                        src={user.imageUrl}
+                        alt={user.fullName || "User"}
                         className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                       />
                     ) : (
@@ -179,10 +179,10 @@ export function Navigation() {
                     )}
                     <div className="hidden lg:block text-left min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate max-w-[100px]">
-                        {session.user.name || "User"}
+                        {user.fullName || user.firstName || "User"}
                       </p>
                       <p className="text-xs text-gray-500 truncate max-w-[100px]">
-                        {session.user.email}
+                        {user.primaryEmailAddress?.emailAddress}
                       </p>
                     </div>
                   </Button>
@@ -192,10 +192,10 @@ export function Navigation() {
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">
-                        {session.user.name || "User"}
+                        {user.fullName || user.firstName || "User"}
                       </p>
                       <p className="text-xs leading-none text-muted-foreground">
-                        {session.user.email}
+                        {user.primaryEmailAddress?.emailAddress}
                       </p>
                       <p className="text-xs text-emerald-600 mt-1">
                         Welcome to Jharkhand Tourism! 🌿
@@ -221,23 +221,24 @@ export function Navigation() {
                   
                   <DropdownMenuSeparator />
                   
-                  <DropdownMenuItem
-                    className="flex items-center cursor-pointer text-red-600 focus:text-red-600"
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Sign out</span>
+                  <DropdownMenuItem asChild>
+                    <SignOutButton redirectUrl="/">
+                      <button className="flex items-center cursor-pointer text-red-600 focus:text-red-600 w-full">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Sign out</span>
+                      </button>
+                    </SignOutButton>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <div className="flex gap-2 flex-shrink-0">
-                <Link href="/auth/signin">
+                <Link href="/sign-in">
                   <Button size="sm" variant="outline" className="bg-white/90 backdrop-blur-sm border-2 whitespace-nowrap">
                     Sign In
                   </Button>
                 </Link>
-                <Link href="/auth/signup">
+                <Link href="/sign-up">
                   <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 whitespace-nowrap">
                     Sign Up
                   </Button>
@@ -315,17 +316,17 @@ export function Navigation() {
             </div>
           
           {/* Mobile Auth Buttons - Only show when not logged in */}
-          {status === "unauthenticated" && (
+          {isLoaded && !isSignedIn && (
             <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-3 sm:py-4 border-t border-white/20 space-y-2">
               <Link
-                href="/auth/signin"
+                href="/sign-in"
                 className="block w-full text-center px-4 py-3 text-green-700 font-medium hover:bg-white/60 active:bg-white/80 rounded-lg transition-all duration-200 touch-manipulation border border-green-200 hover:border-green-300 text-sm xs:text-base"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Sign In
               </Link>
               <Link
-                href="/auth/signup"
+                href="/sign-up"
                 className="block w-full text-center px-4 py-3 bg-gradient-to-r from-green-600 to-orange-500 text-white font-medium rounded-lg hover:from-green-700 hover:to-orange-600 active:from-green-800 active:to-orange-700 transition-all duration-200 shadow-md hover:shadow-lg touch-manipulation text-sm xs:text-base"
                 onClick={() => setIsMenuOpen(false)}
               >

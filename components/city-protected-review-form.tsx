@@ -97,7 +97,7 @@ export function CityProtectedReviewForm({ cityId, cityName, onReviewSubmitted }:
 
           <div className="flex flex-col sm:flex-row gap-3">
             <Button 
-              onClick={() => router.push(`/auth/signin?callbackUrl=/cities/${cityId}`)}
+              onClick={() => router.push(`/sign-in?redirect_url=${encodeURIComponent(`/cities/${cityId}`)}`)}
               className="flex-1 bg-blue-600 hover:bg-blue-700"
             >
               <LogIn className="h-4 w-4 mr-2" />
@@ -105,7 +105,7 @@ export function CityProtectedReviewForm({ cityId, cityName, onReviewSubmitted }:
             </Button>
             <Button 
               variant="outline"
-              onClick={() => router.push(`/auth/signup?callbackUrl=/cities/${cityId}`)}
+              onClick={() => router.push(`/sign-up?redirect_url=${encodeURIComponent(`/cities/${cityId}`)}`)}
               className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-700"
             >
               <UserPlus className="h-4 w-4 mr-2" />

@@ -1,15 +1,9 @@
 import { NextAuthOptions } from "next-auth"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
-import { db } from "@/lib/db"
 import { demoUserStorage } from "@/lib/demo-users"
 
-// Check if database is properly configured
-const isDatabaseConfigured = process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('placeholder')
-
 export const authOptions: NextAuthOptions = {
-  adapter: isDatabaseConfigured ? PrismaAdapter(db) : undefined,
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -23,19 +17,8 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          let user
-          
-          if (isDatabaseConfigured) {
-            // Use database
-            user = await db.user.findUnique({
-              where: {
-                email: credentials.email
-              }
-            })
-          } else {
-            // Use demo storage
-            user = await demoUserStorage.findUserByEmail(credentials.email)
-          }
+          // Use demo storage only (no database)
+          const user = await demoUserStorage.findUserByEmail(credentials.email)
 
           if (!user || !user.password) {
             return null
@@ -67,8 +50,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt"
   },
   pages: {
-    signIn: "/auth/signin",
-    signUp: "/auth/signup",
+    signIn: "/sign-in",
   },
   callbacks: {
     async jwt({ token, user, account }) {
@@ -86,34 +68,6 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string
         session.user.avatar = token.avatar as string
         session.user.provider = token.provider as string
-        
-        // Fetch fresh user data from database if available
-        if (isDatabaseConfigured && session.user.email) {
-          try {
-            const freshUser = await db.user.findUnique({
-              where: { email: session.user.email },
-              select: {
-                id: true,
-                name: true,
-                email: true,
-                phone: true,
-                avatar: true,
-                createdAt: true,
-                updatedAt: true
-              }
-            })
-            
-            if (freshUser) {
-              session.user.name = freshUser.name
-              session.user.phone = freshUser.phone
-              session.user.avatar = freshUser.avatar
-              session.user.createdAt = freshUser.createdAt
-              session.user.updatedAt = freshUser.updatedAt
-            }
-          } catch (error) {
-            console.error("Error fetching fresh user data:", error)
-          }
-        }
       }
       return session
     },
