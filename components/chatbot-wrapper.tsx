@@ -7,9 +7,15 @@ import { Chatbot } from "./chatbot";
 
 export function ChatbotWrapper() {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
 
   const toggleChatbot = () => {
     setIsChatbotOpen(!isChatbotOpen);
+    setIsMinimized(false); // Reset minimize state when opening/closing
+  };
+
+  const toggleMinimize = () => {
+    setIsMinimized(!isMinimized);
   };
 
   return (
@@ -27,7 +33,12 @@ export function ChatbotWrapper() {
       )}
 
       {/* Chatbot Component */}
-      <Chatbot isOpen={isChatbotOpen} onToggle={toggleChatbot} />
+      <Chatbot 
+        isOpen={isChatbotOpen} 
+        onToggle={toggleChatbot} 
+        isMinimized={isMinimized}
+        onMinimize={toggleMinimize}
+      />
     </>
   );
 }

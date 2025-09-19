@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { X, Send, MapPin, Bot, User } from "lucide-react";
+import { X, Send, MapPin, Bot, User, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ChatMessage {
@@ -18,9 +18,11 @@ interface ChatMessage {
 interface ChatbotProps {
   isOpen: boolean;
   onToggle: () => void;
+  isMinimized: boolean;
+  onMinimize: () => void;
 }
 
-export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
+export function Chatbot({ isOpen, onToggle, isMinimized, onMinimize }: ChatbotProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +44,7 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
     if (isOpen && messages.length === 0) {
       const welcomeMessage: ChatMessage = {
         id: "welcome",
-        content: "👋 **Hi! I'm your Jharkhand Travel Assistant**\n\nI help with:\n• 📍 Distance & travel routes\n• 🎯 Tourist spots & attractions  \n• 🚌 Transport options & booking\n• 💬 General questions\n• 📍 Location-based recommendations\n\n**Try asking:**\n• \"Distance from Ranchi to Deoghar\"\n• \"Best places in Jharkhand\"\n• \"Who is power star Pawan Singh?\"\n\n📍 **Tip**: Click the location button 📍 for personalized recommendations!\n\nWhat can I help you with?",
+        content: "👋 Johar Jharkhand! I'm your Jharkhand Travel Assistant\n\nI help with:\n• 📍 Distance & travel routes\n• 🎯 Tourist spots & attractions  \n• 🚌 Transport options & booking\n• 💬 General questions\n\nWhat can I help you with?",
         isBot: true,
         timestamp: new Date(),
         source: 'system'
@@ -109,36 +111,64 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 w-80 sm:w-96 h-[500px] sm:h-[600px] z-50 pointer-events-auto max-w-[calc(100vw-2rem)]">
-      <Card className="h-full flex flex-col shadow-2xl border-0 bg-white">
-        <CardHeader className="flex-row items-center justify-between space-y-0 pb-3 bg-green-600 text-white rounded-t-lg">
+    <div className={`fixed bottom-4 right-4 z-50 pointer-events-auto max-w-[calc(100vw-2rem)] transition-all duration-300 ${
+      isMinimized ? 'w-80 sm:w-96 h-16' : 'w-80 sm:w-96 h-[500px] sm:h-[600px]'
+    }`}>
+      <Card className={`h-full flex flex-col shadow-2xl border-0 bg-gray-50 overflow-hidden rounded-t-lg ${
+        isMinimized ? 'animate-pulse hover:animate-none' : ''
+      }`}>
+        <CardHeader 
+          className={`flex-row items-center justify-between space-y-0 py-2 px-3 sm:px-4 bg-green-600 text-white flex-shrink-0 rounded-t-lg ${
+            isMinimized ? 'cursor-pointer hover:bg-green-700 transition-colors' : ''
+          }`}
+          onClick={isMinimized ? onMinimize : undefined}
+        >
           <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-            <Bot className="w-4 h-4 sm:w-5 sm:h-5" />
+            <Bot className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
             <span className="truncate">Jharkhand Travel Assistant</span>
+            {isMinimized && <span className="text-xs opacity-75 ml-2">(Click to expand)</span>}
           </CardTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onToggle}
-            className="text-white hover:bg-white/20 hover:text-white h-8 w-8 p-0 rounded-full transition-all duration-200"
-          >
-            <X className="w-4 h-4" />
-          </Button>
+          <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onMinimize();
+              }}
+              className="text-white hover:bg-white/20 hover:text-white h-7 w-7 p-0 rounded-full transition-all duration-200"
+            >
+              <Minus className="w-3 h-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggle();
+              }}
+              className="text-white hover:bg-white/20 hover:text-white h-7 w-7 p-0 rounded-full transition-all duration-200"
+            >
+              <X className="w-3 h-3" />
+            </Button>
+          </div>
         </CardHeader>
         
-        <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
-          {/* Messages Area */}
-          <div 
-            ref={messagesContainerRef}
-            className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-gray-50 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
-            style={{ maxHeight: 'calc(100% - 120px)' }}
-          >
-            {messages.map((message) => (
+        {!isMinimized && (
+          <CardContent className="flex-1 flex flex-col p-0 overflow-hidden border-t-0 -mt-1">
+            {/* Messages Area */}
+            <div 
+              ref={messagesContainerRef}
+              className="flex-1 overflow-y-auto px-3 sm:px-4 pt-0 pb-3 space-y-3 sm:space-y-4 bg-gray-50 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
+              style={{ maxHeight: 'calc(100% - 80px)' }}
+            >
+            {messages.map((message, index) => (
               <div
                 key={message.id}
                 className={cn(
                   "flex gap-2 sm:gap-3 animate-fadeIn",
-                  message.isBot ? "justify-start" : "justify-end"
+                  message.isBot ? "justify-start" : "justify-end",
+                  index === 0 ? "mt-1" : "" // Minimal spacing for first message only
                 )}
               >
                 {message.isBot && (
@@ -191,7 +221,7 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
           </div>
           
           {/* Input Area */}
-          <div className="border-t bg-white p-3 sm:p-4">
+          <div className="border-t bg-white px-3 sm:px-4 py-2">
             <div className="flex gap-2">
               <Input
                 value={inputValue}
@@ -235,8 +265,9 @@ export function Chatbot({ isOpen, onToggle }: ChatbotProps) {
                 Distances
               </Button>
             </div>
-          </div>
-        </CardContent>
+            </div>
+          </CardContent>
+        )}
       </Card>
     </div>
   );
