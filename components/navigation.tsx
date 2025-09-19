@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import { createPortal } from "react-dom"
 import Link from "next/link"
 import { Menu, X, Search, ChevronDown, HelpCircle, Phone, MessageSquare } from "lucide-react"
 import { usePathname } from "next/navigation"
@@ -10,23 +11,33 @@ export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isHelpDropdownOpen, setIsHelpDropdownOpen] = useState(false)
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 })
+  const helpButtonRef = useRef<HTMLButtonElement>(null)
   const pathname = usePathname()
+  
   
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      // Don't close if clicking on the help button or dropdown content
       const target = event.target as Element
-      if (!target.closest('[data-dropdown="help"]')) {
+      // Check if click is outside the help dropdown area
+      const helpDropdown = target.closest('[data-dropdown="help"]')
+      if (!helpDropdown && isHelpDropdownOpen) {
         setIsHelpDropdownOpen(false)
       }
     }
     
-    if (isHelpDropdownOpen) {
-      document.addEventListener('click', handleClickOutside)
-      return () => document.removeEventListener('click', handleClickOutside)
-    }
+    // Always add the event listener when component mounts
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
   }, [isHelpDropdownOpen])
+
+  // Close dropdown when mobile menu opens
+  useEffect(() => {
+    if (isMenuOpen) {
+      setIsHelpDropdownOpen(false)
+    }
+  }, [isMenuOpen])
 
   // Handle scroll effect for background change
   useEffect(() => {
@@ -55,6 +66,7 @@ export function Navigation() {
   ]
 
   return (
+    <>
     <nav
       className={`sticky top-0 z-50 transition-all duration-300 w-full overflow-hidden ${
         isScrolled
@@ -93,59 +105,33 @@ export function Navigation() {
                 </Link>
               ))}
               
-              {/* Help Dropdown */}
-              <div className="relative" data-dropdown="help">
+              {/* Help Accordion Dropdown */}
+              <div className="relative">
                 <button
-                  className={`flex items-center px-3 py-2 font-medium transition-all duration-200 whitespace-nowrap rounded-full border border-transparent ${
-                    pathname === "/faq" || pathname === "/contact" || isHelpDropdownOpen
-                      ? "text-white bg-green-600 shadow-md border-green-700"
-                      : "text-gray-700 hover:text-green-700 hover:bg-green-50 hover:border-green-200"
+                  ref={helpButtonRef}
+                  className={`flex items-center px-3 py-2 font-medium transition-all duration-200 whitespace-nowrap rounded-full ${
+                    isHelpDropdownOpen
+                      ? "text-white bg-green-600 shadow-md"
+                      : "text-gray-700 hover:text-green-700 hover:bg-green-50"
                   }`}
-                  onClick={(e) => {
-                    e.stopPropagation()
+                  onClick={() => {
+                    if (!isHelpDropdownOpen && helpButtonRef.current) {
+                      const rect = helpButtonRef.current.getBoundingClientRect()
+                      setDropdownPosition({
+                        top: rect.bottom + 8,
+                        right: window.innerWidth - rect.right
+                      })
+                    }
                     setIsHelpDropdownOpen(!isHelpDropdownOpen)
                   }}
-                  title="Click to show help options"
+                  aria-expanded={isHelpDropdownOpen}
+                  aria-haspopup="true"
                 >
                   Help
-                  <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-300 ${
-                    isHelpDropdownOpen ? "rotate-180" : ""
+                  <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-200 ${
+                    isHelpDropdownOpen ? "rotate-180" : "rotate-0"
                   }`} />
                 </button>
-                
-                {isHelpDropdownOpen && (
-                  <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-xl z-50 transform transition-all duration-200 animate-in fade-in slide-in-from-top-2">
-                    <div className="p-2">
-                      {helpLinks.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          className="flex items-start p-3 rounded-lg hover:bg-gradient-to-r hover:from-green-50 hover:to-orange-50 transition-all duration-200 group border border-transparent hover:border-green-200"
-                          onClick={() => setIsHelpDropdownOpen(false)}
-                        >
-                          <div className="w-8 h-8 bg-gradient-to-br from-green-100 to-orange-100 rounded-full flex items-center justify-center mr-3 group-hover:from-green-200 group-hover:to-orange-200 transition-all duration-200 shadow-sm group-hover:shadow-md">
-                            <link.icon className="h-4 w-4 text-green-600 group-hover:text-green-700" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="text-sm font-semibold text-gray-900 group-hover:text-green-700 flex items-center">
-                              {link.label}
-                              <span className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-green-600">→</span>
-                            </h3>
-                            <p className="text-xs text-gray-500 group-hover:text-gray-600 mt-1">{link.description}</p>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                    
-                    {/* Footer with contact info */}
-                    <div className="border-t border-gray-100 p-3 bg-gray-50 rounded-b-xl">
-                      <div className="text-center">
-                        <p className="text-xs text-gray-600 mb-1">Tourist Helpline</p>
-                        <p className="text-sm font-semibold text-green-600">1363 (Toll Free)</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -260,5 +246,49 @@ export function Navigation() {
         </div>
       )}
     </nav>
+    
+    {/* Portal-based Help Dropdown - Renders at document body level */}
+    {typeof window !== 'undefined' && isHelpDropdownOpen && createPortal(
+      <div 
+        className="fixed w-72 bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden"
+        style={{
+          zIndex: 2147483647,
+          top: `${dropdownPosition.top}px`,
+          right: `${dropdownPosition.right}px`,
+          transform: 'none'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="py-2">
+          {helpLinks.map((link, index) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-green-600 transition-colors duration-150"
+              onClick={() => setIsHelpDropdownOpen(false)}
+            >
+              <link.icon className="h-5 w-5 mr-3 text-gray-400" />
+              <div>
+                <div className="font-medium">{link.label}</div>
+                <div className="text-xs text-gray-500">{link.description}</div>
+              </div>
+            </Link>
+          ))}
+          
+          {/* Divider */}
+          <hr className="my-2 border-gray-200" />
+          
+          {/* Contact info */}
+          <div className="px-4 py-3 bg-gray-50">
+            <div className="text-center">
+              <div className="text-xs font-medium text-gray-600 mb-1">Tourist Helpline</div>
+              <div className="text-sm font-bold text-green-600">1363 (Toll Free)</div>
+            </div>
+          </div>
+        </div>
+      </div>,
+      document.body
+    )}
+  </>
   )
 }
