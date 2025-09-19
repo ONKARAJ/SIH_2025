@@ -158,37 +158,53 @@ export function formatLocalDataForContext(locations: Location[], pois: PointOfIn
   return context;
 }
 
-// Check if query is related to Jharkhand tourism
+// Check if query is specifically about Jharkhand tourism (strict validation)
 export function isJharkhandTourismQuery(query: string): boolean {
   const lowerQuery = query.toLowerCase();
   
-  // Jharkhand-specific keywords
+  // Comprehensive Jharkhand-specific places, districts, and attractions
   const jharkhandKeywords = [
     'jharkhand', 'ranchi', 'jamshedpur', 'deoghar', 'netarhat', 'hazaribagh',
+    'dhanbad', 'bokaro', 'giridih', 'palamu', 'chatra', 'khunti', 'gumla',
+    'lohardaga', 'simdega', 'west singhbhum', 'east singhbhum', 'saraikela',
     'hundru', 'dassam', 'betla', 'baidyanath', 'parasnath', 'lodh falls',
-    'tagore hill', 'rock garden', 'jubilee park'
+    'jonha falls', 'tagore hill', 'rock garden', 'jubilee park', 'birsa munda',
+    'tribal', 'sarhul', 'sohrai', 'tusu', 'karma', 'chotanagpur', 'dalma',
+    'maithon dam', 'konar dam', 'getalsud dam', 'tilaiya dam'
   ];
 
-  // Tourism-related keywords
-  const tourismKeywords = [
-    'visit', 'tourism', 'tourist', 'travel', 'destination', 'attraction',
-    'waterfall', 'temple', 'park', 'hill station', 'falls', 'places to see'
-  ];
-
-  const hasJharkhandKeyword = jharkhandKeywords.some(keyword => 
+  // Check if query mentions any Jharkhand-specific location or attraction
+  const hasJharkhandLocation = jharkhandKeywords.some(keyword => 
     lowerQuery.includes(keyword)
   );
 
-  const hasTourismKeyword = tourismKeywords.some(keyword => 
-    lowerQuery.includes(keyword)
-  );
+  // Check if query has local data from Jharkhand locations database
+  const hasJharkhandData = getRelevantLocalData(query).hasLocalData;
 
-  return hasJharkhandKeyword || (hasTourismKeyword && (
-    lowerQuery.includes('jharkhand') || 
-    lowerQuery.includes('ranchi') ||
-    // If no specific location mentioned but asking about tourism, might be Jharkhand context
-    getRelevantLocalData(query).hasLocalData
-  ));
+  // Only allow if specifically mentions Jharkhand places or has local data
+  return hasJharkhandLocation || hasJharkhandData;
+}
+
+// Additional function to check for non-Jharkhand places (to reject them)
+export function isNonJharkhandLocationQuery(query: string): boolean {
+  const lowerQuery = query.toLowerCase();
+  
+  // Common non-Jharkhand places that should be rejected
+  const nonJharkhandPlaces = [
+    'delhi', 'mumbai', 'kolkata', 'chennai', 'bangalore', 'hyderabad',
+    'pune', 'ahmedabad', 'surat', 'jaipur', 'lucknow', 'kanpur', 'nagpur',
+    'indore', 'thane', 'bhopal', 'visakhapatnam', 'pimpri', 'patna',
+    'vadodara', 'ludhiana', 'agra', 'nashik', 'faridabad', 'meerut',
+    'rajkot', 'kalyan', 'vasai', 'varanasi', 'srinagar', 'aurangabad',
+    'dhanbad', 'amritsar', 'navi mumbai', 'allahabad', 'howrah', 'gwalior',
+    'jabalpur', 'coimbatore', 'vijayawada', 'jodhpur', 'madurai', 'raipur',
+    'kota', 'guwahati', 'chandigarh', 'solapur', 'hubli', 'dharwad',
+    'bareilly', 'moradabad', 'mysore', 'gurgaon', 'aligarh', 'jalandhar',
+    'tiruchirappalli', 'bhubaneswar', 'salem', 'mira', 'bhiwandi', 'tiruppur',
+    'bihar', 'west bengal', 'uttar pradesh', 'odisha', 'chhattisgarh'
+  ];
+  
+  return nonJharkhandPlaces.some(place => lowerQuery.includes(place));
 }
 
 // Get location by name

@@ -44,7 +44,7 @@ export function Chatbot({ isOpen, onToggle, isMinimized, onMinimize }: ChatbotPr
     if (isOpen && messages.length === 0) {
       const welcomeMessage: ChatMessage = {
         id: "welcome",
-        content: "👋 Johar Jharkhand! I'm your Jharkhand Travel Assistant\n\nI help with:\n• 📍 Distance & travel routes\n• 🎯 Tourist spots & attractions  \n• 🚌 Transport options & booking\n• 💬 General questions\n\nWhat can I help you with?",
+        content: "👋 Johar! I'm your Jharkhand Tourism Specialist\n\nI ONLY help with Jharkhand tourism:\n• 🏞️ Places to visit in Jharkhand\n• 📍 Distances within Jharkhand\n• 🎭 Jharkhand culture & festivals\n• 🚌 Travel within Jharkhand\n\nWhat would you like to know about Jharkhand?",
         isBot: true,
         timestamp: new Date(),
         source: 'system'
@@ -250,19 +250,18 @@ export function Chatbot({ isOpen, onToggle, isMinimized, onMinimize }: ChatbotPr
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setInputValue("Best places in Jharkhand")}
+                onClick={() => setInputValue("Best waterfalls in Jharkhand")}
                 className="text-xs h-7 border-green-200 text-green-700 hover:bg-green-50"
               >
-                Best places
+                Waterfalls
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setInputValue("Distance from Ranchi to Deoghar")}
+                onClick={() => setInputValue("Jharkhand festivals")}
                 className="text-xs h-7 border-green-200 text-green-700 hover:bg-green-50"
               >
-                <MapPin className="w-3 h-3 mr-1" />
-                Distances
+                Festivals
               </Button>
             </div>
             </div>

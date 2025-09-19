@@ -4,6 +4,7 @@ import {
   getRelevantLocalData,
   formatLocalDataForContext,
   isJharkhandTourismQuery,
+  isNonJharkhandLocationQuery,
 } from "@/lib/dataLoader";
 import { ConversationMemory } from "@/lib/conversationMemory";
 import {
@@ -321,75 +322,56 @@ async function tryDeepSeekAPI(messages: ChatMessage[]): Promise<string> {
   }
 }
 
-// Intelligent pattern-based responses (works without API keys)
+// Jharkhand-only intelligent responses
 function getIntelligentResponse(userMessage: string): string {
   const message = userMessage.toLowerCase();
 
-  // Pawan Singh questions
-  if (
-    message.includes("power star pawan singh") ||
-    message.includes("pawan singh")
-  ) {
-    return "🌟 **Pawan Singh** is known as the 'Power Star' of Bhojpuri cinema. He's a popular Bhojpuri actor and singer from Bihar, famous for action movies and folk songs. He has a huge fan following in Bihar, UP, and Jharkhand regions.";
+  // First check if it's about non-Jharkhand locations and reject immediately
+  if (isNonJharkhandLocationQuery(message)) {
+    return `🏞️ I specialize only in Jharkhand tourism! I can't help with places outside Jharkhand.\n\nLet me help you discover Jharkhand instead:\n\n• Hundru Falls - Spectacular 98m waterfall\n• Baidyanath Dham - Sacred Jyotirlinga temple\n• Netarhat - Queen of Chotanagpur\n\nWhat would you like to know about Jharkhand?`;
   }
 
-  // AI/Technology questions
-  if (
-    message.includes("artificial intelligence") ||
-    message.includes("machine learning") ||
-    message.includes("ai")
-  ) {
-    return "🤖 **Artificial Intelligence** is transforming industries worldwide. AI involves creating smart systems that can learn, reason, and make decisions. Key areas include machine learning, natural language processing, and computer vision.";
+  // Check if query is about Jharkhand tourism
+  if (isJharkhandTourismQuery(message)) {
+    // General greetings for Jharkhand context
+    if (
+      message.includes("hello") ||
+      message.includes("hi") ||
+      message.includes("hey")
+    ) {
+      return "👋 Johar! I'm your Jharkhand Tourism Assistant. Ask me about places to visit, distances, or travel in Jharkhand!";
+    }
+
+    // Thank you responses
+    if (message.includes("thank you") || message.includes("thanks")) {
+      return "😊 You're welcome! Happy to help with your Jharkhand travel plans!";
+    }
+
+    // Return Jharkhand-specific fallback
+    return getJharkhandSpecificResponse(userMessage);
   }
 
-  // Current affairs
-  if (
-    message.includes("current affairs") ||
-    message.includes("news") ||
-    message.includes("latest")
-  ) {
-    return "📰 I can help with general knowledge! For latest news, I recommend checking reliable news sources. Is there a specific topic you'd like to know about - politics, technology, sports, or something else?";
+  // For non-Jharkhand queries, politely redirect
+  return `🏞️ I'm specialized in Jharkhand tourism! I can help you with:\n\n• Places to visit in Jharkhand\n• Travel distances within Jharkhand\n• Jharkhand culture and festivals\n• Tourist attractions in Jharkhand\n\nWhat would you like to know about Jharkhand?`;
+}
+
+// Function to provide Jharkhand-specific responses
+function getJharkhandSpecificResponse(userMessage: string): string {
+  const message = userMessage.toLowerCase();
+
+  if (message.includes("place") || message.includes("visit") || message.includes("destination")) {
+    return "🌟 Popular Jharkhand destinations: Hundru Falls, Baidyanath Dham (Deoghar), Netarhat, Betla National Park, Parasnath Hill. Which type interests you - waterfalls, temples, or wildlife?";
   }
 
-  // Science questions
-  if (
-    message.includes("science") ||
-    message.includes("physics") ||
-    message.includes("chemistry")
-  ) {
-    return "🔬 **Science** encompasses understanding our natural world through observation and experimentation. What specific scientific topic interests you - physics, chemistry, biology, or space science?";
+  if (message.includes("waterfall") || message.includes("falls")) {
+    return "🏞️ Jharkhand's beautiful waterfalls: Hundru Falls (98m), Dassam Falls, Lodh Falls (143m), Jonha Falls. Best time to visit is July-February!";
   }
 
-  // Technology questions
-  if (
-    message.includes("technology") ||
-    message.includes("computer") ||
-    message.includes("internet")
-  ) {
-    return "💻 **Technology** is rapidly evolving! From smartphones to AI, tech shapes our daily lives. Are you interested in a specific technology - programming, gadgets, software, or emerging tech?";
+  if (message.includes("festival") || message.includes("culture")) {
+    return "🎭 Jharkhand's tribal festivals: Sarhul (spring), Sohrai (harvest), Tusu (winter), Karma (monsoon). Each celebrates the connection with nature!";
   }
 
-  // History questions
-  if (message.includes("history") || message.includes("historical")) {
-    return "📚 **History** teaches us about our past and helps shape our future. What period or region interests you - ancient civilizations, world wars, Indian history, or local heritage?";
-  }
-
-  // General greetings
-  if (
-    message.includes("hello") ||
-    message.includes("hi") ||
-    message.includes("hey")
-  ) {
-    return "👋 Hello! I'm here to help with travel, tourism, general knowledge, and more. What would you like to know?";
-  }
-
-  // Thank you responses
-  if (message.includes("thank you") || message.includes("thanks")) {
-    return "😊 You're welcome! Happy to help. Is there anything else you'd like to know?";
-  }
-
-  // Default intelligent response
-  return `I understand you're asking about "${userMessage}". While I don't have specific information on that topic right now, I can help with:\n\n• 🏞️ Jharkhand tourism and travel\n• 📍 Distance calculations\n• 🎭 Culture and festivals\n• 💬 General knowledge\n\nFeel free to ask about any of these topics!`;
+  return `I can help with specific information about Jharkhand tourism. Try asking about:\n\n• "Best places in Jharkhand"\n• "Waterfalls in Jharkhand"\n• "Distance from Ranchi to Deoghar"\n• "Jharkhand festivals"\n\nWhat interests you most?`;
 }
 
 // Function to check if AI API is available
@@ -652,44 +634,45 @@ function getPopularJharkhandDestinations(): string {
   return `**Popular Jharkhand Destinations:**\n\n• **Baidyanath Dham (Deoghar)** - Sacred Jyotirlinga temple\n• **Hundru Falls** - 98m waterfall near Ranchi\n• **Netarhat** - Queen of Chotanagpur hill station\n• **Betla National Park** - Wildlife and tiger reserve\n• **Parasnath Hill** - Highest peak, Jain pilgrimage site\n\n*Ask me about specific places for detailed information and travel options!*`;
 }
 
-// Fallback responses for when API is unavailable
+// Jharkhand-only fallback responses
 function getFallbackResponse(userMessage: string): string {
   const message = userMessage.toLowerCase();
 
-  // Tourism-related fallback responses
-  if (message.includes("waterfall") || message.includes("falls")) {
-    return "🏞️ Jharkhand's Beautiful Waterfalls:\n\n• **Hundru Falls** (98m) - Near Ranchi, spectacular cascade\n• **Dassam Falls** (44m) - Called 'Niagara of Jharkhand'\n• **Lodh Falls** (143m) - Highest waterfall in the state\n• **Jonha Falls** (43m) - Also known as Gautamdhara\n\n**Best time to visit**: During/after monsoon (July-February) for maximum water flow!";
+  // First check if it's about non-Jharkhand places
+  if (isNonJharkhandLocationQuery(message)) {
+    return `🏞️ I only provide information about Jharkhand tourism! I can't help with places outside Jharkhand.\n\nExplore Jharkhand instead:\n\n• Hundru Falls - 98m spectacular waterfall\n• Baidyanath Dham - Sacred Jyotirlinga temple\n• Betla National Park - Wildlife sanctuary\n\nAsk me about Jharkhand places!`;
   }
 
-  if (message.includes("festival") || message.includes("culture")) {
-    return "🎭 Jharkhand's Rich Tribal Culture:\n\n• **Sarhul** - Spring festival celebrating nature\n• **Sohrai** - Harvest festival honoring cattle\n• **Tusu** - Winter festival dedicated to goddess Tusu\n• **Karma** - Monsoon festival for youth blessings\n\nThese festivals showcase the deep connection between tribal communities and nature! Would you like to know more about any specific festival?";
+  // Check if it's a Jharkhand-related query
+  if (isJharkhandTourismQuery(message)) {
+    // Tourism-related fallback responses for Jharkhand
+    if (message.includes("waterfall") || message.includes("falls")) {
+      return "🏞️ Jharkhand's Beautiful Waterfalls:\n\n• **Hundru Falls** (98m) - Near Ranchi\n• **Dassam Falls** (44m) - Niagara of Jharkhand\n• **Lodh Falls** (143m) - Highest waterfall\n• **Jonha Falls** (43m) - Gautamdhara\n\n**Best time**: July-February for maximum flow!";
+    }
+
+    if (message.includes("festival") || message.includes("culture")) {
+      return "🎭 Jharkhand's Tribal Festivals:\n\n• **Sarhul** - Spring nature festival\n• **Sohrai** - Harvest festival\n• **Tusu** - Winter goddess festival\n• **Karma** - Monsoon blessing festival\n\nThese celebrate tribal connection with nature!";
+    }
+
+    if (message.includes("place") || message.includes("visit") || message.includes("destination")) {
+      return "🌟 Top Jharkhand Destinations:\n\n• Hundru Falls - 98m waterfall\n• Betla National Park - Wildlife\n• Netarhat - Queen of Chotanagpur\n• Deoghar - Baidyanath Temple\n• Parasnath Hill - Highest peak\n\nWhat interests you - nature, temples, or wildlife?";
+    }
+
+    if (message.includes("distance") || message.includes("how far")) {
+      return "📍 Jharkhand Distances from Ranchi:\n\n• Jamshedpur: ~130 km (3 hours)\n• Deoghar: ~250 km (5-6 hours)\n• Netarhat: ~156 km (4 hours)\n• Hundru Falls: ~45 km (1.5 hours)\n\nWhich route do you need?";
+    }
+
+    if (message.includes("capital")) {
+      return "🏙️ **Ranchi** is Jharkhand's capital! MS Dhoni's hometown with Rock Garden, Tagore Hill, and pleasant climate.";
+    }
+
+    if (message.includes("hello") || message.includes("hi")) {
+      return "👋 Johar! I'm your Jharkhand tourism specialist. Ask about places, distances, or attractions in Jharkhand!";
+    }
+
+    return "I help with Jharkhand tourism information. Ask about places, waterfalls, temples, or travel within Jharkhand!";
   }
 
-  if (
-    message.includes("place") ||
-    message.includes("visit") ||
-    message.includes("destination")
-  ) {
-    return "🌟Top Jharkhand Destinations:\n\n• Hundru Falls - Spectacular 98m waterfall\n• **Betla National Park** - Tigers, elephants, wildlife\n• **Netarhat** - 'Queen of Chotanagpur', hill station\n• **Deoghar** - Sacred Baidyanath Jyotirlinga temple\n• **Parasnath Hill** - Highest peak, Jain pilgrimage\n• **Ranchi** - Capital city, Rock Garden, Tagore Hill\n\nWhat type of experience are you looking for - adventure, spirituality, or nature?";
-  }
-
-  if (message.includes("distance") || message.includes("how far")) {
-    return "📍 Distance Information:\n\nI can help you with distances between places in Jharkhand and beyond! For accurate, real-time distance calculations with travel options, I'm working on getting that data for you.\n\n**Major distances from Ranchi**:\n• Jamshedpur: ~130 km (3 hours by road)\n• Deoghar: ~250 km (5-6 hours)\n• Netarhat: ~156 km (4 hours)\n• Hundru Falls: ~45 km (1.5 hours)\n\nWhich specific route would you like to know about?";
-  }
-
-  // Government-related
-  if (message.includes("cm") || message.includes("chief minister")) {
-    return "🏛️ **Hemant Soren** is the current Chief Minister of Jharkhand (JMM party), serving since 2019. He focuses on tribal rights, employment generation, and welfare schemes.";
-  }
-
-  if (message.includes("capital")) {
-    return "🏙️ **Ranchi** is the capital of Jharkhand! Known for its pleasant climate, educational institutions (IIT, NIT), and as MS Dhoni's hometown. Major attractions include Jagannath Temple, Rock Garden, and Tagore Hill.";
-  }
-
-  // General responses
-  if (message.includes("hello") || message.includes("hi")) {
-    return "Hi! 👋 I'm your Jharkhand travel assistant. Ask me about places, distances, or any topic!";
-  }
-
-  return "I can help with tourism, travel, distances, and general questions. Currently connecting to AI service. What would you like to know?";
+  // For completely off-topic queries, redirect to Jharkhand
+  return `🏞️ I specialize in Jharkhand tourism only! Let me help you discover Jharkhand:\n\n• Amazing waterfalls like Hundru Falls\n• Sacred temples like Baidyanath Dham\n• Wildlife at Betla National Park\n• Hill stations like Netarhat\n\nWhat would you like to know about Jharkhand?`;
 }
