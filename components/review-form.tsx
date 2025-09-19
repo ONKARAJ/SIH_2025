@@ -25,58 +25,114 @@ export function ReviewForm({ onSubmit, defaultName = "", disabled = false }: Rev
   const [videos, setVideos] = useState<string[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [isDraggingVideo, setIsDraggingVideo] = useState(false)
+  const [isUploadingPhotos, setIsUploadingPhotos] = useState(false)
+  const [isUploadingVideos, setIsUploadingVideos] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const videoInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileSelection = (files: FileList | null) => {
+  const handleFileSelection = async (files: FileList | null) => {
     if (!files) return
     
-    const newPhotos: string[] = []
     const maxPhotos = 5 // Limit to 5 photos
     const remainingSlots = maxPhotos - photos.length
     const filesToProcess = Math.min(files.length, remainingSlots)
     
-    for (let i = 0; i < filesToProcess; i++) {
-      const file = files[i]
-      if (file && file.type.startsWith('image/')) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          const result = e.target?.result as string
-          if (result) {
-            newPhotos.push(result)
-            if (newPhotos.length === filesToProcess) {
-              setPhotos(prev => [...prev, ...newPhotos])
-            }
+    if (filesToProcess === 0) {
+      alert(`Maximum ${maxPhotos} photos allowed. Please remove some photos first.`)
+      return
+    }
+    
+    setIsUploadingPhotos(true)
+    const newPhotos: string[] = []
+    
+    try {
+      for (let i = 0; i < filesToProcess; i++) {
+        const file = files[i]
+        if (file && file.type.startsWith('image/')) {
+          // Check file size (limit to 10MB)
+          if (file.size > 10 * 1024 * 1024) {
+            alert(`File ${file.name} is too large. Please use images smaller than 10MB.`)
+            continue
           }
+          
+          // Convert file to base64
+          const base64 = await fileToBase64(file)
+          if (base64) {
+            newPhotos.push(base64)
+          }
+        } else {
+          alert(`File ${files[i]?.name || 'unknown'} is not a valid image format.`)
         }
-        reader.readAsDataURL(file)
       }
+      
+      if (newPhotos.length > 0) {
+        setPhotos(prev => [...prev, ...newPhotos])
+      }
+    } catch (error) {
+      console.error('Error processing files:', error)
+      alert('Error uploading photos. Please try again.')
+    } finally {
+      setIsUploadingPhotos(false)
     }
   }
+  
+  const fileToBase64 = (file: File): Promise<string | null> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        resolve(reader.result as string)
+      }
+      reader.onerror = () => {
+        console.error('Error reading file:', file.name)
+        reject(new Error('Failed to read file'))
+      }
+      reader.readAsDataURL(file)
+    })
+  }
 
-  const handleVideoSelection = (files: FileList | null) => {
+  const handleVideoSelection = async (files: FileList | null) => {
     if (!files) return
     
-    const newVideos: string[] = []
     const maxVideos = 2 // Limit to 2 videos
     const remainingSlots = maxVideos - videos.length
     const filesToProcess = Math.min(files.length, remainingSlots)
     
-    for (let i = 0; i < filesToProcess; i++) {
-      const file = files[i]
-      if (file && file.type.startsWith('video/')) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          const result = e.target?.result as string
-          if (result) {
-            newVideos.push(result)
-            if (newVideos.length === filesToProcess) {
-              setVideos(prev => [...prev, ...newVideos])
-            }
+    if (filesToProcess === 0) {
+      alert(`Maximum ${maxVideos} videos allowed. Please remove some videos first.`)
+      return
+    }
+    
+    setIsUploadingVideos(true)
+    const newVideos: string[] = []
+    
+    try {
+      for (let i = 0; i < filesToProcess; i++) {
+        const file = files[i]
+        if (file && file.type.startsWith('video/')) {
+          // Check file size (limit to 50MB)
+          if (file.size > 50 * 1024 * 1024) {
+            alert(`File ${file.name} is too large. Please use videos smaller than 50MB.`)
+            continue
           }
+          
+          // Convert file to base64
+          const base64 = await fileToBase64(file)
+          if (base64) {
+            newVideos.push(base64)
+          }
+        } else {
+          alert(`File ${files[i]?.name || 'unknown'} is not a valid video format.`)
         }
-        reader.readAsDataURL(file)
       }
+      
+      if (newVideos.length > 0) {
+        setVideos(prev => [...prev, ...newVideos])
+      }
+    } catch (error) {
+      console.error('Error processing video files:', error)
+      alert('Error uploading videos. Please try again.')
+    } finally {
+      setIsUploadingVideos(false)
     }
   }
 
@@ -90,10 +146,15 @@ export function ReviewForm({ onSubmit, defaultName = "", disabled = false }: Rev
     setIsDragging(false)
   }
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
-    handleFileSelection(e.dataTransfer.files)
+    try {
+      await handleFileSelection(e.dataTransfer.files)
+    } catch (error) {
+      console.error('Error handling dropped files:', error)
+      alert('Error processing dropped files. Please try again.')
+    }
   }
 
   const removePhoto = (index: number) => {
@@ -122,11 +183,13 @@ export function ReviewForm({ onSubmit, defaultName = "", disabled = false }: Rev
     })
 
     // Reset form
-    setName("")
+    setName(defaultName || "")
     setRating(0)
     setFeedback("")
     setPhotos([])
     setVideos([])
+    setIsUploadingPhotos(false)
+    setIsUploadingVideos(false)
     setIsSubmitting(false)
   }
 
@@ -205,7 +268,9 @@ export function ReviewForm({ onSubmit, defaultName = "", disabled = false }: Rev
             {/* Upload Area */}
             <div
               className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-                isDragging 
+                isUploadingPhotos
+                  ? 'border-primary bg-primary/10 pointer-events-none'
+                  : isDragging 
                   ? 'border-primary bg-primary/10' 
                   : 'border-muted-foreground/25 hover:border-primary/50'
               }`}
@@ -218,17 +283,30 @@ export function ReviewForm({ onSubmit, defaultName = "", disabled = false }: Rev
                 type="file"
                 multiple
                 accept="image/*"
-                onChange={(e) => handleFileSelection(e.target.files)}
+                onChange={async (e) => {
+                  try {
+                    await handleFileSelection(e.target.files)
+                  } catch (error) {
+                    console.error('Error handling file input:', error)
+                  }
+                  // Reset input value to allow selecting the same file again
+                  e.target.value = ''
+                }}
                 className="hidden"
+                disabled={isUploadingPhotos}
               />
               
               <div className="flex flex-col items-center space-y-2">
                 <div className="p-3 bg-muted rounded-full">
-                  <Camera className="h-6 w-6 text-muted-foreground" />
+                  {isUploadingPhotos ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                  ) : (
+                    <Camera className="h-6 w-6 text-muted-foreground" />
+                  )}
                 </div>
                 <div>
                   <p className="text-sm font-medium text-foreground mb-1">
-                    Drag & drop photos here, or click to browse
+                    {isUploadingPhotos ? 'Processing photos...' : 'Drag & drop photos here, or click to browse'}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     PNG, JPG, GIF up to 10MB each
@@ -239,10 +317,20 @@ export function ReviewForm({ onSubmit, defaultName = "", disabled = false }: Rev
                   variant="outline"
                   size="sm"
                   onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploadingPhotos}
                   className="mt-2"
                 >
-                  <Upload className="h-4 w-4 mr-2" />
-                  Choose Photos
+                  {isUploadingPhotos ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-4 w-4 mr-2" />
+                      Choose Photos
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
@@ -290,8 +378,17 @@ export function ReviewForm({ onSubmit, defaultName = "", disabled = false }: Rev
                 type="file"
                 multiple
                 accept="video/*"
-                onChange={(e) => handleVideoSelection(e.target.files)}
+                onChange={async (e) => {
+                  try {
+                    await handleVideoSelection(e.target.files)
+                  } catch (error) {
+                    console.error('Error handling video input:', error)
+                  }
+                  // Reset input value to allow selecting the same file again
+                  e.target.value = ''
+                }}
                 className="hidden"
+                disabled={isUploadingVideos}
               />
               
               <div className="flex flex-col items-center space-y-2">
@@ -311,10 +408,20 @@ export function ReviewForm({ onSubmit, defaultName = "", disabled = false }: Rev
                   variant="outline"
                   size="sm"
                   onClick={() => videoInputRef.current?.click()}
+                  disabled={isUploadingVideos}
                   className="mt-2"
                 >
-                  <Upload className="h-4 w-4 mr-2" />
-                  Choose Videos
+                  {isUploadingVideos ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-4 w-4 mr-2" />
+                      Choose Videos
+                    </>
+                  )}
                 </Button>
               </div>
             </div>

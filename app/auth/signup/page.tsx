@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Icons } from "@/components/ui/icons"
-import { Eye, EyeOff, Mail, Lock, User, MapPin } from "lucide-react"
+import { Eye, EyeOff, Mail, Lock, User, MapPin, Phone } from "lucide-react"
 import { toast } from "sonner"
 
 export default function SignUpPage() {
@@ -19,6 +19,7 @@ export default function SignUpPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: ""
   })
@@ -51,6 +52,7 @@ export default function SignUpPage() {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
+          phone: formData.phone,
           password: formData.password,
         }),
       })
@@ -58,28 +60,25 @@ export default function SignUpPage() {
       const data = await response.json()
 
       if (response.ok) {
-        if (data.message?.includes("Demo Mode")) {
-          toast.success("Account created successfully! (Demo Mode - No database configured)")
-        } else {
-          toast.success("Account created successfully!")
-        }
+        // Show success message
+        toast.success(data.message || "Account created successfully!")
         
-        // Automatically sign in the user after successful registration
-        const result = await signIn("credentials", {
-          email: formData.email,
-          password: formData.password,
-          redirect: false,
+        // Clear the form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          password: "",
+          confirmPassword: ""
         })
-
-        if (result?.ok) {
-          router.push("/")
-        }
+        
+        // Redirect to sign in page instead of auto-login
+        setTimeout(() => {
+          router.push("/auth/signin")
+        }, 2000)
       } else {
-        if (data.error?.includes("Database not configured")) {
-          toast.error("Database setup required. Please contact the administrator.")
-        } else {
-          toast.error(data.error || "Failed to create account")
-        }
+        // Show specific error message
+        toast.error(data.error || "Failed to create account")
       }
     } catch (error) {
       toast.error("Something went wrong. Please try again.")
@@ -252,6 +251,23 @@ export default function SignUpPage() {
                       type="email"
                       placeholder="Enter your email"
                       value={formData.email}
+                      onChange={handleInputChange}
+                      className="pl-10 h-12"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="Enter your phone number"
+                      value={formData.phone}
                       onChange={handleInputChange}
                       className="pl-10 h-12"
                       required

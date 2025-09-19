@@ -5,6 +5,17 @@ import { createPortal } from "react-dom"
 import Link from "next/link"
 import { Menu, X, Search, ChevronDown, HelpCircle, Phone, MessageSquare } from "lucide-react"
 import { usePathname } from "next/navigation"
+import { useSession, signOut } from "next-auth/react"
+import { User, LogOut, UserCircle, Settings } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import EnhancedSearch from '@/components/search/enhanced-search'
 
 export function Navigation() {
@@ -14,6 +25,7 @@ export function Navigation() {
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 })
   const helpButtonRef = useRef<HTMLButtonElement>(null)
   const pathname = usePathname()
+  const { data: session, status } = useSession()
   
   
   // Close dropdown when clicking outside
@@ -74,28 +86,29 @@ export function Navigation() {
           : "bg-white/20 backdrop-blur-md"
       }`}
     >
-      <div className="flex items-center justify-between h-12 xs:h-14 sm:h-16 px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 w-full">
-          {/* Left Section - Logo */}
-          <div className="flex items-center flex-shrink-0 min-w-0 max-w-[60%] xs:max-w-[70%] sm:max-w-none">
-            <Link href="/" className="flex items-center space-x-1 xs:space-x-2 hover:opacity-90 transition-opacity touch-manipulation">
-              <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-green-600 to-orange-500 rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
-                <span className="text-white font-bold text-xs xs:text-sm sm:text-base">JH</span>
+      <div className="flex items-center h-12 xs:h-14 sm:h-16 px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 w-full gap-4">
+          
+          {/* Left Section - Logo & Brand */}
+          <div className="flex items-center flex-shrink-0">
+            <Link href="/" className="flex items-center space-x-2 hover:opacity-90 transition-opacity touch-manipulation">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-600 to-orange-500 rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
+                <span className="text-white font-bold text-sm">JH</span>
               </div>
-              <div className="hidden xs:block min-w-0">
-                <div className="text-xs xs:text-sm sm:text-lg font-bold text-green-700 leading-tight truncate">Jharkhand Tourism</div>
-                <div className="text-xs text-gray-500 leading-tight truncate hidden sm:block">Explore Nature's Paradise</div>
+              <div className="hidden sm:block">
+                <div className="text-lg font-bold text-green-700 leading-tight whitespace-nowrap">Jharkhand Tourism</div>
+                <div className="text-xs text-gray-500 leading-tight whitespace-nowrap">Explore Nature's Paradise</div>
               </div>
             </Link>
           </div>
 
           {/* Center Section - Navigation Links */}
-          <div className="hidden md:flex items-center justify-center flex-1">
-            <div className="flex items-center space-x-1">
+          <div className="hidden lg:flex items-center justify-center flex-1 max-w-4xl mx-4">
+            <div className="flex items-center space-x-1 overflow-x-auto scrollbar-hide">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-3 py-2 font-medium transition-all duration-200 whitespace-nowrap ${
+                  className={`px-3 py-2 text-sm font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
                     pathname === link.href
                       ? "text-white bg-green-600 rounded-full shadow-md"
                       : "text-gray-700 hover:text-green-700 hover:bg-green-50 rounded-full"
@@ -106,10 +119,10 @@ export function Navigation() {
               ))}
               
               {/* Help Accordion Dropdown */}
-              <div className="relative">
+              <div className="relative flex-shrink-0">
                 <button
                   ref={helpButtonRef}
-                  className={`flex items-center px-3 py-2 font-medium transition-all duration-200 whitespace-nowrap rounded-full ${
+                  className={`flex items-center px-3 py-2 text-sm font-medium transition-all duration-200 whitespace-nowrap rounded-full ${
                     isHelpDropdownOpen
                       ? "text-white bg-green-600 shadow-md"
                       : "text-gray-700 hover:text-green-700 hover:bg-green-50"
@@ -136,40 +149,115 @@ export function Navigation() {
             </div>
           </div>
 
-          {/* Right Section - Search & Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4 justify-end mr-12">
+          {/* Right Section - Search & User Profile */}
+          <div className="flex items-center space-x-3 flex-shrink-0">
             {/* Enhanced Search Bar */}
-            <div className="w-64">
+            <div className="hidden md:block w-48 lg:w-64">
               <EnhancedSearch placeholder="Search destinations..." />
             </div>
             
-            {/* Auth Buttons */}
-            <Link
-              href="/auth/signin"
-              className="text-green-700 font-medium hover:text-green-600 transition-colors duration-200 whitespace-nowrap"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/auth/signup"
-              className="px-4 py-2 bg-gradient-to-r from-green-600 to-orange-500 text-white font-medium rounded-lg hover:from-green-700 hover:to-orange-600 transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap"
-            >
-              Sign Up
-            </Link>
+            {/* User Profile / Auth Buttons */}
+            {status === "loading" ? (
+              <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse flex-shrink-0"></div>
+            ) : status === "authenticated" && session ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="flex items-center gap-2 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-lg px-3 py-2 flex-shrink-0"
+                  >
+                    {session.user.avatar ? (
+                      <img
+                        src={session.user.avatar}
+                        alt={session.user.name || "User"}
+                        className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <User className="w-4 h-4 text-white" />
+                      </div>
+                    )}
+                    <div className="hidden lg:block text-left min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate max-w-[100px]">
+                        {session.user.name || "User"}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate max-w-[100px]">
+                        {session.user.email}
+                      </p>
+                    </div>
+                  </Button>
+                </DropdownMenuTrigger>
+                
+                <DropdownMenuContent align="end" className="w-64">
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {session.user.name || "User"}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {session.user.email}
+                      </p>
+                      <p className="text-xs text-emerald-600 mt-1">
+                        Welcome to Jharkhand Tourism! 🌿
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  
+                  <DropdownMenuSeparator />
+                  
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="flex items-center cursor-pointer">
+                      <UserCircle className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile/bookings" className="flex items-center cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>My Bookings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuSeparator />
+                  
+                  <DropdownMenuItem
+                    className="flex items-center cursor-pointer text-red-600 focus:text-red-600"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Sign out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex gap-2 flex-shrink-0">
+                <Link href="/auth/signin">
+                  <Button size="sm" variant="outline" className="bg-white/90 backdrop-blur-sm border-2 whitespace-nowrap">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/auth/signup">
+                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 whitespace-nowrap">
+                    Sign Up
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
           
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center flex-shrink-0">
+          <div className="lg:hidden flex items-center flex-shrink-0">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-1.5 xs:p-2 sm:p-3 text-gray-700 hover:text-green-700 active:text-green-800 transition-colors duration-200 touch-manipulation rounded-lg hover:bg-green-50 active:bg-green-100 min-w-[40px] min-h-[40px] flex items-center justify-center"
+              className="p-2 text-gray-700 hover:text-green-700 active:text-green-800 transition-colors duration-200 touch-manipulation rounded-lg hover:bg-green-50 active:bg-green-100 flex items-center justify-center"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMenuOpen}
             >
               {isMenuOpen ? (
-                <X className="h-5 w-5 xs:h-6 xs:w-6 sm:h-7 sm:w-7" />
+                <X className="h-6 w-6" />
               ) : (
-                <Menu className="h-5 w-5 xs:h-6 xs:w-6 sm:h-7 sm:w-7" />
+                <Menu className="h-6 w-6" />
               )}
             </button>
           </div>
@@ -226,23 +314,25 @@ export function Navigation() {
               </div>
             </div>
           
-          {/* Mobile Auth Buttons */}
-          <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-3 sm:py-4 border-t border-white/20 space-y-2">
-            <Link
-              href="/auth/signin"
-              className="block w-full text-center px-4 py-3 text-green-700 font-medium hover:bg-white/60 active:bg-white/80 rounded-lg transition-all duration-200 touch-manipulation border border-green-200 hover:border-green-300 text-sm xs:text-base"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/auth/signup"
-              className="block w-full text-center px-4 py-3 bg-gradient-to-r from-green-600 to-orange-500 text-white font-medium rounded-lg hover:from-green-700 hover:to-orange-600 active:from-green-800 active:to-orange-700 transition-all duration-200 shadow-md hover:shadow-lg touch-manipulation text-sm xs:text-base"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Sign Up
-            </Link>
-          </div>
+          {/* Mobile Auth Buttons - Only show when not logged in */}
+          {status === "unauthenticated" && (
+            <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-3 sm:py-4 border-t border-white/20 space-y-2">
+              <Link
+                href="/auth/signin"
+                className="block w-full text-center px-4 py-3 text-green-700 font-medium hover:bg-white/60 active:bg-white/80 rounded-lg transition-all duration-200 touch-manipulation border border-green-200 hover:border-green-300 text-sm xs:text-base"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/auth/signup"
+                className="block w-full text-center px-4 py-3 bg-gradient-to-r from-green-600 to-orange-500 text-white font-medium rounded-lg hover:from-green-700 hover:to-orange-600 active:from-green-800 active:to-orange-700 transition-all duration-200 shadow-md hover:shadow-lg touch-manipulation text-sm xs:text-base"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </nav>

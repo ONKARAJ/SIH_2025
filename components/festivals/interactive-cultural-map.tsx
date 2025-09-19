@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Calendar, Users, Camera, Navigation, X } from 'lucide-react';
+import { Calendar, Users, Camera, Navigation, X } from 'lucide-react';
 
 interface CulturalSpot {
   id: string;
@@ -762,18 +762,6 @@ export function InteractiveCulturalMap() {
               >
                 <Navigation className="w-4 h-4" />
                 Get Directions
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  if (mapInstanceRef.current) {
-                    mapInstanceRef.current.setZoom(16);
-                    mapInstanceRef.current.setCenter({ lat: selectedSpot.lat, lng: selectedSpot.lng });
-                  }
-                }}
-              >
-                <MapPin className="w-4 h-4 mr-2" />
-                Focus on Map
               </Button>
             </div>
           </CardContent>

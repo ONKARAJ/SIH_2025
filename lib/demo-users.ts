@@ -3,6 +3,7 @@ interface DemoUser {
   id: string
   name: string
   email: string
+  phone?: string
   password: string
   createdAt: Date
 }
@@ -15,7 +16,7 @@ export const demoUserStorage = {
     return demoUsers.find(user => user.email === email) || null
   },
 
-  async createUser(userData: { name: string; email: string; password: string }): Promise<DemoUser> {
+  async createUser(userData: { name: string; email: string; phone?: string; password: string }): Promise<DemoUser> {
     const user: DemoUser = {
       id: Math.random().toString(36).substr(2, 9),
       ...userData,

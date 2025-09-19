@@ -7,13 +7,14 @@ import { z } from "zod"
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits").regex(/^[+]?[0-9\s\-()]+$/, "Invalid phone number format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 })
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, password } = signupSchema.parse(body)
+    const { name, email, phone, password } = signupSchema.parse(body)
 
     // Check if database is available
     const isDatabaseConfigured = process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('placeholder')
@@ -26,7 +27,7 @@ export async function POST(request: NextRequest) {
 
       if (existingUser) {
         return NextResponse.json(
-          { error: "User with this email already exists" },
+          { error: "Account already exists! Please sign in instead." },
           { status: 400 }
         )
       }
@@ -39,6 +40,7 @@ export async function POST(request: NextRequest) {
         data: {
           name,
           email,
+          phone,
           password: hashedPassword,
         }
       })
@@ -47,7 +49,7 @@ export async function POST(request: NextRequest) {
       const { password: _, ...userWithoutPassword } = user
 
       return NextResponse.json({
-        message: "User created successfully",
+        message: "Account created successfully! You can now sign in.",
         user: userWithoutPassword
       })
     } else {
@@ -56,7 +58,7 @@ export async function POST(request: NextRequest) {
       
       if (existingUser) {
         return NextResponse.json(
-          { error: "User with this email already exists" },
+          { error: "Account already exists! Please sign in instead." },
           { status: 400 }
         )
       }
@@ -68,6 +70,7 @@ export async function POST(request: NextRequest) {
       const user = await demoUserStorage.createUser({
         name,
         email,
+        phone,
         password: hashedPassword
       })
       
@@ -75,7 +78,7 @@ export async function POST(request: NextRequest) {
       const { password: _, ...userWithoutPassword } = user
 
       return NextResponse.json({
-        message: "User created successfully (Demo Mode)",
+        message: "Account created successfully! You can now sign in. (Demo Mode)",
         user: userWithoutPassword
       })
     }

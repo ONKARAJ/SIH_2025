@@ -23,13 +23,18 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 export default function ReviewsPage() {
+  const { data: session } = useSession()
+  
   // Default reviews with 12 total reviews (3 with photos, 9 without photos)
   const defaultReviews = [
     // Reviews WITH photos (3 reviews)
     {
+      id: "review-1",
       name: "Priya Sharma",
+      userId: "user-1", // Add userId to track ownership
       rating: 5,
       feedback:
         "Absolutely breathtaking! The powerful cascade and surrounding greenery create a magical atmosphere. The 320-foot waterfall is truly spectacular and a must-visit destination in Jharkhand.",
@@ -40,6 +45,8 @@ export default function ReviewsPage() {
       spotName: "Hundru Falls"
     },
     {
+      id: "review-2",
+      userId: "user-2",
       name: "Vikram Singh",
       rating: 5,
       feedback:
@@ -51,6 +58,8 @@ export default function ReviewsPage() {
       spotName: "Parasnath Hill"
     },
     {
+      id: "review-3",
+      userId: "user-3",
       name: "Meera Gupta",
       rating: 4,
       feedback:
@@ -63,6 +72,8 @@ export default function ReviewsPage() {
     },
     // Reviews WITHOUT photos (9 reviews)
     {
+      id: "review-4",
+      userId: "user-4",
       name: "Rajesh Kumar",
       rating: 5,
       feedback:
@@ -73,6 +84,20 @@ export default function ReviewsPage() {
       spotName: "Betla National Park"
     },
     {
+      id: "review-test-user",
+      userId: "test@example.com", // Common test email
+      name: "ONKAR Raj", // User from the screenshot
+      rating: 5,
+      feedback:
+        "Testing the review system! This is a test review that can be deleted by the current user.",
+      date: "Just now",
+      location: "Jharkhand",
+      category: "General",
+      spotName: "Test Location"
+    },
+    {
+      id: "review-5",
+      userId: "user-5",
       name: "Anita Devi",
       rating: 5,
       feedback:
@@ -83,6 +108,8 @@ export default function ReviewsPage() {
       spotName: "Baidyanath Dham"
     },
     {
+      id: "review-6",
+      userId: "user-6",
       name: "Arjun Mahato",
       rating: 4,
       feedback:
@@ -93,6 +120,8 @@ export default function ReviewsPage() {
       spotName: "Netarhat Hill Station"
     },
     {
+      id: "review-7",
+      userId: "user-7",
       name: "Kavita Singh",
       rating: 5,
       feedback:
@@ -103,6 +132,8 @@ export default function ReviewsPage() {
       spotName: "Sohrai Festival"
     },
     {
+      id: "review-8",
+      userId: "user-8",
       name: "Deepak Verma",
       rating: 4,
       feedback:
@@ -113,6 +144,8 @@ export default function ReviewsPage() {
       spotName: "Jonha Falls"
     },
     {
+      id: "review-9",
+      userId: "user-9",
       name: "Sunita Rani",
       rating: 5,
       feedback:
@@ -123,6 +156,8 @@ export default function ReviewsPage() {
       spotName: "Jagannath Temple"
     },
     {
+      id: "review-10",
+      userId: "user-10",
       name: "Manoj Kumar",
       rating: 4,
       feedback:
@@ -133,6 +168,8 @@ export default function ReviewsPage() {
       spotName: "Dalma Wildlife Sanctuary"
     },
     {
+      id: "review-11",
+      userId: "user-11",
       name: "Ravi Prakash",
       rating: 4,
       feedback:
@@ -143,6 +180,8 @@ export default function ReviewsPage() {
       spotName: "Birsa Zoological Park"
     },
     {
+      id: "review-12",
+      userId: "user-12",
       name: "Rohini Sharma",
       rating: 5,
       feedback:
@@ -151,6 +190,129 @@ export default function ReviewsPage() {
       location: "Ranchi",
       category: "Nature",
       spotName: "Rock Garden"
+    },
+    // Additional 10 reviews for more content
+    {
+      id: "review-13",
+      userId: "user-13",
+      name: "Amit Chakraborty",
+      rating: 5,
+      feedback:
+        "Visited Tagore Hill during sunrise and it was absolutely magical! The panoramic view of Ranchi city from the top is breathtaking. The peaceful atmosphere and the memorial make it a perfect spot for meditation and photography.",
+      date: "3 days ago",
+      location: "Ranchi",
+      category: "Nature",
+      spotName: "Tagore Hill"
+    },
+    {
+      id: "review-14",
+      userId: "user-14", 
+      name: "Sneha Pandey",
+      rating: 4,
+      feedback:
+        "Rajrappa Temple is a unique blend of spirituality and natural beauty. The temple situated at the confluence of two rivers creates a serene atmosphere. The drive through the forests was equally enjoyable.",
+      date: "1 week ago",
+      location: "Ramgarh",
+      category: "Spiritual",
+      spotName: "Rajrappa Temple"
+    },
+    {
+      id: "review-15",
+      userId: "user-15",
+      name: "Rahul Gupta",
+      rating: 5,
+      feedback:
+        "Hazaribagh National Park exceeded my expectations! Spotted deer, wild boar, and various bird species. The safari experience was thrilling and our guide was very knowledgeable about the local wildlife and ecosystem.",
+      date: "2 weeks ago",
+      location: "Hazaribagh",
+      category: "Wildlife",
+      spotName: "Hazaribagh National Park"
+    },
+    {
+      id: "review-16",
+      userId: "user-16",
+      name: "Priyanka Singh",
+      rating: 4,
+      feedback:
+        "The tribal villages around Khunti offer an authentic cultural experience. The traditional Mundari houses, local crafts, and warm hospitality of the tribal people make it a memorable visit. Great for cultural enthusiasts.",
+      date: "3 weeks ago",
+      location: "Khunti",
+      category: "Culture",
+      spotName: "Mundari Tribal Villages"
+    },
+    {
+      id: "review-17",
+      userId: "user-17",
+      name: "Vikash Kumar",
+      rating: 5,
+      feedback:
+        "Lodh Falls during monsoon is simply spectacular! The 468-feet cascade creates a thunderous sound and misty atmosphere. Perfect for adventure seekers and nature photographers. Don't miss this hidden gem!",
+      date: "1 month ago",
+      location: "Latehar",
+      category: "Adventure",
+      spotImage: "/lodh-falls-jharkhand-monsoon-adventure.jpg",
+      spotName: "Lodh Falls"
+    },
+    {
+      id: "review-18",
+      userId: "user-18",
+      name: "Shalini Mishra",
+      rating: 4,
+      feedback:
+        "Maithon Dam offers a perfect weekend getaway! The boating facility, beautiful gardens, and the vast reservoir create a refreshing environment. Great for families looking for a peaceful retreat near nature.",
+      date: "10 days ago",
+      location: "Dhanbad",
+      category: "Nature",
+      spotName: "Maithon Dam"
+    },
+    {
+      id: "review-19",
+      userId: "user-19",
+      name: "Arjun Oraon",
+      rating: 5,
+      feedback:
+        "As a local, I'm proud to share that the Sendra Festival in our village was amazing this year! The traditional Oraon dances, local music, and community feast showcase the rich cultural heritage of Jharkhand.",
+      date: "5 days ago",
+      location: "Gumla",
+      category: "Culture",
+      spotName: "Sendra Festival"
+    },
+    {
+      id: "review-20",
+      userId: "user-20",
+      name: "Neha Jha",
+      rating: 4,
+      feedback:
+        "Dimna Lake is perfect for evening walks and water sports. The peaceful environment, clean facilities, and beautiful sunset views make it an ideal spot for couples and families. Boating here was really enjoyable.",
+      date: "4 days ago",
+      location: "Jamshedpur",
+      category: "Nature",
+      spotName: "Dimna Lake"
+    },
+    {
+      id: "review-21",
+      userId: "user-21",
+      name: "Santosh Mahto",
+      rating: 5,
+      feedback:
+        "Patratu Valley offers breathtaking views especially during winter mornings! The misty hills, peaceful lake, and cool weather create a perfect hill station experience. Great for photography and nature walks.",
+      date: "6 days ago",
+      location: "Ramgarh",
+      category: "Hill Station",
+      spotImage: "/patratu-valley-jharkhand-misty-hills.jpg",
+      spotName: "Patratu Valley"
+    },
+    {
+      id: "review-22",
+      userId: "user-22",
+      name: "Ritu Sharma",
+      rating: 4,
+      feedback:
+        "Jubilee Park in Jamshedpur is beautifully maintained! The rose gardens, musical fountain, and children's play area make it perfect for family outings. Evening shows and cultural programs add to the charm.",
+      date: "1 week ago",
+      location: "Jamshedpur",
+      category: "Nature",
+      spotName: "Jubilee Park"
     }
   ];
   
@@ -164,13 +326,18 @@ export default function ReviewsPage() {
   // Initialize with default reviews and save to localStorage if not exists
   useEffect(() => {
     const savedReviews = localStorage.getItem("jharkhand-reviews");
-    if (savedReviews) {
-      // Load saved reviews from localStorage
-      setReviews(JSON.parse(savedReviews));
-    } else {
-      // First time loading - save default reviews to localStorage
+    
+    // Check if we need to update with new default reviews
+    const shouldUpdate = !savedReviews || 
+      (savedReviews && JSON.parse(savedReviews).length < defaultReviews.length);
+    
+    if (shouldUpdate) {
+      console.log('Updating reviews with new default data');
       localStorage.setItem("jharkhand-reviews", JSON.stringify(defaultReviews));
       setReviews(defaultReviews);
+    } else {
+      // Load saved reviews from localStorage
+      setReviews(JSON.parse(savedReviews));
     }
   }, []);
 
@@ -183,6 +350,8 @@ export default function ReviewsPage() {
   }) => {
     const reviewWithDetails = {
       ...newReview,
+      id: `review-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      userId: session?.user?.id || session?.user?.email || 'anonymous',
       date: "Just now",
       location: "Jharkhand",
       category: "General",
@@ -193,6 +362,37 @@ export default function ReviewsPage() {
     const updatedReviews = [reviewWithDetails, ...reviews];
     setReviews(updatedReviews);
     localStorage.setItem("jharkhand-reviews", JSON.stringify(updatedReviews));
+  };
+
+  const handleDeleteReview = (reviewId: string) => {
+    console.log('Attempting to delete review with ID:', reviewId);
+    console.log('Current reviews before deletion:', reviews.map(r => ({ id: r.id, name: r.name })));
+    
+    if (!reviewId) {
+      console.error('No review ID provided for deletion');
+      return;
+    }
+    
+    const updatedReviews = reviews.filter(review => {
+      const keepReview = review.id !== reviewId;
+      if (!keepReview) {
+        console.log('Deleting review:', { id: review.id, name: review.name });
+      }
+      return keepReview;
+    });
+    
+    console.log('Updated reviews after deletion:', updatedReviews.map(r => ({ id: r.id, name: r.name })));
+    console.log(`Reviews count: ${reviews.length} -> ${updatedReviews.length}`);
+    
+    setReviews(updatedReviews);
+    localStorage.setItem("jharkhand-reviews", JSON.stringify(updatedReviews));
+  };
+  
+  // Function to reset reviews to default (for debugging)
+  const resetReviewsToDefault = () => {
+    console.log('Resetting reviews to default');
+    setReviews(defaultReviews);
+    localStorage.setItem("jharkhand-reviews", JSON.stringify(defaultReviews));
   };
 
   // Filter and sort reviews
@@ -261,6 +461,23 @@ export default function ReviewsPage() {
               authentic experiences and stories. Read genuine reviews from
               fellow travelers and share your own journey.
             </p>
+            
+            {/* Load New Reviews Button */}
+            <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-sm text-yellow-800 mb-2">
+                📋 <strong>New reviews added!</strong> Click below to load all 22 reviews (including 10 new ones)
+              </p>
+              <Button 
+                onClick={() => {
+                  localStorage.removeItem("jharkhand-reviews");
+                  resetReviewsToDefault();
+                  window.location.reload();
+                }}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                🔄 Load All 22 Reviews (Click Me!)
+              </Button>
+            </div>
           </div>
 
           {/* Review Statistics */}
@@ -470,8 +687,15 @@ export default function ReviewsPage() {
 
               {/* Reviews Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                {filteredReviews.map((review, index) => (
-                  <div key={index}>
+                {filteredReviews.map((review, index) => {
+                  const canDelete = session?.user && (
+                    review.userId === session.user.id || 
+                    review.userId === session.user.email ||
+                    review.name === session.user.name
+                  );
+                  
+                  return (
+                  <div key={review.id || index}>
                     <ReviewCard
                       name={review.name}
                       rating={review.rating}
@@ -481,6 +705,15 @@ export default function ReviewsPage() {
                       spotVideo={review.spotVideo}
                       spotName={review.spotName}
                       location={review.location}
+                      canDelete={canDelete}
+                      onDelete={() => {
+                        console.log('ReviewCard onDelete called for review:', review.id, review.name);
+                        if (review.id) {
+                          handleDeleteReview(review.id);
+                        } else {
+                          console.error('Review has no ID, cannot delete:', review);
+                        }
+                      }}
                     />
                     <div className="flex items-center space-x-2 mt-2 ml-6">
                       <Badge variant="outline" className="text-xs">
@@ -491,7 +724,8 @@ export default function ReviewsPage() {
                       </Badge>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
 
               {filteredReviews.length === 0 && (
