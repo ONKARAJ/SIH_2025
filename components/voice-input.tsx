@@ -6,6 +6,7 @@ import useSpeechRecognition from '@/hooks/useSpeechRecognition';
 
 interface VoiceInputProps {
   onTranscript: (text: string) => void;
+  onRecordingChange?: (isRecording: boolean) => void;
   disabled?: boolean;
   className?: string;
   placeholder?: string;
@@ -14,6 +15,7 @@ interface VoiceInputProps {
 
 const VoiceInput: React.FC<VoiceInputProps> = ({
   onTranscript,
+  onRecordingChange,
   disabled = false,
   className = '',
   placeholder = 'Click the microphone to start voice input...',
@@ -55,6 +57,13 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
   useEffect(() => {
     setSelectedLanguage(initialLanguage);
   }, [initialLanguage]);
+
+  // Notify parent component of recording state changes
+  useEffect(() => {
+    if (onRecordingChange) {
+      onRecordingChange(isListening);
+    }
+  }, [isListening, onRecordingChange]);
 
   // Clear voice error after 8 seconds (longer for better UX)
   useEffect(() => {
@@ -125,13 +134,19 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
   const getMicButtonContent = () => {
     if (isListening) {
       return (
-        <div className="flex items-center space-x-2">
-          <Square className="w-5 h-5 text-red-400" />
-          <span className="text-sm font-medium text-red-400">Stop Recording</span>
+        <div className="flex items-center space-x-3">
+          <div className="relative">
+            <Square className="w-6 h-6 text-red-400 animate-pulse" />
+            {/* Pulsing ring animation */}
+            <div className="absolute inset-0 w-6 h-6 border-2 border-red-400 rounded-full animate-ping opacity-75"></div>
+            <div className="absolute inset-0 w-6 h-6 border border-red-300 rounded-full animate-pulse"></div>
+          </div>
+          <span className="text-sm font-bold text-red-400 animate-pulse">🔴 RECORDING</span>
           <div className="flex space-x-1">
-            <div className="w-1 h-4 bg-red-400 rounded-full animate-pulse"></div>
-            <div className="w-1 h-3 bg-red-400/70 rounded-full animate-pulse delay-100"></div>
-            <div className="w-1 h-5 bg-red-400 rounded-full animate-pulse delay-200"></div>
+            <div className="w-1.5 h-6 bg-red-400 rounded-full animate-bounce"></div>
+            <div className="w-1.5 h-4 bg-red-400/80 rounded-full animate-bounce delay-75"></div>
+            <div className="w-1.5 h-5 bg-red-400 rounded-full animate-bounce delay-150"></div>
+            <div className="w-1.5 h-3 bg-red-400/80 rounded-full animate-bounce delay-225"></div>
           </div>
         </div>
       );
@@ -173,6 +188,39 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
 
   return (
     <div className={`space-y-4 ${className}`}>
+      {/* Recording Status Banner */}
+      {isListening && (
+        <div className="bg-red-500/20 border-2 border-red-500/40 rounded-xl p-4 animate-pulse">
+          <div className="flex items-center justify-center space-x-3">
+            <div className="relative">
+              <div className="w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
+              <div className="absolute inset-0 w-4 h-4 bg-red-400 rounded-full animate-pulse"></div>
+            </div>
+            <span className="text-red-400 font-bold text-lg">
+              🎙️ RECORDING IN PROGRESS
+            </span>
+            <div className="flex items-center space-x-1">
+              <span className="text-xs text-red-300">Listening for</span>
+              <span className="text-xs font-semibold text-red-400">{getLanguageLabel(selectedLanguage)}</span>
+            </div>
+          </div>
+          <div className="mt-2 flex justify-center">
+            <div className="flex space-x-1">
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-1 bg-red-400 rounded-full animate-bounce`}
+                  style={{
+                    height: `${Math.random() * 20 + 10}px`,
+                    animationDelay: `${i * 0.1}s`
+                  }}
+                ></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Language Selector and Microphone Button */}
       <div className="flex items-center justify-between gap-4">
         {/* Language Selector */}
@@ -211,10 +259,10 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
         <button
           onClick={handleMicClick}
           disabled={disabled || isProcessing}
-          className={`flex-1 flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`flex-1 flex items-center justify-center px-6 py-4 rounded-xl font-semibold transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed ${
             isListening
-              ? 'bg-red-500/20 hover:bg-red-500/30 border-2 border-red-500/40 shadow-lg shadow-red-500/20'
-              : 'bg-gradient-to-r from-orange-500/20 to-red-500/20 hover:from-orange-500/30 hover:to-red-500/30 border-2 border-orange-500/30 hover:border-orange-500/50 shadow-lg hover:shadow-xl'
+              ? 'bg-red-500/30 hover:bg-red-500/40 border-2 border-red-500/60 shadow-2xl shadow-red-500/40 ring-4 ring-red-500/20 animate-pulse transform scale-105'
+              : 'bg-gradient-to-r from-orange-500/20 to-red-500/20 hover:from-orange-500/30 hover:to-red-500/30 border-2 border-orange-500/30 hover:border-orange-500/50 shadow-lg hover:shadow-xl hover:transform hover:scale-105'
           }`}
         >
           {getMicButtonContent()}
@@ -223,14 +271,34 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
 
       {/* Real-time Transcript Display */}
       {(transcript || isListening) && (
-        <div className="p-4 bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-orange-400 uppercase tracking-wider">
-              {isListening ? 'Listening...' : 'Voice Input Complete'}
-            </span>
-            <span className="text-xs text-gray-400">
-              Language: {getLanguageLabel(selectedLanguage)}
-            </span>
+        <div className={`p-4 rounded-xl transition-all duration-300 ${
+          isListening 
+            ? 'bg-gradient-to-br from-red-500/20 to-orange-500/20 border-2 border-red-500/30 shadow-lg shadow-red-500/20' 
+            : 'bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20'
+        }`}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-2">
+              {isListening && (
+                <div className="flex items-center space-x-1">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse delay-75"></div>
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse delay-150"></div>
+                </div>
+              )}
+              <span className={`text-xs font-bold uppercase tracking-wider ${
+                isListening ? 'text-red-400 animate-pulse' : 'text-orange-400'
+              }`}>
+                {isListening ? '🎧 LISTENING...' : '✅ VOICE INPUT COMPLETE'}
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-400">Language:</span>
+              <span className={`text-xs font-semibold ${
+                isListening ? 'text-red-400' : 'text-orange-400'
+              }`}>
+                {getLanguageLabel(selectedLanguage)}
+              </span>
+            </div>
           </div>
           <p className="text-white text-sm leading-relaxed min-h-[2rem]">
             {transcript || placeholder}

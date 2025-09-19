@@ -123,3 +123,35 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom animations for voice recording indicators */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Pulse animation with scale for recording indicators */
+@keyframes recordingPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.animate-recording-pulse {
+  animation: recordingPulse 1.5s ease-in-out infinite;
+}

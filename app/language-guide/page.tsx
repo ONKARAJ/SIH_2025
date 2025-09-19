@@ -22,6 +22,7 @@ export default function LanguageGuidePage() {
   const [showVoiceInput, setShowVoiceInput] = useState(false);
   const [sourceLanguage, setSourceLanguage] = useState<'en' | 'hi'>('en');
   const [targetLanguage, setTargetLanguage] = useState<'en' | 'hi'>('hi');
+  const [isRecording, setIsRecording] = useState(false);
 
   // Check for speech synthesis support on component mount
   useEffect(() => {
@@ -173,10 +174,40 @@ export default function LanguageGuidePage() {
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8 md:py-16">
+        {/* Global Recording Indicator */}
+        {isRecording && (
+          <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 animate-fadeIn">
+            <div className="bg-red-500/90 backdrop-blur-sm border-2 border-red-400 rounded-full px-6 py-3 shadow-2xl">
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
+                  <div className="absolute inset-0 w-3 h-3 bg-red-100 rounded-full animate-pulse"></div>
+                </div>
+                <span className="text-white font-bold text-sm tracking-wider">
+                  🎙️ RECORDING VOICE INPUT
+                </span>
+                <div className="flex space-x-1">
+                  {[...Array(4)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="w-1 h-4 bg-white rounded-full animate-bounce"
+                      style={{ animationDelay: `${i * 0.15}s` }}
+                    ></div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg">
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${
+              isRecording 
+                ? 'bg-gradient-to-br from-red-500 to-red-600 animate-pulse ring-4 ring-red-500/30' 
+                : 'bg-gradient-to-br from-orange-500 to-red-500'
+            }`}>
               <Languages className="w-8 h-8 text-white" />
             </div>
           </div>
@@ -226,9 +257,31 @@ export default function LanguageGuidePage() {
                   </label>
                   <button 
                     onClick={() => setShowVoiceInput(!showVoiceInput)} 
-                    className="flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-orange-500/20 to-red-500/20 hover:from-orange-500/30 hover:to-red-500/30 border border-orange-500/30 rounded-lg text-gray-300 hover:text-white transition-all duration-200 text-sm">
-                    <Mic className="w-4 h-4 text-orange-400" />
-                    <span>{showVoiceInput ? 'Hide Voice Input' : 'Voice Input'}</span>
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                      isRecording
+                        ? 'bg-red-500/30 border-2 border-red-500/50 text-red-400 animate-pulse ring-2 ring-red-500/20'
+                        : showVoiceInput
+                          ? 'bg-gradient-to-r from-orange-500/30 to-red-500/30 border border-orange-500/50 text-white'
+                          : 'bg-gradient-to-r from-orange-500/20 to-red-500/20 hover:from-orange-500/30 hover:to-red-500/30 border border-orange-500/30 text-gray-300 hover:text-white'
+                    }`}>
+                    <Mic className={`w-4 h-4 ${
+                      isRecording ? 'text-red-400 animate-bounce' : 'text-orange-400'
+                    }`} />
+                    <span>
+                      {isRecording 
+                        ? '🔴 Recording...' 
+                        : showVoiceInput 
+                          ? 'Hide Voice Input' 
+                          : 'Voice Input'
+                      }
+                    </span>
+                    {isRecording && (
+                      <div className="flex space-x-0.5">
+                        <div className="w-1 h-3 bg-red-400 rounded-full animate-bounce"></div>
+                        <div className="w-1 h-2 bg-red-400/80 rounded-full animate-bounce delay-75"></div>
+                        <div className="w-1 h-4 bg-red-400 rounded-full animate-bounce delay-150"></div>
+                      </div>
+                    )}
                   </button>
                 </div>
                 
@@ -236,6 +289,7 @@ export default function LanguageGuidePage() {
                   <div className="animate-fadeIn">
                     <VoiceInput 
                       onTranscript={handleVoiceInput} 
+                      onRecordingChange={setIsRecording}
                       disabled={isLoading} 
                       className="mb-4"
                       initialLanguage={getVoiceLanguageCode(sourceLanguage)}
