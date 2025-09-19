@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Menu, X, Search } from "lucide-react"
+import { Menu, X, Search, ChevronDown, HelpCircle, Phone, MessageSquare } from "lucide-react"
 import { usePathname } from "next/navigation"
+import EnhancedSearch from '@/components/search/enhanced-search'
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isHelpDropdownOpen, setIsHelpDropdownOpen] = useState(false)
   const pathname = usePathname()
 
   // Handle scroll effect for background change
@@ -29,7 +31,11 @@ export function Navigation() {
     { href: "/about", label: "About" },
     { href: "/reviews", label: "Reviews" },
     { href: "/map", label: "Map" },
-    { href: "/contact", label: "Contact" },
+  ]
+
+  const helpLinks = [
+    { href: "/faq", label: "FAQ", icon: HelpCircle, description: "Frequently asked questions" },
+    { href: "/contact", label: "Contact Support", icon: Phone, description: "Get in touch with us" },
   ]
 
   return (
@@ -70,19 +76,63 @@ export function Navigation() {
                   {link.label}
                 </Link>
               ))}
+              
+              {/* Help Dropdown */}
+              <div className="relative">
+                <button
+                  className={`flex items-center px-3 py-2 font-medium transition-all duration-200 whitespace-nowrap rounded-full ${
+                    pathname === "/faq" || pathname === "/contact"
+                      ? "text-white bg-green-600 shadow-md"
+                      : "text-gray-700 hover:text-green-700 hover:bg-green-50"
+                  }`}
+                  onClick={() => setIsHelpDropdownOpen(!isHelpDropdownOpen)}
+                  onBlur={() => setTimeout(() => setIsHelpDropdownOpen(false), 200)}
+                >
+                  Help
+                  <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-200 ${
+                    isHelpDropdownOpen ? "rotate-180" : ""
+                  }`} />
+                </button>
+                
+                {isHelpDropdownOpen && (
+                  <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="p-2">
+                      {helpLinks.map((link) => (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          className="flex items-start p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                          onClick={() => setIsHelpDropdownOpen(false)}
+                        >
+                          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 group-hover:bg-green-200 transition-colors">
+                            <link.icon className="h-4 w-4 text-green-600" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-sm font-semibold text-gray-900 group-hover:text-green-700">{link.label}</h3>
+                            <p className="text-xs text-gray-500 mt-1">{link.description}</p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                    
+                    {/* Footer with contact info */}
+                    <div className="border-t border-gray-100 p-3 bg-gray-50 rounded-b-xl">
+                      <div className="text-center">
+                        <p className="text-xs text-gray-600 mb-1">Tourist Helpline</p>
+                        <p className="text-sm font-semibold text-green-600">1363 (Toll Free)</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Right Section - Search & Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4 justify-end mr-12">
-            {/* Search Bar */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <input
-                type="text"
-                placeholder="Search destinations..."
-                className="pl-10 pr-4 py-2 w-56 bg-white/80 backdrop-blur-sm border border-gray-300/50 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent focus:bg-white transition-all duration-200 text-sm"
-              />
+            {/* Enhanced Search Bar */}
+            <div className="w-64">
+              <EnhancedSearch placeholder="Search destinations..." />
             </div>
             
             {/* Auth Buttons */}
@@ -98,6 +148,20 @@ export function Navigation() {
             >
               Sign Up
             </Link>
+          </div>
+          
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 text-gray-700 hover:text-green-700 transition-colors duration-200"
+            >
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
           </div>
       </div>
 
@@ -120,19 +184,34 @@ export function Navigation() {
                 {link.label}
               </Link>
             ))}
-          </div>
-          
-          {/* Mobile Search Bar */}
-          <div className="px-4 py-3 border-t border-white/20">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
-              <input
-                type="text"
-                placeholder="Search destinations, festivals..."
-                className="pl-10 pr-4 py-3 w-full bg-white/40 backdrop-blur-sm border border-white/30 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent focus:bg-white/80 transition-all duration-200 placeholder-gray-600"
-              />
+            
+            {/* Mobile Help Section */}
+            <div className="pt-2 border-t border-white/20">
+              <div className="px-4 py-2">
+                <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Help & Support</h3>
+              </div>
+              {helpLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`flex items-center px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
+                    pathname === link.href
+                      ? "text-white bg-green-600/90 shadow-md backdrop-blur-sm"
+                      : "text-gray-800 hover:text-green-700 hover:bg-white/30 backdrop-blur-sm"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <link.icon className="h-5 w-5 mr-3" />
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
+          
+            {/* Mobile Search Bar */}
+            <div className="px-4 py-3 border-t border-white/20">
+              <EnhancedSearch placeholder="Search destinations, festivals..." showPopular={false} />
+            </div>
           
           {/* Mobile Auth Buttons */}
           <div className="px-4 py-4 border-t border-white/20 space-y-3">

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { MapWrapper } from "@/components/map-wrapper";
 
 import { MapPin, NavigationIcon, Camera, Eye } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { StreetViewModal } from "@/components/street-view-modal";
 
@@ -278,6 +278,25 @@ export default function MapPage() {
   const selectedSpot = selectedLocation
     ? touristSpots.find((spot) => spot.id === selectedLocation)
     : null;
+
+  // Listen for Street View modal opening from Google Maps info window
+  useEffect(() => {
+    const handleOpenStreetView = (event: any) => {
+      const spotData = event.detail?.spot;
+      if (spotData) {
+        const spot = touristSpots.find(s => s.id === spotData.id);
+        if (spot) {
+          setSelectedStreetViewSpot(spot);
+          setShowStreetView(true);
+        }
+      }
+    };
+
+    window.addEventListener('openStreetView', handleOpenStreetView);
+    return () => {
+      window.removeEventListener('openStreetView', handleOpenStreetView);
+    };
+  }, [touristSpots]);
 
   return (
     <div className="min-h-screen bg-background">

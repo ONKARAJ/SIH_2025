@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, MapPin, Clock, Utensils, Camera, Heart, Users, Wallet, Sparkles } from "lucide-react";
+import { Loader2, MapPin, Clock, Utensils, Camera, Heart, Users, Wallet, Sparkles, Shield, User, AlertCircle } from "lucide-react";
 
 // Jharkhand-specific data
 const cities = [
@@ -33,6 +33,7 @@ const interests = [
 const travelStyles = [
   { id: "family", label: "Family Trip", icon: "👨‍👩‍👧‍👦" },
   { id: "solo", label: "Solo Travel", icon: "🚶" },
+  { id: "solo-female", label: "Solo Female", icon: "👩" },
   { id: "couple", label: "Couple Getaway", icon: "💑" },
   { id: "friends", label: "Friends Group", icon: "👥" },
   { id: "luxury", label: "Luxury Experience", icon: "✨" },
@@ -55,11 +56,14 @@ interface ItineraryResponse {
     foods: string[];
     markets: string[];
     experiences: string[];
+    safetyTips?: string[];
+    womenFriendlyPlaces?: string[];
   };
   tips: {
     weather: string;
     customs: string;
     budget: string;
+    safety?: string;
   };
 }
 
@@ -113,25 +117,25 @@ export function ItineraryPlanner() {
           formData.interests.includes("religious") ? "Spiritual Journey" :
           "Complete"
         } Experience`,
-        overview: `A perfect ${formData.travelStyle === "family" ? "family-friendly" : formData.travelStyle} blend of ${
+        overview: `A perfect ${formData.travelStyle === "family" ? "family-friendly" : formData.travelStyle === "solo-female" ? "safe and empowering solo female" : formData.travelStyle} blend of ${
           formData.interests.includes("nature") ? "waterfalls, temples, and city vibes" :
           formData.interests.includes("history") ? "ancient heritage and cultural exploration" :
           "diverse experiences across Jharkhand's highlights"
-        }.`,
+        }.${formData.travelStyle === "solo-female" ? " Prioritizing safety, well-connected locations, and women-friendly accommodations." : ""}`,
         days: Array.from({ length: parseInt(formData.duration) }, (_, i) => ({
           day: i + 1,
           title: i === 0 ? "Arrival & City Exploration" : 
                 i === parseInt(formData.duration) - 1 ? "Cultural Immersion & Departure" :
                 `Adventure & Discovery Day ${i + 1}`,
           morning: formData.interests.includes("nature") && i === 0 ? 
-            "Visit Hundru Falls (9:00 AM) - Experience the 320-foot cascade surrounded by rocky cliffs" :
+            `Visit Hundru Falls (9:00 AM) - Experience the 320-foot cascade surrounded by rocky cliffs${formData.travelStyle === "solo-female" ? ". Safe timing with good crowd presence" : ""}` :
             formData.interests.includes("religious") && formData.cities.includes("Deoghar") ?
-            "Darshan at Baidyanath Dham (6:00 AM) - One of the 12 Jyotirlingas, perfect for morning prayers" :
-            `Morning sightseeing in ${formData.cities[0]} - Explore local attractions and scenic spots`,
+            `Darshan at Baidyanath Dham (6:00 AM) - One of the 12 Jyotirlingas, perfect for morning prayers${formData.travelStyle === "solo-female" ? ". Early visit ensures peaceful experience and safety" : ""}` :
+            `Morning sightseeing in ${formData.cities[0]} - Explore local attractions and scenic spots${formData.travelStyle === "solo-female" ? " with good public presence" : ""}`,
           afternoon: "Enjoy authentic litti chokha at a traditional local eatery - Yeh jagah zaroor dekhni chahiye! Try local specialties like dhuska and pua",
-          evening: i === 0 ? "Sunset at Ranchi Lake with boating - Perfect for family photos and relaxation" :
-            i === parseInt(formData.duration) - 1 ? "Local shopping at Main Road market - Buy Dokra art and tribal handicrafts" :
-            "Evening cultural program or nature walk - Experience local traditions",
+          evening: i === 0 ? `Sunset at Ranchi Lake with boating - Perfect for ${formData.travelStyle === "family" ? "family photos" : "photos"} and relaxation${formData.travelStyle === "solo-female" ? ". Well-lit area with good security" : ""}` :
+            i === parseInt(formData.duration) - 1 ? `Local shopping at Main Road market - Buy Dokra art and tribal handicrafts${formData.travelStyle === "solo-female" ? ". Visit during daylight hours for safety" : ""}` :
+            `Evening cultural program or nature walk - Experience local traditions${formData.travelStyle === "solo-female" ? " in well-populated areas" : ""}`,
           transport: formData.transport === "private" ? "Private vehicle with local guide" : "Local transport available"
         })),
         recommendations: {
@@ -151,14 +155,36 @@ export function ItineraryPlanner() {
             "Tribal village visit - Learn about Santhal, Munda, and Ho cultures",
             "Waterfall photography - Best during monsoon season",
             "Traditional dance performances - Jhumur and Chhau dance forms"
-          ]
+          ],
+          ...(formData.travelStyle === "solo-female" ? {
+            safetyTips: [
+              "Choose well-reviewed accommodations with 24/7 front desk service",
+              "Share your itinerary with trusted friends or family members",
+              "Keep emergency contacts easily accessible on your phone",
+              "Use reputable ride-sharing apps or pre-booked taxis for transportation",
+              "Visit popular tourist spots during daytime hours with good crowd presence",
+              "Trust your instincts and avoid isolated areas, especially after sunset",
+              "Carry a charged power bank and keep your phone battery full",
+              "Dress modestly and respect local customs for comfortable travel"
+            ],
+            womenFriendlyPlaces: [
+              "Hotel Radisson Blu, Ranchi - Women-safe accommodation with excellent security",
+              "Jagannath Temple, Ranchi - Well-maintained temple with good crowd and security",
+              "Nakshatra Van, Ranchi - Popular park with families, safe for solo visits",
+              "City Centre Mall, Dhanbad - Safe shopping environment with good security",
+              "Main Road shopping area - Well-lit and crowded market areas"
+            ]
+          } : {})
         },
         tips: {
           weather: "Best time to visit is October to March. Monsoon season (July-September) is perfect for waterfalls but carry rain gear.",
           customs: "Respect tribal customs and photography permissions. Remove shoes before entering temples. Jharkhand mein aapka swagat hai! 🙏",
           budget: formData.budget === "budget" ? 
             "Budget tip: Use local buses, stay in government guest houses, eat at local dhabas - save 40-50% on expenses" :
-            "Mid-range accommodations and private transport recommended for comfort. Local guides cost ₹500-800 per day"
+            "Mid-range accommodations and private transport recommended for comfort. Local guides cost ₹500-800 per day",
+          ...(formData.travelStyle === "solo-female" ? {
+            safety: "For solo female travelers: Book verified accommodations, inform someone about your plans, avoid late-night travel, and trust local women for guidance. Jharkhand is generally safe but taking precautions ensures a worry-free experience. Emergency helpline: 112 📞"
+          } : {})
         }
       };
 
@@ -270,19 +296,48 @@ export function ItineraryPlanner() {
                 {travelStyles.map(style => (
                   <div
                     key={style.id}
-                    className={`p-3 rounded-lg border cursor-pointer transition-all hover:border-primary ${
+                    className={`p-3 rounded-lg border cursor-pointer transition-all hover:border-primary relative ${
                       formData.travelStyle === style.id ? 'border-primary bg-primary/5' : 'border-muted'
+                    } ${
+                      style.id === 'solo-female' ? 'border-purple-200 hover:border-purple-400' : ''
                     }`}
                     onClick={() => setFormData(prev => ({...prev, travelStyle: style.id}))}
                   >
                     <div className="text-center space-y-1">
                       <div className="text-lg">{style.icon}</div>
                       <div className="text-xs font-medium">{style.label}</div>
+                      {style.id === 'solo-female' && (
+                        <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-700 hover:bg-purple-200">
+                          <Shield className="h-2 w-2 mr-1" />
+                          Safe
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
+
+            {/* Solo Female Traveler Info */}
+            {formData.travelStyle === "solo-female" && (
+              <Card className="bg-purple-50 border-purple-200">
+                <CardContent className="p-4">
+                  <div className="flex items-start space-x-3">
+                    <Shield className="h-5 w-5 text-purple-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium text-purple-800 mb-2">Solo Female Travel - Safety First! 💜</h4>
+                      <p className="text-sm text-purple-700 mb-2">
+                        Your itinerary will include safety-conscious timing, well-reviewed accommodations, and women-friendly locations. We prioritize your security while ensuring you experience Jharkhand's beauty.
+                      </p>
+                      <div className="flex items-center text-xs text-purple-600">
+                        <AlertCircle className="h-3 w-3 mr-1" />
+                        <span>Emergency helpline: 112 | Women Helpline: 1091</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Quick Options */}
             <div className="grid grid-cols-2 gap-4">
@@ -474,6 +529,51 @@ export function ItineraryPlanner() {
                 </Card>
               </div>
 
+              {/* Safety Recommendations for Solo Female Travelers */}
+              {itinerary.recommendations.safetyTips && (
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2 text-lg font-semibold text-purple-600">
+                    <Shield className="h-5 w-5" />
+                    <span>Safety Recommendations for Solo Female Travelers</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="border-purple-200">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-sm flex items-center space-x-2 text-purple-600">
+                          <AlertCircle className="h-4 w-4" />
+                          <span>Essential Safety Tips</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        {itinerary.recommendations.safetyTips.map((tip, index) => (
+                          <div key={index} className="text-sm text-muted-foreground flex items-start space-x-2">
+                            <span className="text-purple-500 mt-1 text-xs">✓</span>
+                            <span>{tip}</span>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-green-200">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-sm flex items-center space-x-2 text-green-600">
+                          <User className="h-4 w-4" />
+                          <span>Women-Friendly Places</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        {itinerary.recommendations.womenFriendlyPlaces?.map((place, index) => (
+                          <div key={index} className="text-sm text-muted-foreground flex items-start space-x-2">
+                            <span className="text-green-500 mt-1 text-xs">✓</span>
+                            <span>{place}</span>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              )}
+
               {/* Travel Tips */}
               <Card>
                 <CardHeader>
@@ -495,18 +595,43 @@ export function ItineraryPlanner() {
                     <h5 className="font-medium text-sm text-green-600 mb-1">Budget Tips</h5>
                     <p className="text-sm text-muted-foreground">{itinerary.tips.budget}</p>
                   </div>
+                  {itinerary.tips.safety && (
+                    <div>
+                      <h5 className="font-medium text-sm text-purple-600 mb-1 flex items-center space-x-1">
+                        <Shield className="h-3 w-3" />
+                        <span>Safety Guidelines</span>
+                      </h5>
+                      <p className="text-sm text-muted-foreground">{itinerary.tips.safety}</p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
               {/* Footer Message */}
-              <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200">
+              <Card className={`bg-gradient-to-r ${formData.travelStyle === "solo-female" ? "from-purple-50 to-pink-50 border-purple-200" : "from-orange-50 to-red-50 border-orange-200"}`}>
                 <CardContent className="text-center p-6">
-                  <p className="text-lg font-medium text-orange-800 mb-2">
-                    Safe travels! ✈️ Jharkhand mein aapka swagat hai 🙏
+                  <p className={`text-lg font-medium mb-2 ${
+                    formData.travelStyle === "solo-female" ? "text-purple-800" : "text-orange-800"
+                  }`}>
+                    {formData.travelStyle === "solo-female" ? 
+                      "Safe & empowering travels! ✈️ You've got this, sister! 💪 Jharkhand mein aapka swagat hai 🙏" :
+                      "Safe travels! ✈️ Jharkhand mein aapka swagat hai 🙏"
+                    }
                   </p>
-                  <p className="text-sm text-orange-700">
-                    Your personalized itinerary is ready! Book your accommodations and start your amazing journey.
+                  <p className={`text-sm ${
+                    formData.travelStyle === "solo-female" ? "text-purple-700" : "text-orange-700"
+                  }`}>
+                    {formData.travelStyle === "solo-female" ? 
+                      "Your safety-conscious itinerary is ready! Remember to inform someone about your plans, trust your instincts, and enjoy every moment of your solo adventure." :
+                      "Your personalized itinerary is ready! Book your accommodations and start your amazing journey."
+                    }
                   </p>
+                  {formData.travelStyle === "solo-female" && (
+                    <div className="mt-3 flex items-center justify-center space-x-1 text-xs text-purple-600">
+                      <Shield className="h-3 w-3" />
+                      <span>24/7 Emergency: 112 | Women Helpline: 1091</span>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>

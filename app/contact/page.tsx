@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import Link from "next/link"
 
 import { Navigation } from "@/components/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -145,6 +146,29 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
+
+      {/* FAQ Promotion Banner */}
+      <section className="py-4 bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                <MessageSquare className="h-4 w-4 text-primary-foreground" />
+              </div>
+              <div>
+                <p className="font-medium text-foreground">Looking for quick answers?</p>
+                <p className="text-sm text-muted-foreground">Check our FAQ section for instant solutions</p>
+              </div>
+            </div>
+            <Link href="/faq">
+              <Button variant="outline" size="sm" className="whitespace-nowrap">
+                Browse FAQ
+                <MessageSquare className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Header Section */}
       <section className="py-20 bg-card">
@@ -399,22 +423,55 @@ export default function ContactPage() {
                 {/* FAQ Quick Links */}
                 <Card className="border-border bg-card">
                   <CardHeader>
-                    <CardTitle className="text-xl text-card-foreground">Quick Help</CardTitle>
+                    <CardTitle className="text-xl text-card-foreground flex items-center">
+                      <MessageSquare className="h-5 w-5 mr-2" />
+                      Quick Help
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground">Find answers to common questions</p>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-2">
-                      <Button variant="ghost" className="w-full justify-start text-sm h-auto p-2">
-                        How to plan a trip to Jharkhand?
-                      </Button>
-                      <Button variant="ghost" className="w-full justify-start text-sm h-auto p-2">
-                        Best time to visit waterfalls?
-                      </Button>
-                      <Button variant="ghost" className="w-full justify-start text-sm h-auto p-2">
-                        Festival calendar and dates
-                      </Button>
-                      <Button variant="ghost" className="w-full justify-start text-sm h-auto p-2">
-                        Accommodation booking help
-                      </Button>
+                    <div className="space-y-3">
+                      <Link href="/faq" className="block">
+                        <Button variant="ghost" className="w-full justify-start text-sm h-auto p-3 hover:bg-primary/10 hover:text-primary transition-colors">
+                          <div className="text-left">
+                            <div className="font-medium">How to plan a trip to Jharkhand?</div>
+                            <div className="text-xs text-muted-foreground mt-1">Get detailed travel planning tips</div>
+                          </div>
+                        </Button>
+                      </Link>
+                      <Link href="/faq" className="block">
+                        <Button variant="ghost" className="w-full justify-start text-sm h-auto p-3 hover:bg-primary/10 hover:text-primary transition-colors">
+                          <div className="text-left">
+                            <div className="font-medium">Best time to visit waterfalls?</div>
+                            <div className="text-xs text-muted-foreground mt-1">Seasonal travel recommendations</div>
+                          </div>
+                        </Button>
+                      </Link>
+                      <Link href="/faq" className="block">
+                        <Button variant="ghost" className="w-full justify-start text-sm h-auto p-3 hover:bg-primary/10 hover:text-primary transition-colors">
+                          <div className="text-left">
+                            <div className="font-medium">Festival calendar and dates</div>
+                            <div className="text-xs text-muted-foreground mt-1">Cultural events and celebrations</div>
+                          </div>
+                        </Button>
+                      </Link>
+                      <Link href="/faq" className="block">
+                        <Button variant="ghost" className="w-full justify-start text-sm h-auto p-3 hover:bg-primary/10 hover:text-primary transition-colors">
+                          <div className="text-left">
+                            <div className="font-medium">Accommodation booking help</div>
+                            <div className="text-xs text-muted-foreground mt-1">Hotels and lodging assistance</div>
+                          </div>
+                        </Button>
+                      </Link>
+                    </div>
+                    
+                    <div className="mt-6 pt-4 border-t border-border">
+                      <Link href="/faq">
+                        <Button className="w-full" variant="outline">
+                          <MessageSquare className="h-4 w-4 mr-2" />
+                          View All FAQs
+                        </Button>
+                      </Link>
                     </div>
                   </CardContent>
                 </Card>
