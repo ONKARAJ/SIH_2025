@@ -122,7 +122,7 @@ export function Navigation() {
               <div className="relative flex-shrink-0">
                 <button
                   ref={helpButtonRef}
-                  className={`flex items-center px-3 py-2 text-sm font-medium transition-all duration-200 whitespace-nowrap rounded-full ${
+                  className={`flex items-center px-3 py-2 min-h-touch text-sm font-medium transition-all duration-200 whitespace-nowrap rounded-full ${
                     isHelpDropdownOpen
                       ? "text-white bg-green-600 shadow-md"
                       : "text-gray-700 hover:text-green-700 hover:bg-green-50"
@@ -234,12 +234,12 @@ export function Navigation() {
             ) : (
               <div className="flex gap-2 flex-shrink-0">
                 <Link href="/sign-in">
-                  <Button size="sm" variant="outline" className="bg-white/90 backdrop-blur-sm border-2 whitespace-nowrap">
+                  <Button size="sm" variant="outline" className="bg-white/90 backdrop-blur-sm border-2 whitespace-nowrap min-h-touch">
                     Sign In
                   </Button>
                 </Link>
                 <Link href="/sign-up">
-                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 whitespace-nowrap">
+                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 whitespace-nowrap min-h-touch">
                     Sign Up
                   </Button>
                 </Link>
@@ -251,7 +251,7 @@ export function Navigation() {
           <div className="lg:hidden flex items-center flex-shrink-0">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-gray-700 hover:text-green-700 active:text-green-800 transition-colors duration-200 touch-manipulation rounded-lg hover:bg-green-50 active:bg-green-100 flex items-center justify-center"
+              className="p-3 min-h-touch min-w-touch text-gray-700 hover:text-green-700 active:text-green-800 transition-colors duration-200 touch-manipulation rounded-lg hover:bg-green-50 active:bg-green-100 flex items-center justify-center"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMenuOpen}
             >

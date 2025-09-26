@@ -303,12 +303,12 @@ export default function MapPage() {
       <Navigation />
 
       {/* Header */}
-      <section className="py-16 bg-card">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold text-card-foreground mb-4">
+      <section className="py-8 sm:py-12 lg:py-16 bg-card">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-card-foreground mb-4">
             Interactive Map of Jharkhand
           </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
             Explore Jharkhand’s waterfalls, hill stations, temples, and wildlife
             sanctuaries. Click on any marker to learn more and get directions.
           </p>
@@ -316,31 +316,33 @@ export default function MapPage() {
       </section>
 
       {/* Map & Sidebar */}
-      <section className="py-12">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <section className="py-6 sm:py-8 lg:py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
           {/* Map */}
-          <div className="lg:col-span-3">
-            <MapWrapper 
-              touristSpots={touristSpots} 
-              onLocationSelect={setSelectedLocation}
-              selectedLocationId={selectedLocation}
-            />
+          <div className="lg:col-span-3 order-2 lg:order-1">
+            <div className="h-[400px] sm:h-[500px] lg:h-[600px] rounded-lg overflow-hidden">
+              <MapWrapper 
+                touristSpots={touristSpots} 
+                onLocationSelect={setSelectedLocation}
+                selectedLocationId={selectedLocation}
+              />
+            </div>
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-1 flex flex-col space-y-6">
+          <div className="lg:col-span-1 flex flex-col space-y-4 lg:space-y-6 order-1 lg:order-2">
             {/* Popular Destinations */}
             <Card className="border-border bg-card">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-card-foreground mb-4">
+              <CardContent className="p-4 lg:p-6">
+                <h3 className="text-base lg:text-lg font-semibold text-card-foreground mb-3 lg:mb-4">
                   Popular Destinations
                 </h3>
-                <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+                <div className="space-y-2 max-h-[300px] lg:max-h-[400px] overflow-y-auto pr-2">
                   {touristSpots.map((spot) => (
                     <button
                       key={spot.id}
                       onClick={() => setSelectedLocation(spot.id)}
-                      className="w-full text-left p-2 rounded-md hover:bg-muted transition-colors"
+                      className="w-full text-left p-3 min-h-touch rounded-md hover:bg-muted transition-colors"
                     >
                       <div className="flex items-center space-x-3">
                         <div
@@ -365,7 +367,7 @@ export default function MapPage() {
             {/* Selected Spot Details */}
             {selectedSpot ? (
               <Card className="border-border bg-card">
-                <CardContent className="p-6">
+                <CardContent className="p-4 lg:p-6">
                   <h3 className="text-lg font-bold">{selectedSpot.name}</h3>
                   <Badge className="mt-1">{selectedSpot.type}</Badge>
                   <p className="text-muted-foreground my-4">
@@ -377,7 +379,7 @@ export default function MapPage() {
                   </p>
                   <div className="flex flex-col space-y-2">
                     <Link href={selectedSpot.googleMaps} target="_blank">
-                      <Button size="sm" className="w-full">
+                      <Button size="sm" className="w-full min-h-touch">
                         <NavigationIcon className="h-4 w-4 mr-2" />
                         Get Directions
                       </Button>
@@ -386,7 +388,7 @@ export default function MapPage() {
                       href={`${selectedSpot.googleMaps}&t=k`}
                       target="_blank"
                     >
-                      <Button size="sm" variant="outline" className="w-full">
+                      <Button size="sm" variant="outline" className="w-full min-h-touch">
                         <Camera className="h-4 w-4 mr-2" />
                         Satellite View
                       </Button>
@@ -394,7 +396,7 @@ export default function MapPage() {
                     <Button 
                       size="sm" 
                       variant="secondary" 
-                      className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white"
+                      className="w-full min-h-touch bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white"
                       onClick={() => {
                         setSelectedStreetViewSpot(selectedSpot);
                         setShowStreetView(true);
@@ -408,7 +410,7 @@ export default function MapPage() {
               </Card>
             ) : (
               <Card className="border-border bg-card">
-                <CardContent className="p-6 text-center">
+                <CardContent className="p-4 lg:p-6 text-center">
                   <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-semibold mb-2">
                     Select a Location

@@ -222,7 +222,7 @@ const VoiceTranslator: React.FC<VoiceTranslatorProps> = ({
           <button
             onClick={() => setShowSpeechLanguageSelector(!showSpeechLanguageSelector)}
             disabled={disabled || isListening}
-            className="flex items-center space-x-2 px-4 py-2 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded-xl text-gray-300 hover:text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center space-x-2 px-4 py-2 min-h-touch bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded-xl text-gray-300 hover:text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Mic className="w-4 h-4" />
             <span className="text-sm font-medium">{getSpeechLanguageLabel(selectedSpeechLanguage)}</span>
@@ -235,7 +235,7 @@ const VoiceTranslator: React.FC<VoiceTranslatorProps> = ({
                   setSelectedSpeechLanguage('en-US');
                   setShowSpeechLanguageSelector(false);
                 }}
-                className="w-full px-4 py-3 text-left text-gray-300 hover:text-white hover:bg-orange-500/20 transition-all duration-200 flex items-center space-x-2"
+                className="w-full px-4 py-3 min-h-touch text-left text-gray-300 hover:text-white hover:bg-orange-500/20 transition-all duration-200 flex items-center space-x-2"
               >
                 <span className="text-2xl">🇺🇸</span>
                 <span>English</span>
@@ -245,7 +245,7 @@ const VoiceTranslator: React.FC<VoiceTranslatorProps> = ({
                   setSelectedSpeechLanguage('hi-IN');
                   setShowSpeechLanguageSelector(false);
                 }}
-                className="w-full px-4 py-3 text-left text-gray-300 hover:text-white hover:bg-orange-500/20 transition-all duration-200 flex items-center space-x-2"
+                className="w-full px-4 py-3 min-h-touch text-left text-gray-300 hover:text-white hover:bg-orange-500/20 transition-all duration-200 flex items-center space-x-2"
               >
                 <span className="text-2xl">🇮🇳</span>
                 <span>हिंदी (Hindi)</span>
@@ -261,7 +261,7 @@ const VoiceTranslator: React.FC<VoiceTranslatorProps> = ({
           <button
             onClick={() => setShowTargetLanguageSelector(!showTargetLanguageSelector)}
             disabled={disabled}
-            className="flex items-center space-x-2 px-4 py-2 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded-xl text-gray-300 hover:text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center space-x-2 px-4 py-2 min-h-touch bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600 rounded-xl text-gray-300 hover:text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Languages className="w-4 h-4" />
             <span className="text-sm font-medium">

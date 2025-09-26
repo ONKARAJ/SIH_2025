@@ -112,7 +112,7 @@ export function Chatbot({ isOpen, onToggle, isMinimized, onMinimize }: ChatbotPr
 
   return (
     <div className={`fixed bottom-4 right-4 z-50 pointer-events-auto max-w-[calc(100vw-2rem)] transition-all duration-300 ${
-      isMinimized ? 'w-80 sm:w-96 h-16' : 'w-80 sm:w-96 h-[500px] sm:h-[600px]'
+      isMinimized ? 'w-72 sm:w-80 md:w-96 h-16' : 'w-72 sm:w-80 md:w-96 h-[480px] sm:h-[520px] md:h-[600px]'
     }`}>
       <Card className={`h-full flex flex-col shadow-2xl border-0 bg-gray-50 overflow-hidden rounded-t-lg ${
         isMinimized ? 'animate-pulse hover:animate-none' : ''
@@ -136,9 +136,9 @@ export function Chatbot({ isOpen, onToggle, isMinimized, onMinimize }: ChatbotPr
                 e.stopPropagation();
                 onMinimize();
               }}
-              className="text-white hover:bg-white/20 hover:text-white h-7 w-7 p-0 rounded-full transition-all duration-200"
+              className="text-white hover:bg-white/20 hover:text-white min-h-touch min-w-touch p-1 rounded-full transition-all duration-200"
             >
-              <Minus className="w-3 h-3" />
+              <Minus className="w-4 h-4" />
             </Button>
             <Button
               variant="ghost"
@@ -147,9 +147,9 @@ export function Chatbot({ isOpen, onToggle, isMinimized, onMinimize }: ChatbotPr
                 e.stopPropagation();
                 onToggle();
               }}
-              className="text-white hover:bg-white/20 hover:text-white h-7 w-7 p-0 rounded-full transition-all duration-200"
+              className="text-white hover:bg-white/20 hover:text-white min-h-touch min-w-touch p-1 rounded-full transition-all duration-200"
             >
-              <X className="w-3 h-3" />
+              <X className="w-4 h-4" />
             </Button>
           </div>
         </CardHeader>
@@ -240,7 +240,7 @@ export function Chatbot({ isOpen, onToggle, isMinimized, onMinimize }: ChatbotPr
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isLoading}
                 size="sm"
-                className="px-3 bg-green-600 hover:bg-green-700"
+                className="px-3 min-h-touch min-w-touch bg-green-600 hover:bg-green-700"
               >
                 <Send className="w-4 h-4" />
               </Button>
@@ -251,7 +251,7 @@ export function Chatbot({ isOpen, onToggle, isMinimized, onMinimize }: ChatbotPr
                 variant="outline"
                 size="sm"
                 onClick={() => setInputValue("Best waterfalls in Jharkhand")}
-                className="text-xs h-7 border-green-200 text-green-700 hover:bg-green-50"
+                className="text-xs min-h-touch px-3 border-green-200 text-green-700 hover:bg-green-50"
               >
                 Waterfalls
               </Button>
@@ -259,7 +259,7 @@ export function Chatbot({ isOpen, onToggle, isMinimized, onMinimize }: ChatbotPr
                 variant="outline"
                 size="sm"
                 onClick={() => setInputValue("Jharkhand festivals")}
-                className="text-xs h-7 border-green-200 text-green-700 hover:bg-green-50"
+                className="text-xs min-h-touch px-3 border-green-200 text-green-700 hover:bg-green-50"
               >
                 Festivals
               </Button>

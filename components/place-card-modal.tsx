@@ -120,7 +120,7 @@ export function PlaceCardModal({ place }: PlaceCardModalProps) {
               size="sm" 
               variant="outline" 
               onClick={() => handleBooking('flight')}
-              className="text-xs hover:bg-blue-50 hover:border-blue-300"
+              className="text-xs min-h-touch py-2 hover:bg-blue-50 hover:border-blue-300"
             >
               <Plane className="w-3 h-3 mr-1" />
               Flight
@@ -129,7 +129,7 @@ export function PlaceCardModal({ place }: PlaceCardModalProps) {
               size="sm" 
               variant="outline" 
               onClick={() => handleBooking('train')}
-              className="text-xs hover:bg-green-50 hover:border-green-300"
+              className="text-xs min-h-touch py-2 hover:bg-green-50 hover:border-green-300"
             >
               <Train className="w-3 h-3 mr-1" />
               Train
@@ -138,7 +138,7 @@ export function PlaceCardModal({ place }: PlaceCardModalProps) {
               size="sm" 
               variant="outline" 
               onClick={() => handleBooking('hotel')}
-              className="text-xs hover:bg-purple-50 hover:border-purple-300"
+              className="text-xs min-h-touch py-2 hover:bg-purple-50 hover:border-purple-300"
             >
               <Hotel className="w-3 h-3 mr-1" />
               Hotel
@@ -148,7 +148,7 @@ export function PlaceCardModal({ place }: PlaceCardModalProps) {
           {/* View Details Button */}
           <Button 
             onClick={() => setIsModalOpen(true)}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="w-full min-h-touch bg-emerald-600 hover:bg-emerald-700 text-white"
           >
             View Details
           </Button>
@@ -157,7 +157,7 @@ export function PlaceCardModal({ place }: PlaceCardModalProps) {
 
       {/* Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
               <MapPin className="w-6 h-6 text-emerald-600" />
@@ -180,14 +180,14 @@ export function PlaceCardModal({ place }: PlaceCardModalProps) {
                     <>
                       <button
                         onClick={prevImage}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 min-h-touch min-w-touch transition-colors"
                         aria-label="Previous image"
                       >
                         <ChevronLeft className="w-4 h-4" />
                       </button>
                       <button
                         onClick={nextImage}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 min-h-touch min-w-touch transition-colors"
                         aria-label="Next image"
                       >
                         <ChevronRight className="w-4 h-4" />

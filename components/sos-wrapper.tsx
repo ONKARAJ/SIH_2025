@@ -765,7 +765,7 @@ className={`fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-[min(640px,100vw-1re
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3" role="group" aria-label="Emergency options">
               <button
                 onClick={onFuel}
-                className={`rounded-xl p-4 text-left border transition shadow-sm hover:shadow-md ${
+                className={`rounded-xl p-4 min-h-touch text-left border transition shadow-sm hover:shadow-md ${
                   selectedEmergency === "fuel" ? "border-red-500 bg-red-50" : "border-border bg-card"
                 }`}
               >
@@ -782,7 +782,7 @@ className={`fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-[min(640px,100vw-1re
 
               <button
                 onClick={onMedical}
-                className={`rounded-xl p-4 text-left border transition shadow-sm hover:shadow-md ${
+                className={`rounded-xl p-4 min-h-touch text-left border transition shadow-sm hover:shadow-md ${
                   selectedEmergency === "medical" ? "border-emerald-600 bg-emerald-50" : "border-border bg-card"
                 }`}
               >
@@ -799,7 +799,7 @@ className={`fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-[min(640px,100vw-1re
 
               <button
                 onClick={onPolice}
-                className={`rounded-xl p-4 text-left border transition shadow-sm hover:shadow-md ${
+                className={`rounded-xl p-4 min-h-touch text-left border transition shadow-sm hover:shadow-md ${
                   selectedEmergency === "police" ? "border-blue-600 bg-blue-50" : "border-border bg-card"
                 }`}
               >
